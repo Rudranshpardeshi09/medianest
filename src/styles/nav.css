@@ -1,0 +1,492 @@
+/* ============================================================
+   NAVBAR — premium rebuild
+   Theme unchanged: navy #1a1369 + orange #e95523, Roboto + Roboto Slab.
+   Sab kuch .mn-nav ke andar namespaced hai, isliye globals.css ke
+   purane .header-holder / .menu-holder rules se koi takraav nahi.
+
+   Do states hain:
+     data-state="top"      → hero ke upar transparent, safed text
+     data-state="scrolled" → glass bar, navy text, chhoti height
+   Pehle nav pura safed tha jo navy hero se takrata tha; ab wo hero
+   ka hissa lagta hai aur neeche light sections par solid ho jata hai.
+   ============================================================ */
+
+.mn-nav {
+  --nav-navy: var(--dark-blue, #1a1369);
+  --nav-orange: var(--orange, #e95523);
+  --nav-orange-soft: var(--orange-light, #ec7e69);
+  --nav-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --nav-ink: #fff;
+  --nav-ink-dim: rgba(255, 255, 255, 0.66);
+  --nav-hair: rgba(255, 255, 255, 0.14);
+
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 1000;
+  transition: background-color 0.55s var(--nav-ease), box-shadow 0.55s var(--nav-ease),
+    backdrop-filter 0.55s var(--nav-ease);
+}
+
+/* ── State: scrolled ───────────────────────────────────────── */
+
+.mn-nav[data-state='scrolled'] {
+  --nav-ink: var(--nav-navy);
+  --nav-ink-dim: rgba(26, 19, 105, 0.62);
+  --nav-hair: rgba(26, 19, 105, 0.1);
+
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: 0 12px 40px -22px rgba(16, 11, 58, 0.55);
+}
+
+/* Hero ke upar sirf ek halki hairline, koi bhaari safed patti nahi */
+.mn-nav[data-state='top']::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16) 30%, rgba(255, 255, 255, 0.1) 70%, transparent);
+}
+
+/* ── Bar ───────────────────────────────────────────────────── */
+
+.mn-nav__bar {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 40px;
+  transition: padding 0.55s var(--nav-ease);
+}
+.mn-nav[data-state='scrolled'] .mn-nav__bar {
+  padding: 11px 40px;
+}
+
+/* ── Brand ─────────────────────────────────────────────────── */
+
+.mn-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  flex: 0 0 auto;
+  /* <button> ka UA default background #f0f0f0 hota hai — bina reset
+     kiye wo navy nav par ek grey dabba bankar dikhta hai. */
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mn-nav__logo {
+  display: block;
+  width: 84px;
+  height: auto;
+  transition: width 0.55s var(--nav-ease), filter 0.55s var(--nav-ease);
+}
+.mn-nav[data-state='scrolled'] .mn-nav__logo {
+  width: 66px;
+}
+/* Logo navy + orange ka hai; navy hero par navy hissa gaayab ho jata,
+   isliye top state me use safed silhouette bana dete hain. */
+.mn-nav[data-state='top'] .mn-nav__logo {
+  filter: brightness(0) invert(1);
+}
+
+.mn-nav__rule {
+  width: 1px;
+  height: 34px;
+  background: var(--nav-hair);
+  transition: background-color 0.55s var(--nav-ease);
+}
+
+/* Tagline — yahi jagah hai jahan type-mixing hoti hai:
+   Roboto Slab italic + Roboto uppercase tracked. */
+.mn-nav__tag {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.mn-nav__tag-a {
+  font-family: var(--font-heading, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--nav-orange);
+}
+.mn-nav__tag-b {
+  font-family: var(--font-primary, 'Roboto', sans-serif);
+  font-weight: 500;
+  font-size: 8.5px;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: var(--nav-ink-dim);
+  transition: color 0.55s var(--nav-ease);
+}
+
+/* ── Links ─────────────────────────────────────────────────── */
+
+.mn-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.mn-nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--nav-ink-dim);
+  font-family: var(--font-primary, 'Roboto', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.7px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.4s var(--nav-ease);
+}
+.mn-nav__link:hover,
+.mn-nav__link:focus-visible {
+  color: var(--nav-ink);
+}
+.mn-nav__link[aria-current='true'] {
+  color: var(--nav-ink);
+}
+
+/* Chhota orange index number, hover/active par khulta hai */
+.mn-nav__idx {
+  font-family: var(--font-heading, 'Roboto Slab', serif);
+  font-size: 8px;
+  font-weight: 400;
+  color: var(--nav-orange);
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity 0.4s var(--nav-ease), transform 0.4s var(--nav-ease);
+}
+.mn-nav__link:hover .mn-nav__idx,
+.mn-nav__link[aria-current='true'] .mn-nav__idx {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Roll-up text swap: ek copy upar nikalti hai, doosri neeche se aati hai */
+.mn-nav__swap {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.mn-nav__swap span {
+  display: block;
+  transition: transform 0.55s var(--nav-ease);
+}
+.mn-nav__swap-b {
+  position: absolute;
+  inset: 0;
+  transform: translateY(115%);
+  font-weight: 700;
+  color: var(--nav-orange);
+}
+.mn-nav__link:hover .mn-nav__swap-a,
+.mn-nav__link:focus-visible .mn-nav__swap-a {
+  transform: translateY(-115%);
+}
+.mn-nav__link:hover .mn-nav__swap-b,
+.mn-nav__link:focus-visible .mn-nav__swap-b {
+  transform: translateY(0);
+}
+
+/* Active pill — framer layoutId se ek item se doosre tak travel karta hai */
+.mn-nav__pill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+.mn-nav[data-state='scrolled'] .mn-nav__pill {
+  background: rgba(26, 19, 105, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(26, 19, 105, 0.1);
+}
+
+/* ── Right side ────────────────────────────────────────────── */
+
+.mn-nav__right {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  flex: 0 0 auto;
+}
+
+.mn-nav__phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--nav-ink-dim);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  transition: color 0.4s var(--nav-ease);
+}
+.mn-nav__phone:hover {
+  color: var(--nav-orange);
+}
+.mn-nav__phone svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+}
+
+/* CTA — liquid orange fill neeche se */
+.mn-nav__cta {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  overflow: hidden;
+  padding: 12px 22px;
+  border: 0;
+  background: var(--nav-orange);
+  color: #fff;
+  font-family: var(--font-primary, 'Roboto', sans-serif);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mn-nav__cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  background: linear-gradient(to top, #b8380c, var(--nav-orange-soft));
+  transition: transform 0.6s var(--nav-ease);
+}
+.mn-nav__cta:hover::before,
+.mn-nav__cta:focus-visible::before {
+  transform: scaleY(1);
+}
+.mn-nav__cta svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  transition: transform 0.5s var(--nav-ease);
+}
+.mn-nav__cta:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* ── Scroll progress hairline ──────────────────────────────── */
+
+.mn-nav__progress {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--nav-orange), var(--nav-orange-soft), var(--nav-orange));
+}
+
+/* ── Mobile toggle ─────────────────────────────────────────── */
+
+.mn-nav__toggle {
+  display: none;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.mn-nav__toggle span {
+  position: absolute;
+  left: 11px;
+  width: 22px;
+  height: 2px;
+  background: var(--nav-ink);
+  transition: transform 0.45s var(--nav-ease), opacity 0.3s var(--nav-ease),
+    background-color 0.55s var(--nav-ease);
+}
+.mn-nav__toggle span:nth-child(1) { top: 16px; }
+.mn-nav__toggle span:nth-child(2) { top: 22px; }
+.mn-nav__toggle span:nth-child(3) { top: 28px; }
+
+.mn-nav__toggle[aria-expanded='true'] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.mn-nav__toggle[aria-expanded='true'] span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.3);
+}
+.mn-nav__toggle[aria-expanded='true'] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Sheet khula ho to toggle hamesha safed rahe (panel navy hai) */
+.mn-nav[data-open='true'] .mn-nav__toggle span {
+  background: #fff;
+}
+
+/* ── Mobile sheet ──────────────────────────────────────────── */
+
+.mn-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 30px 44px;
+  overflow-y: auto;
+  background: linear-gradient(165deg, #221a7d 0%, var(--dark-blue, #1a1369) 45%, #120d4f 100%);
+}
+
+/* Bottom-anchored: top par lagane se arch ka curve viewport ke bahar
+   chala jata tha aur sirf teen seedhi laathi jaisi dikhti thi. */
+.mn-sheet__shape {
+  position: absolute;
+  right: -20%;
+  bottom: -4%;
+  width: 86%;
+  opacity: 0.13;
+  pointer-events: none;
+}
+
+.mn-sheet__list {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mn-sheet__item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  overflow: hidden;
+}
+
+.mn-sheet__link {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  width: 100%;
+  padding: 15px 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.mn-sheet__num {
+  font-family: var(--font-heading, 'Roboto Slab', serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--orange, #e95523);
+  flex: 0 0 auto;
+}
+.mn-sheet__label {
+  font-family: var(--font-primary, 'Roboto', sans-serif);
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  transition: color 0.35s var(--nav-ease), transform 0.45s var(--nav-ease);
+}
+.mn-sheet__link[aria-current='true'] .mn-sheet__label {
+  color: var(--orange, #e95523);
+}
+
+.mn-sheet__foot {
+  position: relative;
+  margin-top: 34px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.mn-sheet__foot a {
+  display: block;
+  margin-bottom: 7px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13.5px;
+}
+.mn-sheet__foot a:hover { color: var(--orange, #e95523); }
+
+.mn-sheet__social {
+  display: flex;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.mn-sheet__social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+  transition: background-color 0.45s var(--nav-ease), color 0.45s var(--nav-ease);
+}
+.mn-sheet__social a:hover {
+  background: var(--orange, #e95523);
+  box-shadow: inset 0 0 0 1px var(--orange, #e95523);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+/* Tagline ko sirf tab dikhao jab links + CTA ke saath jagah bache */
+@media (max-width: 1439px) {
+  .mn-nav__rule,
+  .mn-nav__tag { display: none; }
+}
+
+@media (max-width: 1240px) {
+  .mn-nav__phone { display: none; }
+  .mn-nav__link { padding: 10px 10px; letter-spacing: 1.3px; }
+}
+
+@media (max-width: 1080px) {
+  .mn-nav__links,
+  .mn-nav__right { display: none; }
+  .mn-nav__toggle { display: block; }
+  .mn-nav__bar { justify-content: space-between; padding: 14px 24px; }
+  .mn-nav[data-state='scrolled'] .mn-nav__bar { padding: 10px 24px; }
+}
+
+@media (max-width: 400px) {
+  .mn-sheet__label { font-size: 23px; }
+}
+
+/* ── Reduced motion ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-nav,
+  .mn-nav__bar,
+  .mn-nav__logo,
+  .mn-nav__swap span,
+  .mn-nav__cta::before,
+  .mn-nav__idx {
+    transition-duration: 0.01ms;
+  }
+}

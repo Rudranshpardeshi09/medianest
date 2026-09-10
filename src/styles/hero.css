@@ -1,0 +1,518 @@
+/* ============================================================
+   HERO — premium rebuild
+   Theme unchanged: navy #1a1369 + orange #e95523, Roboto.
+   Sab kuch .mn-hero ke andar namespaced hai, isliye globals.css
+   ke purane .hero-* rules se koi takraav nahi hota.
+   ============================================================ */
+
+/* Procedural film grain — inline SVG turbulence, zero network cost */
+:root {
+  --mn-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.mn-hero {
+  --hero-navy: var(--dark-blue, #1a1369);
+  --hero-navy-deep: #120d4f;
+  --hero-orange: var(--orange, #e95523);
+  --hero-orange-soft: var(--orange-light, #ec7e69);
+  --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 170px 0 190px;
+  overflow: hidden;
+  background: var(--hero-navy);
+}
+
+/* ── Background plate (theme ka arch/circle graphic) ───────── */
+
+.mn-hero__plate {
+  position: absolute;
+  inset: -8% 0 -8% 0;
+  z-index: -3;
+  background-image: url('/images/website-13.jpg');
+  background-size: cover;
+  background-position: center center;
+  will-change: transform;
+}
+
+/* Navy grade + vignette. Jaan-boojh kar halka rakha gaya hai: plate ke
+   arch pattern aur circles theme ki pehchaan hain, unhe dikhna chahiye.
+   Gehrapan sirf wahan jahan text baithta hai (baayan-neeche). */
+.mn-hero__veil {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(95% 75% at 12% 62%, rgba(18, 13, 79, 0.82) 0%, rgba(20, 14, 84, 0.46) 55%, rgba(26, 19, 105, 0) 100%),
+    linear-gradient(180deg, rgba(26, 19, 105, 0.28) 0%, rgba(22, 16, 90, 0.34) 52%, rgba(15, 10, 66, 0.8) 100%);
+}
+
+/* ── Motion graphics layer ─────────────────────────────────── */
+
+.mn-hero__shapes {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mn-hero__shapes svg {
+  position: absolute;
+  overflow: visible;
+}
+
+/* Cursor-following blurred orbs */
+.mn-hero__orb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.mn-hero__orb--warm {
+  width: 40rem;
+  height: 40rem;
+  opacity: 0.3;
+  filter: blur(110px);
+  background: radial-gradient(circle, var(--hero-orange) 0%, rgba(233, 85, 35, 0.22) 42%, transparent 68%);
+}
+
+.mn-hero__orb--cool {
+  width: 24rem;
+  height: 24rem;
+  opacity: 0.4;
+  filter: blur(80px);
+  background: radial-gradient(circle, #5b6cff 0%, rgba(91, 108, 255, 0.2) 45%, transparent 70%);
+}
+
+/* Fine grain — inline SVG turbulence, koi network request nahi */
+.mn-hero__grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.19;
+  mix-blend-mode: overlay;
+  background-image: var(--mn-grain);
+  background-size: 170px 170px;
+}
+
+/* ── Content ───────────────────────────────────────────────── */
+
+.mn-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.mn-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 30px;
+  font-family: var(--font-primary);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3.4px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.mn-hero__pulse {
+  position: relative;
+  display: inline-flex;
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+}
+.mn-hero__pulse::before,
+.mn-hero__pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--hero-orange);
+}
+.mn-hero__pulse::before {
+  animation: mn-ping 1.9s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes mn-ping {
+  0% { transform: scale(1); opacity: 0.8; }
+  75%, 100% { transform: scale(2.6); opacity: 0; }
+}
+
+.mn-hero__rule {
+  width: 34px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--hero-orange), rgba(233, 85, 35, 0));
+}
+
+/* Headline */
+
+/* Size chuni gayi hai taaki "Management & Consultancy" ek hi line par
+   rahe, jaise asli site par hai — 17ch ne use teen line me tod diya tha. */
+.mn-hero__title {
+  position: relative;
+  margin: 0 0 28px;
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: clamp(2.35rem, 5.3vw, 4.9rem);
+  line-height: 1.06;
+  letter-spacing: -0.022em;
+  color: var(--white, #fff);
+  max-width: 26ch;
+}
+
+.mn-hero__line {
+  display: block;
+}
+
+/* Clipping box: pb/-mb jodi descenders (g, y) aur brush underline ko
+   andar rakhti hai, bina line-height badhaye */
+.mn-hero__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.24em;
+  margin-bottom: -0.24em;
+}
+
+.mn-hero__word {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Orange brush underline "Image" ke neeche */
+.mn-hero__brushwrap {
+  position: relative;
+  display: inline-block;
+}
+
+.mn-hero__brush {
+  position: absolute;
+  left: 0;
+  bottom: -0.04em;
+  width: 100%;
+  height: 0.14em;
+  overflow: visible;
+}
+.mn-hero__brush path {
+  fill: none;
+  stroke: var(--hero-orange);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+/* Ek-baar chalne waala glint: headline ke upar se ek roshni ki patti
+   guzarti hai. Overlay blend ki wajah se ye navy par chamak banti hai
+   aur text ke strokes ko chhoo kar nikalti hai — koi mask ki zaroorat
+   nahi, sirf ek transform animate hota hai. */
+.mn-hero__glint {
+  position: absolute;
+  top: -8%;
+  left: 0;
+  width: 42%;
+  height: 116%;
+  pointer-events: none;
+  transform: translateX(-140%) skewX(-18deg);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.16) 42%,
+    rgba(236, 126, 105, 0.34) 52%,
+    rgba(255, 255, 255, 0.16) 62%,
+    transparent 100%
+  );
+  mix-blend-mode: overlay;
+  animation: mn-glint 2.2s var(--hero-ease) 1s 1 both;
+}
+
+@keyframes mn-glint {
+  from { transform: translateX(-140%) skewX(-18deg); }
+  to   { transform: translateX(330%) skewX(-18deg); }
+}
+
+.mn-hero__desc {
+  max-width: 58ch;
+  margin: 0 0 38px;
+  font-family: var(--font-primary);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+
+.mn-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+}
+
+.mn-btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  padding: 15px 30px;
+  border: 2px solid var(--hero-orange);
+  background: transparent;
+  color: var(--white, #fff);
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.45s var(--hero-ease), border-color 0.45s var(--hero-ease);
+}
+
+/* Liquid fill — neeche se upar swell hoti hai */
+.mn-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  background: linear-gradient(to top, #c8410f, var(--hero-orange) 55%, var(--hero-orange-soft));
+  transition: transform 0.62s var(--hero-ease);
+}
+.mn-btn:hover::before,
+.mn-btn:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.mn-btn__arrow {
+  width: 18px;
+  height: 21px;
+  flex: 0 0 auto;
+  transition: transform 0.5s var(--hero-ease);
+}
+.mn-btn__arrow path {
+  fill: var(--hero-orange);
+  transition: fill 0.45s var(--hero-ease);
+}
+/* Liquid fill orange hai, isliye arrow safed ho jata hai warna ghul jaata */
+.mn-btn:hover .mn-btn__arrow path,
+.mn-btn:focus-visible .mn-btn__arrow path {
+  fill: #fff;
+}
+.mn-btn:hover .mn-btn__arrow {
+  transform: translateX(4px);
+}
+
+.mn-btn--ghost {
+  border-color: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(6px);
+}
+.mn-btn--ghost:hover,
+.mn-btn--ghost:focus-visible {
+  border-color: var(--hero-orange);
+}
+
+/* ── Scroll cue ────────────────────────────────────────────── */
+
+.mn-hero__scroll {
+  position: absolute;
+  right: 40px;
+  bottom: 210px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  pointer-events: none;
+}
+.mn-hero__scroll span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.mn-hero__scroll i {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 58px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.16);
+}
+.mn-hero__scroll i::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 20px;
+  background: var(--hero-orange);
+  animation: mn-scroll-run 2.2s ease-in-out infinite;
+}
+
+@keyframes mn-scroll-run {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(340%); }
+}
+
+/* ── Info banner (orange, hero par overlap) ────────────────── */
+
+.mn-banner {
+  position: relative;
+  z-index: 5;
+  margin-top: -120px;
+  padding: 0 40px;
+}
+
+.mn-banner__card {
+  position: relative;
+  overflow: hidden;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 36px 44px;
+  background: linear-gradient(135deg, #ef6231 0%, var(--orange, #e95523) 52%, #d8481b 100%);
+  box-shadow: 0 40px 90px -34px rgba(10, 7, 44, 0.9);
+}
+
+/* Lit top edge */
+.mn-banner__card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65) 30%, rgba(255, 255, 255, 0.28) 70%, transparent);
+}
+
+.mn-banner__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px 36px;
+  margin: 0;
+}
+
+.mn-banner__col {
+  min-width: 0;
+}
+
+.mn-banner__label {
+  margin: 0 0 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.mn-banner__value {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #fff;
+  overflow-wrap: break-word;
+}
+.mn-banner__value + .mn-banner__label {
+  margin-top: 18px;
+}
+.mn-banner__value a {
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  transition: border-color 0.35s var(--hero-ease);
+}
+.mn-banner__value a:hover {
+  border-bottom-color: rgba(255, 255, 255, 0.85);
+}
+
+.mn-banner__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.mn-banner__live::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7cf7b0;
+  box-shadow: 0 0 10px 2px rgba(124, 247, 176, 0.7);
+}
+
+/* Social */
+
+.mn-banner__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mn-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 15px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.42);
+  transition: box-shadow 0.5s var(--hero-ease), background-color 0.5s var(--hero-ease),
+    color 0.5s var(--hero-ease);
+}
+.mn-social:hover,
+.mn-social:focus-visible {
+  background: #fff;
+  color: var(--orange, #e95523);
+  box-shadow: inset 0 0 0 1px #fff, 0 0 22px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .mn-hero { padding: 150px 0 170px; }
+  .mn-banner__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mn-hero__scroll { display: none; }
+  /* Content padding itna kam ho jata hai ki left-edge ticks seedhe
+     headline aur paragraph ko kaat dete hain — inhe hata dena behtar. */
+  .mn-hero__ticks { display: none; }
+}
+
+@media (max-width: 767px) {
+  .mn-hero { padding: 130px 0 140px; min-height: auto; }
+  .mn-hero__inner { padding: 0 24px; }
+  .mn-hero__title { max-width: none; }
+  .mn-hero__desc { font-size: 14px; }
+  .mn-hero__actions { gap: 12px; }
+  .mn-btn { padding: 13px 22px; letter-spacing: 1.8px; }
+  .mn-banner { margin-top: -70px; padding: 0 24px; }
+  .mn-banner__card { padding: 28px 24px; }
+  .mn-banner__grid { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* ── Reduced motion ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-hero__pulse::before,
+  .mn-hero__scroll i::after {
+    animation: none;
+  }
+  .mn-hero__plate { inset: 0; }
+  .mn-hero__glint { display: none; }
+}

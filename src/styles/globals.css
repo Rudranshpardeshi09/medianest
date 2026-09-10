@@ -365,3 +365,15 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-primary); font-weight: 600; }
   .portfolio-grid { grid-template-columns: 1fr; grid-auto-rows: 250px; }
   .p-half { grid-column: span 1; }
 }
+
+/* ===== A11Y UTILITY ===== */
+/* Visually hidden but still announced by screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
