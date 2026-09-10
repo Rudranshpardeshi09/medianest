@@ -1,0 +1,35 @@
+.mobile-menu {
+  position: fixed;
+  inset: var(--nav-height) 0 0;
+  background: var(--color-background);
+  z-index: 35;
+  padding: var(--space-xl) var(--page-padding);
+}
+
+.mobile-menu:not(.is-open) {
+  display: none;
+}
+
+.mobile-menu__nav {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.mobile-menu__link {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.mobile-menu__link.is-active,
+.mobile-menu__link:hover {
+  color: var(--color-white);
+}
+
+@media (min-width: 980px) {
+  .mobile-menu {
+    display: none;
+  }
+}

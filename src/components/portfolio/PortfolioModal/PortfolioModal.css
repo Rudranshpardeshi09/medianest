@@ -1,0 +1,20 @@
+.portfolio-modal {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.portfolio-modal p,
+.portfolio-modal dd {
+  color: var(--color-muted);
+}
+
+.portfolio-modal dl {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.portfolio-modal dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}

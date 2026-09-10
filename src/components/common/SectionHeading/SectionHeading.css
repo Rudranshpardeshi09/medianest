@@ -1,0 +1,14 @@
+.section-heading {
+  display: grid;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.section-heading--center {
+  text-align: center;
+  justify-items: center;
+}
+
+.section-heading__description {
+  color: var(--color-muted);
+}

@@ -1,0 +1,9 @@
+.portfolio {
+  padding-block: var(--space-2xl);
+}
+
+.portfolio__more {
+  margin-top: var(--space-lg);
+  display: flex;
+  justify-content: center;
+}

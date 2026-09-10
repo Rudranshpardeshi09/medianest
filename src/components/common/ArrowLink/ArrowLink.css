@@ -1,0 +1,16 @@
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.arrow-link__arrow {
+  transition: transform var(--transition);
+}
+
+.arrow-link:hover .arrow-link__arrow {
+  transform: translateX(0.35rem);
+}

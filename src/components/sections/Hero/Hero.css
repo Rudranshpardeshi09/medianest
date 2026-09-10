@@ -1,0 +1,44 @@
+.hero {
+  position: relative;
+  min-height: calc(100vh - var(--nav-height));
+  display: grid;
+  place-items: end start;
+  overflow: hidden;
+}
+
+.hero__media,
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__overlay {
+  background:
+    linear-gradient(180deg, rgba(13, 13, 13, 0.18) 0%, rgba(13, 13, 13, 0.78) 100%);
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-2xl) var(--page-padding);
+  max-width: 52rem;
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.hero__description {
+  color: var(--color-muted);
+  font-size: 1.05rem;
+  max-width: 36rem;
+}
+
+.hero__scroll {
+  position: absolute;
+  right: var(--page-padding);
+  bottom: var(--space-lg);
+  z-index: 1;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}

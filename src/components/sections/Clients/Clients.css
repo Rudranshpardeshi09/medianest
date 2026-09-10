@@ -1,0 +1,28 @@
+.clients {
+  padding-block: var(--space-2xl);
+}
+
+.client-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
+}
+
+.client-logo {
+  background: var(--color-background);
+  min-height: 7rem;
+  display: grid;
+  place-items: center;
+  color: var(--color-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+@media (min-width: 800px) {
+  .client-logo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

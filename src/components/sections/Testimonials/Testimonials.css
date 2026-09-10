@@ -1,0 +1,40 @@
+.testimonials {
+  padding-block: var(--space-2xl);
+}
+
+.testimonial {
+  display: grid;
+  gap: var(--space-md);
+  max-width: 46rem;
+}
+
+.testimonial p {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.25;
+  max-width: none;
+}
+
+.testimonial footer {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.testimonial cite {
+  font-style: normal;
+}
+
+.testimonial span {
+  color: var(--color-muted);
+}
+
+.slider-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+  color: var(--color-muted);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}

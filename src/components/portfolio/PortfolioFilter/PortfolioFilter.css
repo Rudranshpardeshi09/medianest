@@ -1,0 +1,18 @@
+.portfolio-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: var(--space-lg);
+}
+
+.portfolio-filter__item {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.portfolio-filter__item.is-active,
+.portfolio-filter__item:hover {
+  color: var(--color-white);
+}

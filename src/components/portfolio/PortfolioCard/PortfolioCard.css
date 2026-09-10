@@ -1,0 +1,30 @@
+.portfolio-card__trigger {
+  display: grid;
+  width: 100%;
+  text-align: left;
+  gap: var(--space-sm);
+}
+
+.portfolio-card__meta {
+  display: grid;
+  gap: 0.35rem;
+  position: relative;
+  padding-right: 2rem;
+}
+
+.portfolio-card__year,
+.portfolio-card p {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.portfolio-card__arrow {
+  position: absolute;
+  right: 0;
+  top: 0.4rem;
+  transition: transform var(--transition);
+}
+
+.portfolio-card__trigger:hover .portfolio-card__arrow {
+  transform: translateX(0.3rem);
+}
