@@ -29,7 +29,7 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
-
+.claude
 # ── Reference material (not source) ─────────────────────────
 # Full-page screenshots of the live site, kept locally for comparison.
 reference ss/

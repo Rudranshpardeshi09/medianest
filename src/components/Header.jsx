@@ -25,6 +25,18 @@ const SOCIAL = [
   { icon: 'fab fa-linkedin-in', label: 'LinkedIn', href: 'https://www.linkedin.com/company/104838310/' },
 ]
 
+/** Viewfinder corner brackets. Purely decorative. */
+function Corners({ className }) {
+  return (
+    <span className={`mn-frame ${className}`} aria-hidden>
+      <i />
+      <i />
+      <i />
+      <i />
+    </span>
+  )
+}
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('home')
@@ -34,6 +46,8 @@ export default function Header() {
   const progress = useSpring(scrollYProgress, { stiffness: 130, damping: 30, restDelta: 0.001 })
 
   useMotionValueEvent(scrollY, 'change', (v) => setScrolled(v > 60))
+
+  const activeIndex = Math.max(0, NAV.findIndex((n) => n.id === active))
 
   /* Scroll-spy. Sabse upar wale intersecting section ko chunta hai,
      na ki pehle wale ko — isse do section ek saath dikhne par bhi
@@ -47,8 +61,7 @@ export default function Header() {
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort(
-            (a, b) =>
-              Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top),
+            (a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top),
           )
         if (visible[0]) setActive(visible[0].target.id)
       },
@@ -131,13 +144,25 @@ export default function Header() {
                       aria-current={isActive ? 'true' : undefined}
                       onClick={() => go(item.id)}
                     >
+                      {/* Focus lock: orange brackets jo active item tak
+                          travel karte hain (layoutId) */}
                       {isActive && (
                         <motion.span
-                          className="mn-nav__pill"
-                          layoutId="mn-nav-pill"
-                          transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                        />
+                          className="mn-frame mn-nav__frame"
+                          layoutId="mn-nav-frame"
+                          aria-hidden
+                          transition={{ type: 'spring', stiffness: 360, damping: 30 }}
+                        >
+                          <i />
+                          <i />
+                          <i />
+                          <i />
+                        </motion.span>
                       )}
+
+                      {/* "Focusing": halke brackets sirf hover/focus par */}
+                      <Corners className="mn-nav__hoverframe" />
+
                       <span className="mn-nav__idx" aria-hidden>
                         0{i + 1}
                       </span>
@@ -158,6 +183,13 @@ export default function Header() {
 
           {/* ── Right ─────────────────────────────────── */}
           <div className="mn-nav__right">
+            {/* Frame counter — kaunsa "shot" chal raha hai */}
+            <span className="mn-nav__counter" aria-hidden>
+              <b>{String(activeIndex + 1).padStart(2, '0')}</b>
+              <s>/</s>
+              <s>{String(NAV.length).padStart(2, '0')}</s>
+            </span>
+
             <a className="mn-nav__phone" href="tel:+918448112770">
               <svg viewBox="0 0 24 24" aria-hidden focusable="false">
                 <path
@@ -179,7 +211,7 @@ export default function Header() {
             </Magnetic>
           </div>
 
-          {/* ── Mobile toggle ─────────────────────────── */}
+          {/* ── Mobile toggle: hamburger + aperture ring ── */}
           <button
             type="button"
             className="mn-nav__toggle"
@@ -187,27 +219,41 @@ export default function Header() {
             aria-controls="mn-sheet"
             onClick={() => setOpen((v) => !v)}
           >
-            <span aria-hidden />
-            <span aria-hidden />
-            <span aria-hidden />
+            {/* Ring ko 6 arc segments me toda gaya hai (dasharray) — ye
+                iris ki blades padhta hai. Khulne par 60° ghoomti hai,
+                yaani ek blade ki poori doori. */}
+            <svg className="mn-nav__iris" viewBox="0 0 46 46" aria-hidden focusable="false">
+              <circle cx="23" cy="23" r="19.5" strokeWidth="1.5" strokeDasharray="14 6.4" />
+            </svg>
+            <i aria-hidden />
+            <i aria-hidden />
+            <i aria-hidden />
             <span className="sr-only">{open ? 'Menu band karein' : 'Menu kholein'}</span>
           </button>
-        </div>
 
-        {/* Scroll progress hairline */}
-        <motion.div className="mn-nav__progress" style={{ scaleX: progress }} aria-hidden />
+          {/* ── Scroll rail: film scale + progress ─────── */}
+          <div className="mn-nav__rail" aria-hidden>
+            <div className="mn-nav__ticks">
+              {NAV.map((n) => (
+                <span key={n.id} />
+              ))}
+            </div>
+            <motion.div className="mn-nav__progress" style={{ scaleX: progress }} />
+          </div>
+        </div>
       </motion.header>
 
-      {/* ── Mobile sheet ────────────────────────────────── */}
+      {/* ── Mobile sheet — iris wipe ────────────────────── */}
       <AnimatePresence>
         {open && (
           <motion.div
             id="mn-sheet"
             className="mn-sheet"
-            initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-            animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-            exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-            transition={{ duration: 0.68, ease: [0.83, 0, 0.17, 1] }}
+            /* Iris: toggle (upar-daayein) se circle khulta hai */
+            initial={{ clipPath: 'circle(0% at 88% 5%)' }}
+            animate={{ clipPath: 'circle(145% at 88% 5%)' }}
+            exit={{ clipPath: 'circle(0% at 88% 5%)' }}
+            transition={{ duration: 0.72, ease: [0.83, 0, 0.17, 1] }}
           >
             {/* MN arch motif — brand ki hi shakl, watermark ki tarah */}
             <svg
@@ -240,7 +286,7 @@ export default function Header() {
                       initial={{ y: '110%' }}
                       animate={{ y: '0%' }}
                       exit={{ y: '110%' }}
-                      transition={{ duration: 0.62, ease: EASE, delay: 0.1 + i * 0.045 }}
+                      transition={{ duration: 0.62, ease: EASE, delay: 0.12 + i * 0.045 }}
                     >
                       <span className="mn-sheet__num" aria-hidden>
                         0{i + 1}
@@ -257,7 +303,7 @@ export default function Header() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.55, ease: EASE, delay: 0.48 }}
+              transition={{ duration: 0.55, ease: EASE, delay: 0.5 }}
             >
               <a href="mailto:connect@medianest.co.in">connect@medianest.co.in</a>
               <a href="tel:+918448112770">+91-8448112770</a>
