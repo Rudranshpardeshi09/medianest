@@ -1,0 +1,262 @@
+/* ============================================================
+   FOUNDERS — editorial spread
+   Not team cards. The surname runs large and overlaps the portrait,
+   the way a magazine would set a name across a photograph.
+   ============================================================ */
+
+.mn-fnd {
+  position: relative;
+  isolation: isolate;
+  background: var(--mn-paper, #fff);
+  padding: clamp(76px, 12vh, 150px) 0 clamp(64px, 10vh, 130px);
+  overflow: clip;
+}
+
+.mn-fnd__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 56px;
+}
+
+.mn-fnd__head {
+  max-width: 44ch;
+  margin-bottom: clamp(44px, 7vh, 88px);
+}
+
+.mn-fnd__title {
+  margin: 0;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.5vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  color: var(--mn-ink, #100d2b);
+}
+.mn-fnd__title em {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mn-orange, #e95523);
+}
+
+/* ── Spread ────────────────────────────────────────────────── */
+
+.mn-fnd__list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(72px, 12vh, 150px);
+}
+
+.mn-fnd__person {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: 0;
+}
+
+/* Second partner mirrors the first, so the pair never reads as a template */
+.mn-fnd__person--flip {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+}
+.mn-fnd__person--flip .mn-fnd__figure { order: 2; }
+.mn-fnd__person--flip .mn-fnd__body { order: 1; }
+
+/* ── Portrait ──────────────────────────────────────────────── */
+
+.mn-fnd__figure {
+  position: relative;
+  margin: 0;
+  /* Source portraits are 375x560. Capping the frame keeps the upscale
+     near 1.2x instead of stretching them across the column. */
+  max-width: 460px;
+  width: 100%;
+}
+
+.mn-fnd__frame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--mn-paper-tint, #f6f6f9);
+}
+.mn-fnd__frame .mn-reveal {
+  position: absolute;
+  inset: 0;
+}
+.mn-fnd__frame img {
+  filter: grayscale(1) contrast(1.06);
+  transition: transform 1.3s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-fnd__figure:hover img {
+  transform: scale(1.035);
+}
+
+/* Film grain over the portrait — the premium tell */
+.mn-fnd__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  background-image: var(--mn-grain);
+  background-size: 150px 150px;
+}
+
+/* Offset hairline frame behind the photograph */
+.mn-fnd__figure::before {
+  content: '';
+  position: absolute;
+  inset: -18px;
+  border: 1px solid rgba(233, 85, 35, 0.4);
+  transform: translate(-16px, 16px);
+  pointer-events: none;
+  z-index: -1;
+}
+.mn-fnd__person--flip .mn-fnd__figure::before {
+  transform: translate(16px, 16px);
+}
+
+/* ── Name + credentials ────────────────────────────────────── */
+
+.mn-fnd__body {
+  position: relative;
+  z-index: 3;
+  /* No negative margin on the whole block. Only the name overlaps the
+     portrait; pulling the entire body across pushed the credentials
+     behind the photograph, where they could not be read at all. */
+  padding-left: clamp(20px, 3vw, 48px);
+}
+.mn-fnd__person--flip .mn-fnd__body {
+  padding-left: 0;
+  padding-right: clamp(20px, 3vw, 48px);
+  text-align: right;
+}
+
+/* The name is the only element that crosses the portrait's edge. */
+.mn-fnd__name {
+  position: relative;
+  margin: 0 0 22px -14%;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 6vw, 5rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  color: var(--mn-ink, #100d2b);
+}
+.mn-fnd__person--flip .mn-fnd__name {
+  margin-left: 0;
+  margin-right: -14%;
+}
+.mn-fnd__name span {
+  display: block;
+}
+/* The surname carries the accent face */
+.mn-fnd__name em {
+  display: block;
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mn-orange, #e95523);
+}
+
+.mn-fnd__role {
+  margin: 0 0 16px;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: var(--mn-ink-micro, #8e8ba1);
+}
+
+.mn-fnd__lines {
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+.mn-fnd__lines li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 0;
+  font-size: 14.5px;
+  color: var(--mn-ink-body, #5b5870);
+}
+.mn-fnd__lines li::before {
+  content: '';
+  width: 16px;
+  height: 1px;
+  flex: 0 0 auto;
+  background: var(--mn-orange, #e95523);
+}
+.mn-fnd__person--flip .mn-fnd__lines li {
+  flex-direction: row-reverse;
+}
+
+.mn-fnd__social {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mn-fnd__person--flip .mn-fnd__social {
+  justify-content: flex-end;
+}
+.mn-fnd__social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--mn-ink-dim, #7d7a92);
+  font-size: 14px;
+  box-shadow: inset 0 0 0 1px var(--mn-paper-edge, #ececf2);
+  transition: color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-fnd__social a:hover,
+.mn-fnd__social a:focus-visible {
+  color: var(--mn-orange, #e95523);
+  box-shadow: inset 0 0 0 1px var(--mn-orange, #e95523);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .mn-fnd__inner { padding: 0 36px; }
+  .mn-fnd__person,
+  .mn-fnd__person--flip {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  /* Stacked: the overlap and the mirroring stop meaning anything */
+  .mn-fnd__person--flip .mn-fnd__figure { order: 1; }
+  .mn-fnd__person--flip .mn-fnd__body { order: 2; }
+  .mn-fnd__body,
+  .mn-fnd__person--flip .mn-fnd__body {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+  }
+  .mn-fnd__name,
+  .mn-fnd__person--flip .mn-fnd__name {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .mn-fnd__person--flip .mn-fnd__lines li { flex-direction: row; }
+  .mn-fnd__person--flip .mn-fnd__social { justify-content: flex-start; }
+  .mn-fnd__figure { max-width: 420px; }
+}
+
+@media (max-width: 767px) {
+  .mn-fnd__inner { padding: 0 22px; }
+  .mn-fnd__figure::before { inset: -12px; transform: translate(-10px, 10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-fnd__frame img { transition-duration: 0.01ms; }
+}

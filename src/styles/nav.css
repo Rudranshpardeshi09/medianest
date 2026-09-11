@@ -20,9 +20,12 @@
   --nav-orange: var(--orange, #e95523);
   --nav-orange-soft: var(--orange-light, #ec7e69);
   --nav-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --nav-ink: #fff;
-  --nav-ink-dim: rgba(255, 255, 255, 0.66);
-  --nav-hair: rgba(255, 255, 255, 0.14);
+  /* Hero ab light field hai (storyboard frame 08), isliye top state
+     me bhi dark ink chahiye. Pehle ye white tha kyunki hero navy tha —
+     light background par wo poori nav gayab kar deta. */
+  --nav-ink: #100d2b;
+  --nav-ink-dim: rgba(16, 13, 43, 0.58);
+  --nav-hair: rgba(16, 13, 43, 0.12);
 
   position: fixed;
   inset: 0 0 auto 0;
@@ -41,7 +44,7 @@
   position: absolute;
   inset: auto 0 0 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16) 30%, rgba(255, 255, 255, 0.1) 70%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(16, 13, 43, 0.12) 30%, rgba(16, 13, 43, 0.08) 70%, transparent);
 }
 
 /* ── Bar: full-width → floating pill (aperture "stop down") ── */
@@ -106,11 +109,8 @@
 .mn-nav[data-state='scrolled'] .mn-nav__logo {
   width: 58px;
 }
-/* Logo navy + orange ka hai; navy hero par navy hissa gaayab ho jata,
-   isliye top state me use safed silhouette bana dete hain. */
-.mn-nav[data-state='top'] .mn-nav__logo {
-  filter: brightness(0) invert(1);
-}
+/* Light hero par logo apne asli navy + orange rang me hi sahi padha
+   jata hai — pehle wala white-silhouette filter ab ulta kaam karta. */
 
 .mn-nav__rule {
   width: 1px;

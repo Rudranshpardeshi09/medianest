@@ -12,7 +12,10 @@ body {
   line-height: 1.7;
   color: #333;
   background: var(--white);
-  overflow-x: hidden;
+  /* clip, not hidden: overflow-x:hidden forces overflow-y:auto, which
+     makes <body> a scroll container and breaks every position:sticky
+     on the page. */
+  overflow-x: clip;
 }
 
 a { text-decoration: none; color: inherit; transition: color 0.3s; }

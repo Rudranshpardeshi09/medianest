@@ -1,0 +1,251 @@
+/* ============================================================
+   WHY CHOOSE US — the one deep-ink section
+   Everything else in this page is paper. A single dark band gives the
+   scroll a beat without returning to the old navy-everywhere theme.
+   ============================================================ */
+
+.mn-why {
+  position: relative;
+  isolation: isolate;
+  /* Brand navy, not the desaturated near-black. #100d2b read as flat and
+     empty; the real #1a1369 with a gradient gives the band colour and
+     depth, and ties it back to the logo. */
+  background:
+    linear-gradient(158deg, #241c7a 0%, var(--mn-navy, #1a1369) 44%, #120d4f 100%);
+  color: var(--mn-on-dark, #fff);
+  padding: clamp(76px, 12vh, 150px) 0;
+  overflow: clip;
+}
+
+/* Fine grain over the whole band — stops the gradient from banding and
+   keeps large flat areas from looking dead. Inline SVG, no request. */
+.mn-why::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.2;
+  mix-blend-mode: overlay;
+  background-image: var(--mn-grain);
+  background-size: 170px 170px;
+}
+
+/* Two ambient glows give the band a light direction instead of a flat wash */
+.mn-why::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(38rem 38rem at 88% -8%, rgba(233, 85, 35, 0.30) 0%, transparent 64%),
+    radial-gradient(34rem 34rem at 4% 108%, rgba(96, 118, 255, 0.26) 0%, transparent 66%);
+}
+
+/* Brand geometry filling the left column's lower half — lens rings and
+   the MN arch, the same vocabulary as the nav and hero. */
+.mn-why__art {
+  position: relative;
+  margin-top: clamp(28px, 5vh, 56px);
+  width: 100%;
+  max-width: 440px;
+  pointer-events: none;
+}
+.mn-why__art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+@media (max-width: 1100px) {
+  .mn-why__art { display: none; }
+}
+
+.mn-why__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(40px, 5vw, 84px);
+  align-items: start;
+}
+
+.mn-why__head {
+  position: sticky;
+  top: 20vh;
+}
+
+/* The eyebrow rule is shared, but on ink it needs its own colour */
+.mn-why .mn-eyebrow {
+  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.42));
+}
+
+.mn-why__title {
+  margin: 0;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.5vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  color: var(--mn-on-dark, #fff);
+}
+.mn-why__lede {
+  margin: 20px 0 0;
+  max-width: 34ch;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--mn-on-dark-body, rgba(255, 255, 255, 0.74));
+}
+
+.mn-why__title em {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mn-orange, #e95523);
+}
+
+/* ── Disclosure list ───────────────────────────────────────── */
+
+.mn-why__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.18));
+}
+
+.mn-why__item {
+  border-bottom: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.18));
+}
+
+.mn-why__btn {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  padding: clamp(16px, 2.2vh, 24px) 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Muted numeral that turns orange when open. These were outlined
+   (text-stroke) at 4.4rem — at that size in italic slab they read as
+   drawing artifacts rather than numbers. */
+.mn-why__num {
+  flex: 0 0 auto;
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.34);
+  transition: color 0.55s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__item[data-open='true'] .mn-why__num {
+  color: var(--mn-orange, #e95523);
+}
+
+.mn-why__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(1.05rem, 1.7vw, 1.55rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.62);
+  transition: color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__item[data-open='true'] .mn-why__label,
+.mn-why__btn:hover .mn-why__label,
+.mn-why__btn:focus-visible .mn-why__label {
+  color: #fff;
+}
+
+/* Plus → minus */
+.mn-why__sign {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: border-color 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__item[data-open='true'] .mn-why__sign {
+  border-color: var(--mn-orange, #e95523);
+}
+.mn-why__sign::before,
+.mn-why__sign::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 13px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.75);
+  transform: translate(-50%, -50%);
+  transition: transform 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    background-color 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__sign::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.mn-why__item[data-open='true'] .mn-why__sign::before,
+.mn-why__item[data-open='true'] .mn-why__sign::after {
+  background: var(--mn-orange, #e95523);
+}
+.mn-why__item[data-open='true'] .mn-why__sign::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.mn-why__panel {
+  overflow: hidden;
+}
+
+.mn-why__body {
+  max-width: 62ch;
+  margin: 0;
+  padding: 0 0 clamp(18px, 2.6vh, 28px) 0;
+  /* Small indent to align under the label, clear of the numeral */
+  margin-left: calc(clamp(1.15rem, 1.8vw, 1.5rem) + 18px);
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--mn-on-dark-body, rgba(255, 255, 255, 0.74));
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .mn-why__inner {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 36px;
+  }
+  /* Stacked, a sticky heading would just hover over the list */
+  .mn-why__head { position: static; }
+}
+
+@media (max-width: 767px) {
+  .mn-why__inner { padding: 0 22px; }
+  .mn-why__btn { gap: 16px; }
+  .mn-why__sign { width: 32px; height: 32px; }
+  .mn-why__body {
+    margin-left: 0;
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-why__num,
+  .mn-why__label,
+  .mn-why__sign,
+  .mn-why__sign::before,
+  .mn-why__sign::after { transition-duration: 0.01ms; }
+}

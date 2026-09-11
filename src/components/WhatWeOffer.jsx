@@ -1,38 +1,104 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
+import {
+  motion,
+  useAnimationFrame,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from 'framer-motion'
+import { EASE, VIEWPORT } from '@/lib/motion'
 
+const DISCIPLINES = [
+  'Photography',
+  'Cinematography',
+  'Brand Strategy',
+  'Interviews',
+  'Live Streaming',
+  'Video Editing',
+  'Graphic Design',
+  'Events',
+  'Digital Marketing',
+]
+
+/**
+ * A ticker that drifts on its own and is *pushed* by scrolling: scroll down
+ * and it speeds up, scroll up and it reverses. The velocity is spring-damped
+ * so flicks read as momentum rather than jitter.
+ *
+ * The row is duplicated and translated modulo one copy's width, giving a
+ * seamless loop with only a transform animating.
+ */
 export default function WhatWeOffer() {
-  const ref = useRef()
+  const baseX = useMotionValue(0)
+  const reduced = useReducedMotion()
+  const directionRef = useRef(1)
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('visible')
-        })
-      },
-      { threshold: 0.2 }
-    )
-    const els = ref.current?.querySelectorAll('.animate-on-scroll')
-    els?.forEach((el) => observer.observe(el))
-    return () => els?.forEach((el) => observer.unobserve(el))
-  }, [])
+  const { scrollY } = useScroll()
+  const scrollVelocity = useVelocity(scrollY)
+  const smooth = useSpring(scrollVelocity, { damping: 50, stiffness: 400 })
+  /* Clamped on purpose. Unclamped, a fast flick multiplied the drift by 4x
+     or more and the words became unreadable smears. */
+  const factor = useTransform(smooth, [-1800, 0, 1800], [-1, 0, 1], { clamp: true })
+
+  /* Percent of the track per second. One copy is 25% of the row, so 3
+     means a discipline takes roughly eight seconds to cross — slow enough
+     to actually read. The first pass used 18, which crossed a full copy in
+     1.4s and was a blur. */
+  const BASE_VELOCITY = 3
+  const MAX_BOOST = 1.6
+
+  useAnimationFrame((_, delta) => {
+    if (reduced) return
+    const f = factor.get()
+    if (f < -0.02) directionRef.current = -1
+    else if (f > 0.02) directionRef.current = 1
+
+    const boost = 1 + Math.min(Math.abs(f), 1) * MAX_BOOST
+    const moveBy = directionRef.current * BASE_VELOCITY * boost * (delta / 1000)
+
+    // Each copy is 25% of the track (four copies), so wrap on that interval.
+    baseX.set(((baseX.get() + moveBy) % 25) - 25)
+  })
+
+  const x = useTransform(baseX, (v) => `${v}%`)
 
   return (
-    <section className="section section-whatweoffer" ref={ref} style={{ background: '#f5f5f5' }}>
-      {/* Mountain shape divider top */}
-      <div className="shape-divider shape-divider-top" style={{ position: 'absolute', top: 0, left: 0 }}>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
-          <path opacity="0.33" d="M473,67.3c-203.9,88.3-263.1-34-320.3,0C66,119.1,0,59.7,0,59.7V0h1000v59.7 c0,0-62.1,26.1-94.9,29.3c-32.8,3.3-62.8-12.3-75.8-22.1C806,49.6,745.3,8.7,694.9,4.7S492.4,59,473,67.3z" style={{ fill: '#ffffff' }}></path>
-          <path opacity="0.66" d="M734,67.3c-45.5,0-77.2-23.2-129.1-39.1c-28.6-8.7-150.3-10.1-254,39.1 s-91.7-34.4-149.2,0C115.7,118.3,0,39.8,0,39.8V0h1000v36.5c0,0-28.2-18.5-92.1-18.5C810.2,18.1,775.7,67.3,734,67.3z" style={{ fill: '#ffffff' }}></path>
-          <path d="M766.1,28.9c-200-57.5-266,65.5-395.1,19.5C242,1.8,242,5.4,184.8,20.6C128,35.8,132.3,44.9,89.9,52.5C28.6,63.7,0,0,0,0 h1000c0,0-9.9,40.9-83.6,48.1S829.6,47,766.1,28.9z" style={{ fill: '#ffffff' }}></path>
-        </svg>
+    <section className="mn-offer" aria-labelledby="offer-heading">
+      <div className="mn-offer__label">
+        <motion.h2
+          id="offer-heading"
+          className="mn-eyebrow"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VIEWPORT}
+          transition={{ duration: 0.7, ease: EASE }}
+        >
+          What we offer
+        </motion.h2>
       </div>
 
-      <div className="section-inner center-text" style={{ paddingTop: '60px' }}>
-        <div className="section-heading animate-on-scroll fade-in-up">What We Offer</div>
-        <div className="whatweoffer-diagram animate-on-scroll zoom-in">
-          <img src="/images/Diagram-Transperant-PNG-1024x863.png" alt="What We Offer Diagram" />
-        </div>
+      <div className="mn-offer__track">
+        <motion.div className="mn-offer__row" style={reduced ? undefined : { x }}>
+          {/* Four copies so the loop never runs dry on ultrawide screens.
+              Only the first is exposed to assistive tech. */}
+          {[0, 1, 2, 3].map((copy) => (
+            <div
+              key={copy}
+              className="mn-offer__item"
+              aria-hidden={copy > 0 ? true : undefined}
+            >
+              {DISCIPLINES.map((d) => (
+                <span key={d} className="mn-offer__item">
+                  <span>{d}</span>
+                  <i className="mn-offer__dot" aria-hidden />
+                </span>
+              ))}
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   )

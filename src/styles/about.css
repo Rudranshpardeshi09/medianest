@@ -1,0 +1,318 @@
+/* ============================================================
+   ABOUT + WHAT WE OFFER — light editorial
+   Continues the hero's theme: paper field, near-black display type,
+   orange as the only accent, monochrome imagery.
+   ============================================================ */
+
+.mn-about {
+  position: relative;
+  isolation: isolate;
+  background: var(--mn-paper, #fff);
+  padding: clamp(72px, 11vh, 140px) 0 clamp(64px, 9vh, 120px);
+  overflow: clip;
+}
+
+.mn-about__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 56px;
+}
+
+/* ── Section head ──────────────────────────────────────────── */
+
+.mn-about__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: end;
+  gap: 48px;
+  margin-bottom: clamp(40px, 6vh, 72px);
+}
+
+.mn-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 22px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3.2px;
+  text-transform: uppercase;
+  color: var(--mn-ink-micro, #8e8ba1);
+}
+.mn-eyebrow::before {
+  content: '';
+  width: 26px;
+  height: 1px;
+  background: var(--mn-orange, #e95523);
+  flex: 0 0 auto;
+}
+
+.mn-about__title {
+  margin: 0;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.5vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  color: var(--mn-ink, #100d2b);
+  max-width: 18ch;
+}
+
+/* The one accented word, matching the hero's treatment */
+.mn-about__title em {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mn-orange, #e95523);
+}
+
+.mn-about__lede {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--mn-ink-body, #5b5870);
+  max-width: 46ch;
+}
+
+/* ── Bento ─────────────────────────────────────────────────── */
+
+.mn-about__grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+}
+
+/* Tall image panel, left, spanning both rows */
+.mn-about__figure {
+  grid-column: span 4;
+  grid-row: span 2;
+  position: relative;
+  min-height: 420px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--mn-paper-tint, #f6f6f9);
+}
+.mn-about__figure .mn-reveal {
+  position: absolute;
+  inset: 0;
+}
+.mn-about__figure img {
+  transition: transform 1.2s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-about__figure:hover img {
+  transform: scale(1.04);
+}
+
+.mn-about__figcap {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  padding: 26px;
+  background: linear-gradient(180deg, rgba(16, 13, 43, 0) 0%, rgba(16, 13, 43, 0.72) 100%);
+  color: #fff;
+}
+.mn-about__figcap strong {
+  display: block;
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.3;
+}
+.mn-about__figcap span {
+  display: block;
+  margin-top: 6px;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+/* Pillar cards */
+.mn-pillar {
+  grid-column: span 4;
+  position: relative;
+  padding: 32px 30px 34px;
+  border: 1px solid var(--mn-paper-edge, #ececf2);
+  border-radius: 2px;
+  background: var(--mn-paper, #fff);
+  transition: border-color 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    background-color 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-pillar:hover {
+  border-color: rgba(233, 85, 35, 0.42);
+  background: var(--mn-paper-tint, #f6f6f9);
+}
+
+/* The third pillar runs wide, so the row is never three equal boxes */
+.mn-pillar--wide {
+  grid-column: span 8;
+}
+
+.mn-pillar__num {
+  display: block;
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--mn-orange, #e95523);
+  margin-bottom: 14px;
+}
+
+.mn-pillar__title {
+  margin: 0 0 12px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--mn-ink, #100d2b);
+}
+
+.mn-pillar__body {
+  margin: 0;
+  max-width: 48ch;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--mn-ink-body, #5b5870);
+}
+
+/* ── Stats strip ───────────────────────────────────────────── */
+
+.mn-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+.mn-stats > div {
+  padding: 26px 24px;
+  border: 1px solid var(--mn-paper-edge, #ececf2);
+  border-radius: 2px;
+}
+
+.mn-stats dd {
+  margin: 0;
+}
+
+.mn-stats__value {
+  display: block;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(1.8rem, 2.6vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--mn-ink, #100d2b);
+}
+.mn-stats__value em {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mn-orange, #e95523);
+}
+
+.mn-stats__label {
+  display: block;
+  margin-top: 10px;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--mn-ink-micro, #8e8ba1);
+}
+
+/* ── What we offer — marquee ───────────────────────────────── */
+
+.mn-offer {
+  position: relative;
+  background: var(--mn-paper, #fff);
+  padding: 0 0 clamp(64px, 9vh, 110px);
+  overflow: clip;
+}
+
+.mn-offer__label {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto 22px;
+  padding: 0 56px;
+}
+
+.mn-offer__track {
+  border-block: 1px solid var(--mn-paper-edge, #ececf2);
+  padding: 26px 0;
+  overflow: hidden;
+  display: flex;
+}
+
+.mn-offer__row {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  will-change: transform;
+}
+
+.mn-offer__item {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.mn-offer__item span {
+  white-space: nowrap;
+  padding: 0 30px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(1.4rem, 2.6vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--mn-ink, #100d2b);
+}
+
+/* Every third discipline is set in the accent face, so the strip reads as
+   a typographic system rather than one long run of the same weight. */
+.mn-offer__item:nth-child(3n) span {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mn-orange, #e95523);
+}
+
+.mn-offer__dot {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--mn-paper-edge, #ececf2);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .mn-about__inner,
+  .mn-offer__label { padding: 0 36px; }
+  .mn-about__head {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 24px;
+  }
+  .mn-about__figure { grid-column: span 12; grid-row: auto; min-height: 300px; }
+  .mn-pillar { grid-column: span 6; }
+  .mn-pillar--wide { grid-column: span 12; }
+  .mn-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 767px) {
+  .mn-about__inner,
+  .mn-offer__label { padding: 0 22px; }
+  .mn-about { padding-top: 60px; }
+  .mn-about__figure { min-height: 240px; }
+  .mn-pillar { grid-column: span 12; padding: 26px 22px 28px; }
+  .mn-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .mn-stats > div { padding: 20px 18px; }
+  .mn-offer__track { padding: 18px 0; }
+}

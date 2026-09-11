@@ -1,66 +1,164 @@
-import { useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
+import MaskText from './primitives/MaskText'
+import RevealImage from './primitives/RevealImage'
+import EdgeTitle from './primitives/EdgeTitle'
+import { EASE, VIEWPORT } from '@/lib/motion'
+import '../styles/founders.css'
+
+const FOUNDERS = [
+  {
+    id: 'aditi',
+    first: 'Aditi',
+    last: 'Singh',
+    role: 'Managing Partner',
+    lines: ['Still Life & Sports Photographer', 'Artist & Poet'],
+    image: '/media/ADITI-MAM-1.webp',
+    social: [
+      {
+        icon: 'fab fa-instagram',
+        label: 'Instagram of Aditi Singh',
+        href: 'https://www.instagram.com/aditisinghphotography',
+      },
+      {
+        icon: 'fab fa-youtube',
+        label: 'YouTube of Aditi Singh',
+        href: 'https://youtube.com/@aditisinghphotography',
+      },
+    ],
+  },
+  {
+    id: 'vivek',
+    first: 'Vivek',
+    last: 'Pathak',
+    role: 'Managing Partner',
+    lines: ['Former Athlete', 'Sports Administrator', 'Sports & Profiling Photographer'],
+    image: '/media/VIVEK-SIR-2.webp',
+    social: [
+      {
+        icon: 'fab fa-instagram',
+        label: 'Instagram of Vivek Pathak',
+        href: 'https://www.instagram.com/pafcoms',
+      },
+      {
+        icon: 'fab fa-linkedin-in',
+        label: 'LinkedIn of Vivek Pathak',
+        href: 'https://www.linkedin.com/in/vivek-pathak-5257312a',
+      },
+    ],
+  },
+]
 
 export default function Team() {
-  const ref = useRef()
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('visible')
-        })
-      },
-      { threshold: 0.1 }
-    )
-    const els = ref.current?.querySelectorAll('.animate-on-scroll')
-    els?.forEach((el) => observer.observe(el))
-    return () => els?.forEach((el) => observer.unobserve(el))
-  }, [])
-
   return (
-    <section id="team" className="section section-team" ref={ref}>
-      <div className="rotate-title" style={{ color: 'rgba(255,255,255,0.08)' }}>FOUNDERS</div>
+    <section id="team" className="mn-fnd">
+      <EdgeTitle side="left">Founders</EdgeTitle>
 
-      {/* Aditi Singh */}
-      <div className="team-member">
-        <div className="team-photo animate-on-scroll fade-in-left">
-          <img src="/media/ADITI-MAM-1.webp" alt="Aditi Singh" />
-        </div>
-        <div className="team-info animate-on-scroll fade-in">
-          <h3>ADITI SINGH</h3>
-          <p className="role">Managing Partner</p>
-          <p className="desc">Still Life &amp; Sports Photographer</p>
-          <p className="desc">Artist &amp; Poet</p>
-          <div className="team-social">
-            <a href="https://www.instagram.com/aditisinghphotography" target="_blank" rel="noreferrer">
-              <i className="fab fa-instagram"></i>
-            </a>
-            <a href="https://youtube.com/@aditisinghphotography" target="_blank" rel="noreferrer">
-              <i className="fab fa-youtube"></i>
-            </a>
-          </div>
-        </div>
-      </div>
+      <div className="mn-fnd__inner">
+        <div className="mn-fnd__head">
+          <motion.p
+            className="mn-eyebrow"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VIEWPORT}
+            transition={{ duration: 0.7, ease: EASE }}
+          >
+            The partners
+          </motion.p>
 
-      {/* Vivek Pathak */}
-      <div className="team-member reverse">
-        <div className="team-info animate-on-scroll fade-in">
-          <h3>VIVEK PATHAK</h3>
-          <p className="role">Managing Partner</p>
-          <p className="desc">Former Athlete</p>
-          <p className="desc">Sports Administrator</p>
-          <p className="desc">Sports &amp; Profiling Photographer</p>
-          <div className="team-social">
-            <a href="https://www.instagram.com/pafcoms" target="_blank" rel="noreferrer">
-              <i className="fab fa-instagram"></i>
-            </a>
-            <a href="https://www.linkedin.com/in/vivek-pathak-5257312a" target="_blank" rel="noreferrer">
-              <i className="fab fa-linkedin-in"></i>
-            </a>
-          </div>
+          <h2 className="mn-fnd__title">
+            <MaskText>Two photographers running a</MaskText>{' '}
+            <MaskText as="em" delay={0.24}>
+              practice
+            </MaskText>
+            <MaskText delay={0.3}>.</MaskText>
+          </h2>
         </div>
-        <div className="team-photo animate-on-scroll fade-in-right">
-          <img src="/media/VIVEK-SIR-2.webp" alt="Vivek Pathak" />
+
+        <div className="mn-fnd__list">
+          {FOUNDERS.map((p, i) => (
+            <article
+              key={p.id}
+              className={`mn-fnd__person${i % 2 === 1 ? ' mn-fnd__person--flip' : ''}`}
+            >
+              <figure className="mn-fnd__figure">
+                <div className="mn-fnd__frame">
+                  <RevealImage
+                    src={p.image}
+                    alt={`${p.first} ${p.last}, ${p.role} at Media Nest`}
+                    width="375"
+                    height="560"
+                    direction={i % 2 === 0 ? 'left' : 'right'}
+                  />
+                  <span className="mn-fnd__grain" aria-hidden />
+                </div>
+              </figure>
+
+              <div className="mn-fnd__body">
+                <motion.h3
+                  className="mn-fnd__name"
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={VIEWPORT}
+                  variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
+                >
+                  {/* Each line clips its own box; the observer sits on the
+                      unclipped h3 so the lines can actually fire. */}
+                  <span className="mn-mask">
+                    <motion.span
+                      className="mn-mask__word"
+                      variants={{
+                        hidden: { y: '110%' },
+                        show: { y: '0%', transition: { duration: 1.05, ease: EASE } },
+                      }}
+                    >
+                      {p.first}
+                    </motion.span>
+                  </span>
+                  <em className="mn-mask">
+                    <motion.span
+                      className="mn-mask__word"
+                      variants={{
+                        hidden: { y: '110%' },
+                        show: { y: '0%', transition: { duration: 1.05, ease: EASE } },
+                      }}
+                    >
+                      {p.last}
+                    </motion.span>
+                  </em>
+                </motion.h3>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={VIEWPORT}
+                  transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
+                >
+                  <p className="mn-fnd__role">{p.role}</p>
+
+                  <ul className="mn-fnd__lines">
+                    {p.lines.map((l) => (
+                      <li key={l}>{l}</li>
+                    ))}
+                  </ul>
+
+                  <ul className="mn-fnd__social">
+                    {p.social.map((s) => (
+                      <li key={s.href}>
+                        <a
+                          href={s.href}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          aria-label={s.label}
+                        >
+                          <i className={s.icon} aria-hidden />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

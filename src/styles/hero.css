@@ -1,180 +1,98 @@
 /* ============================================================
-   HERO — premium rebuild
-   Theme unchanged: navy #1a1369 + orange #e95523, Roboto.
-   Sab kuch .mn-hero ke andar namespaced hai, isliye globals.css
-   ke purane .hero-* rules se koi takraav nahi hota.
+   HERO — light editorial (replicates storyboard frame 08)
+
+   Note: this reverses the "navy throughout" direction recorded in
+   DESIGN-PLAN.md §2. The hero is now a light field with near-black
+   display type and orange as the single accent, per the approved
+   storyboard. The sections below still need reconciling with this.
+
+   The lens stack / flare / focus-mask / iris from the previous navy
+   hero are gone: they were light effects that only read against a
+   dark field and become invisible (or dirty) on white. That work is
+   recoverable from git history (commits 4d4d279, ba9db0a).
    ============================================================ */
 
-/* --mn-grain lives in tokens.css */
-
 .mn-hero {
-  --hero-navy: var(--dark-blue, #1a1369);
-  --hero-navy-deep: #120d4f;
-  --hero-orange: var(--orange, #e95523);
-  --hero-orange-soft: var(--orange-light, #ec7e69);
-  --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --hero-ink: #100d2b; /* near-black that still carries the navy */
+  --hero-ink-soft: #5b5870;
+  --hero-micro: #8e8ba1;
+  --hero-paper: #ffffff;
+  --hero-orange: var(--mn-orange, #e95523);
+  --hero-ease: var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
 
   position: relative;
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 170px 0 190px;
+  padding-top: 118px;
   overflow: hidden;
-  background: var(--hero-navy);
+  background: var(--hero-paper);
+  color: var(--hero-ink);
 }
 
-/* ── Background plate (theme ka arch/circle graphic) ───────── */
-
-.mn-hero__plate {
-  position: absolute;
-  inset: -10% -6%;
-  background-image: url('/media/website-13.webp');
-  background-size: cover;
-  background-position: center center;
-  will-change: transform;
-}
-
-/* Base copy halki si out-of-focus rehti hai... */
-.mn-hero__plate--soft {
-  filter: blur(7px) saturate(0.92);
-}
-
-/* ...aur sharp copy ke upar ek radial mask hai jo cursor ko follow karta
-   hai. Do copies ka farak hi "lens focus kar raha hai" ka ehsaas deta hai. */
-.mn-hero__plate--sharp {
-  /* Plate ek flat graphic hai, isliye akela blur/sharp ka farak
-     aankh ko pakad me nahi aata. Focus spot ko brightness aur
-     contrast se bhi alag karte hain — tab ye "lens yahan focus
-     kar raha hai" jaisa padha jata hai. */
-  filter: brightness(1.28) contrast(1.14) saturate(1.1);
-  will-change: transform, mask-image;
-}
-
-/* Navy grade + vignette. Jaan-boojh kar halka rakha gaya hai: plate ke
-   arch pattern aur circles theme ki pehchaan hain, unhe dikhna chahiye.
-   Gehrapan sirf wahan jahan text baithta hai (baayan-neeche). */
-.mn-hero__veil {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background:
-    radial-gradient(95% 75% at 12% 62%, rgba(18, 13, 79, 0.82) 0%, rgba(20, 14, 84, 0.46) 55%, rgba(26, 19, 105, 0) 100%),
-    linear-gradient(180deg, rgba(26, 19, 105, 0.28) 0%, rgba(22, 16, 90, 0.34) 52%, rgba(15, 10, 66, 0.8) 100%);
-}
-
-/* ── Motion graphics layer ─────────────────────────────────── */
-
-.mn-hero__shapes {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.mn-hero__shapes svg {
-  position: absolute;
-  overflow: visible;
-}
-
-
-/* Fine grain — inline SVG turbulence, koi network request nahi */
-.mn-hero__grain {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.19;
-  mix-blend-mode: overlay;
-  background-image: var(--mn-grain);
-  background-size: 170px 170px;
-}
-
-/* ── Content ───────────────────────────────────────────────── */
+/* ── Copy block ────────────────────────────────────────────── */
 
 .mn-hero__inner {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 1180px;
+  max-width: 1500px;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 56px 44px;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
+/* Eyebrow — tracked-out micro type with an orange multiplier */
 .mn-hero__eyebrow {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 30px;
-  font-family: var(--font-primary);
+  gap: 10px;
+  margin: 0 0 26px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 3.4px;
+  letter-spacing: 3.2px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--hero-micro);
+}
+.mn-hero__x {
+  color: var(--hero-orange);
+  font-size: 13px;
+  line-height: 1;
 }
 
-.mn-hero__pulse {
-  position: relative;
-  display: inline-flex;
-  width: 7px;
-  height: 7px;
-  flex: 0 0 auto;
-}
-.mn-hero__pulse::before,
-.mn-hero__pulse::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--hero-orange);
-}
-.mn-hero__pulse::before {
-  animation: mn-ping 1.9s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
+/* ── Headline ──────────────────────────────────────────────── */
 
-@keyframes mn-ping {
-  0% { transform: scale(1); opacity: 0.8; }
-  75%, 100% { transform: scale(2.6); opacity: 0; }
-}
-
-.mn-hero__rule {
-  width: 34px;
-  height: 1px;
-  background: linear-gradient(90deg, var(--hero-orange), rgba(233, 85, 35, 0));
-}
-
-/* Headline */
-
-/* Size chuni gayi hai taaki "Management & Consultancy" ek hi line par
-   rahe, jaise asli site par hai — 17ch ne use teen line me tod diya tha. */
 .mn-hero__title {
-  position: relative;
-  margin: 0 0 28px;
-  font-family: var(--font-primary);
+  margin: 0 0 26px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
   font-weight: 700;
-  font-size: clamp(2.35rem, 5.3vw, 4.9rem);
-  line-height: 1.06;
-  letter-spacing: -0.022em;
-  color: var(--white, #fff);
-  max-width: 26ch;
+  font-size: clamp(2.4rem, 4.6vw, 4.4rem);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  color: var(--hero-ink);
 }
 
 .mn-hero__line {
   display: block;
 }
 
-/* Clipping box: pb/-mb jodi descenders (g, y) aur brush underline ko
-   andar rakhti hai, bina line-height badhaye */
+/* Clipping box for the unmask. The padding / negative-margin pair keeps
+   descenders (g, y) and the serif italic's overhang inside the box
+   without adding to the line height. */
 .mn-hero__mask {
   display: inline-block;
   overflow: hidden;
   vertical-align: bottom;
-  padding-bottom: 0.24em;
-  margin-bottom: -0.24em;
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
 }
 
 .mn-hero__word {
@@ -182,510 +100,231 @@
   will-change: transform;
 }
 
-/* Orange brush underline "Image" ke neeche */
-.mn-hero__brushwrap {
-  position: relative;
-  display: inline-block;
+/* The one word that carries the accent — slab italic, orange */
+.mn-hero__word--accent {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--hero-orange);
+  padding-right: 0.06em;
 }
 
-.mn-hero__brush {
-  position: absolute;
-  left: 0;
-  bottom: -0.04em;
-  width: 100%;
-  height: 0.14em;
-  overflow: visible;
-}
-.mn-hero__brush path {
-  fill: none;
-  stroke: var(--hero-orange);
-  stroke-width: 7;
-  stroke-linecap: round;
-}
-
-/* Ek-baar chalne waala glint: headline ke upar se ek roshni ki patti
-   guzarti hai. Overlay blend ki wajah se ye navy par chamak banti hai
-   aur text ke strokes ko chhoo kar nikalti hai — koi mask ki zaroorat
-   nahi, sirf ek transform animate hota hai. */
-.mn-hero__glint {
-  position: absolute;
-  top: -8%;
-  left: 0;
-  width: 42%;
-  height: 116%;
-  pointer-events: none;
-  transform: translateX(-140%) skewX(-18deg);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.16) 42%,
-    rgba(236, 126, 105, 0.34) 52%,
-    rgba(255, 255, 255, 0.16) 62%,
-    transparent 100%
-  );
-  mix-blend-mode: overlay;
-  animation: mn-glint 2.2s var(--hero-ease) 1s 1 both;
-}
-
-@keyframes mn-glint {
-  from { transform: translateX(-140%) skewX(-18deg); }
-  to   { transform: translateX(330%) skewX(-18deg); }
-}
+/* ── Body ──────────────────────────────────────────────────── */
 
 .mn-hero__desc {
-  max-width: 58ch;
-  margin: 0 0 38px;
-  font-family: var(--font-primary);
-  font-weight: 300;
+  max-width: 52ch;
+  margin: 0 0 34px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 400;
   font-size: 15px;
-  line-height: 1.85;
-  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.75;
+  color: var(--hero-ink-soft);
 }
 
-/* ── Buttons ───────────────────────────────────────────────── */
+/* ── CTAs ──────────────────────────────────────────────────── */
 
 .mn-hero__actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 18px;
+  gap: 42px;
 }
 
-.mn-btn {
-  position: relative;
-  isolation: isolate;
+.mn-cta {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  overflow: hidden;
-  padding: 15px 30px;
-  border: 2px solid var(--hero-orange);
+  gap: 18px;
+  border: 0;
   background: transparent;
-  color: var(--white, #fff);
-  font-family: var(--font-primary);
-  font-size: 12px;
-  font-weight: 600;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 2.4px;
   text-transform: uppercase;
-  cursor: pointer;
-  transition: color 0.45s var(--hero-ease), border-color 0.45s var(--hero-ease);
+  color: var(--hero-ink);
+  transition: color 0.4s var(--hero-ease);
+}
+.mn-cta:hover {
+  color: var(--hero-orange);
 }
 
-/* Liquid fill — neeche se upar swell hoti hai */
-.mn-btn::before {
+.mn-cta__disc {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  transition: transform 0.55s var(--hero-ease), box-shadow 0.45s var(--hero-ease),
+    color 0.4s var(--hero-ease);
+}
+.mn-cta:hover .mn-cta__disc {
+  transform: scale(1.06);
+}
+
+.mn-cta--solid .mn-cta__disc {
+  background: var(--hero-orange);
+  color: #fff;
+  box-shadow: 0 14px 34px -14px rgba(233, 85, 35, 0.85);
+}
+.mn-cta--outline .mn-cta__disc {
+  color: var(--hero-ink);
+  box-shadow: inset 0 0 0 1.5px rgba(16, 13, 43, 0.22);
+}
+.mn-cta--outline:hover .mn-cta__disc {
+  box-shadow: inset 0 0 0 1.5px var(--hero-orange);
+  color: var(--hero-orange);
+}
+
+.mn-cta__disc svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  transition: transform 0.5s var(--hero-ease);
+}
+.mn-cta--solid:hover .mn-cta__disc svg {
+  transform: translateX(3px);
+}
+/* The play triangle is a filled shape, not a stroked path */
+.mn-cta--outline .mn-cta__disc svg {
+  fill: currentColor;
+  stroke: none;
+  width: 13px;
+  height: 13px;
+  margin-left: 2px;
+}
+
+/* ── Full-bleed image band ─────────────────────────────────── */
+
+.mn-hero__band {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: clamp(260px, 34vh, 460px);
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.mn-hero__band img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  display: block;
+}
+
+/* Two jobs in one layer:
+   1. the top third dissolves into the paper, so the photograph emerges
+      from the white rather than butting against it with a hard seam;
+   2. the bottom darkens so the micro-labels stay legible over any crop. */
+.mn-hero__band::after {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: -1;
-  transform: scaleY(0);
-  transform-origin: bottom;
-  background: linear-gradient(to top, #c8410f, var(--hero-orange) 55%, var(--hero-orange-soft));
-  transition: transform 0.62s var(--hero-ease);
-}
-.mn-btn:hover::before,
-.mn-btn:focus-visible::before {
-  transform: scaleY(1);
-}
-
-.mn-btn__arrow {
-  width: 18px;
-  height: 21px;
-  flex: 0 0 auto;
-  transition: transform 0.5s var(--hero-ease);
-}
-.mn-btn__arrow path {
-  fill: var(--hero-orange);
-  transition: fill 0.45s var(--hero-ease);
-}
-/* Liquid fill orange hai, isliye arrow safed ho jata hai warna ghul jaata */
-.mn-btn:hover .mn-btn__arrow path,
-.mn-btn:focus-visible .mn-btn__arrow path {
-  fill: #fff;
-}
-.mn-btn:hover .mn-btn__arrow {
-  transform: translateX(4px);
-}
-
-.mn-btn--ghost {
-  border-color: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(6px);
-}
-.mn-btn--ghost:hover,
-.mn-btn--ghost:focus-visible {
-  border-color: var(--hero-orange);
-}
-
-/* ── Scroll cue ────────────────────────────────────────────── */
-
-.mn-hero__scroll {
-  position: absolute;
-  right: 40px;
-  bottom: 210px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  background:
+    linear-gradient(
+      180deg,
+      var(--hero-paper) 0%,
+      rgba(255, 255, 255, 0.82) 12%,
+      rgba(255, 255, 255, 0.34) 30%,
+      rgba(255, 255, 255, 0) 52%
+    ),
+    linear-gradient(180deg, rgba(16, 13, 43, 0) 48%, rgba(16, 13, 43, 0.62) 100%);
   pointer-events: none;
 }
-.mn-hero__scroll span {
+
+.mn-hero__bandbar {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 20px;
+  padding: 0 56px 26px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
   font-size: 10px;
   font-weight: 500;
-  letter-spacing: 3px;
+  letter-spacing: 2.6px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.82);
+}
+.mn-hero__bandbar > span:last-child {
+  text-align: right;
+}
+
+.mn-hero__scroll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  justify-self: center;
 }
 .mn-hero__scroll i {
   position: relative;
   display: block;
   width: 1px;
-  height: 58px;
+  height: 34px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.28);
 }
 .mn-hero__scroll i::after {
   content: '';
   position: absolute;
   inset-inline: 0;
   top: 0;
-  height: 20px;
+  height: 12px;
   background: var(--hero-orange);
   animation: mn-scroll-run 2.2s ease-in-out infinite;
 }
 
 @keyframes mn-scroll-run {
   0% { transform: translateY(-100%); }
-  100% { transform: translateY(340%); }
-}
-
-/* ── Info banner (orange, hero par overlap) ────────────────── */
-
-.mn-banner {
-  position: relative;
-  z-index: 5;
-  margin-top: -120px;
-  padding: 0 40px;
-}
-
-.mn-banner__card {
-  position: relative;
-  overflow: hidden;
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 36px 44px;
-  background: linear-gradient(135deg, #ef6231 0%, var(--orange, #e95523) 52%, #d8481b 100%);
-  box-shadow: 0 40px 90px -34px rgba(10, 7, 44, 0.9);
-}
-
-/* Lit top edge */
-.mn-banner__card::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65) 30%, rgba(255, 255, 255, 0.28) 70%, transparent);
-}
-
-.mn-banner__grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 28px 36px;
-  margin: 0;
-}
-
-.mn-banner__col {
-  min-width: 0;
-}
-
-.mn-banner__label {
-  margin: 0 0 6px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2.2px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.mn-banner__value {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #fff;
-  overflow-wrap: break-word;
-}
-.mn-banner__value + .mn-banner__label {
-  margin-top: 18px;
-}
-.mn-banner__value a {
-  color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0);
-  transition: border-color 0.35s var(--hero-ease);
-}
-.mn-banner__value a:hover {
-  border-bottom-color: rgba(255, 255, 255, 0.85);
-}
-
-.mn-banner__live {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.mn-banner__live::before {
-  content: '';
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #7cf7b0;
-  box-shadow: 0 0 10px 2px rgba(124, 247, 176, 0.7);
-}
-
-/* Social */
-
-.mn-banner__social {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.mn-social {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 15px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.42);
-  transition: box-shadow 0.5s var(--hero-ease), background-color 0.5s var(--hero-ease),
-    color 0.5s var(--hero-ease);
-}
-.mn-social:hover,
-.mn-social:focus-visible {
-  background: #fff;
-  color: var(--orange, #e95523);
-  box-shadow: inset 0 0 0 1px #fff, 0 0 22px 2px rgba(255, 255, 255, 0.6);
+  100% { transform: translateY(320%); }
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
 
-@media (max-width: 1024px) {
-  .mn-hero { padding: 150px 0 170px; }
-  .mn-banner__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .mn-hero__scroll { display: none; }
-  /* Content padding itna kam ho jata hai ki left-edge ticks seedhe
-     headline aur paragraph ko kaat dete hain — inhe hata dena behtar. */
-  .mn-hero__ticks { display: none; }
+@media (max-width: 1100px) {
+  .mn-hero__inner { padding: 0 36px 52px; }
+  .mn-hero__bandbar { padding: 0 36px 22px; }
 }
 
 @media (max-width: 767px) {
-  .mn-hero { padding: 130px 0 140px; min-height: auto; }
-  .mn-hero__inner { padding: 0 24px; }
-  .mn-hero__title { max-width: none; }
-  .mn-hero__desc { font-size: 14px; }
-  .mn-hero__actions { gap: 12px; }
-  .mn-btn { padding: 13px 22px; letter-spacing: 1.8px; }
-  .mn-banner { margin-top: -70px; padding: 0 24px; }
-  .mn-banner__card { padding: 28px 24px; }
-  .mn-banner__grid { grid-template-columns: 1fr; gap: 20px; }
-}
-
-/* ── Reduced motion ────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  .mn-hero__pulse::before,
-  .mn-hero__scroll i::after {
-    animation: none;
+  .mn-hero {
+    padding-top: 112px;
+    min-height: auto;
   }
-  .mn-hero__plate { inset: 0; }
-  .mn-hero__glint { display: none; }
-}
-
-/* ============================================================
-   HERO = A LENS
-   Nav camera ban gayi; hero uska agla kadam hai — lens ke through
-   dekhna. Sab kuch CSS 3D / transforms par hai, koi WebGL nahi.
-   ============================================================ */
-
-/* ── 1. Lens depth stack ───────────────────────────────────── */
-
-/* Stage perspective deti hai, deck uske andar tilt karta hai.
-   Dono alag hain kyunki perspective parent par honi chahiye,
-   warna har child ka apna vanishing point ban jata hai. */
-.mn-hero__stage {
-  position: absolute;
-  inset: 0;
-  z-index: -3;
-  overflow: hidden;
-  pointer-events: none;
-  perspective: 1150px;
-  perspective-origin: 50% 46%;
-}
-
-.mn-hero__deck {
-  position: absolute;
-  /* Deck jaan-boojh kar oversized hai: tilt hone par kinare
-     viewport ke andar nahi aane chahiye. */
-  inset: -9%;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
-.mn-hero__ring {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: inset 0 0 60px rgba(120, 140, 255, 0.09);
-}
-
-/* Har teesri ring me halka glass sheen, taaki ye khokhle circle
-   na lagein balki lens elements lagein. */
-.mn-hero__ring--glass {
-  background: radial-gradient(
-    circle at 38% 32%,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(120, 140, 255, 0.03) 42%,
-    transparent 70%
-  );
-  border-color: rgba(255, 255, 255, 0.26);
-}
-
-/* Sabse andar wala element — halka orange coating, jaise lens par
-   anti-reflective coating chamakti hai. */
-.mn-hero__ring--coated {
-  border-color: rgba(233, 85, 35, 0.42);
-  box-shadow: inset 0 0 80px rgba(233, 85, 35, 0.07);
-}
-
-/* ── 4. Anamorphic lens flare ──────────────────────────────── */
-
-.mn-hero__flare,
-.mn-hero__ghosts {
-  position: absolute;
-  left: 0;
-  top: 0;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.mn-hero__flare-inner {
-  position: relative;
-  transform: translate(-50%, -50%);
-}
-
-/* Horizontal streak — anamorphic lens ki pehchaan */
-.mn-hero__streak {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 46vw;
-  height: 2px;
-  transform: translate(-50%, -50%);
-  filter: blur(2.5px);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(236, 126, 105, 0.35) 28%,
-    rgba(255, 214, 196, 0.75) 50%,
-    rgba(236, 126, 105, 0.35) 72%,
-    transparent 100%
-  );
-}
-
-.mn-hero__flare-core {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 160px;
-  height: 160px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  filter: blur(22px);
-  background: radial-gradient(
-    circle,
-    rgba(255, 208, 178, 0.5) 0%,
-    rgba(233, 85, 35, 0.28) 38%,
-    transparent 70%
-  );
-}
-
-/* Ghosts optical centre ki taraf ek line me baithte hain — asli
-   flare aisa hi behave karta hai. Container ko us line par ghuma
-   dete hain, phir ghosts sirf local X par baith jaate hain. */
-.mn-hero__ghost {
-  position: absolute;
-  top: 0;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: screen;
-  /* Blur ke bina ye dhool ke kan lagte hain, lens ghost nahi */
-  filter: blur(3px);
-}
-
-/* ── 3. Focus point ────────────────────────────────────────── */
-/* CSS .mn-hero__plate--soft / --sharp me upar define hai */
-
-/* ── 2. Aperture reveal ────────────────────────────────────── */
-
-.mn-hero__aperture {
-  position: absolute;
-  inset: 0;
-  z-index: 9;
-  pointer-events: none;
-  background: #100c46;
-}
-
-/* Rim par sirf gradient hai, koi thos background nahi —
-   ye khulte hue kinare ki chamak hai. */
-.mn-hero__aperture--rim {
-  background: none;
-  z-index: 10;
-}
-
-/* ── 6. Exposure readout ───────────────────────────────────── */
-
-.mn-hero__exif {
-  position: absolute;
-  left: 40px;
-  bottom: 208px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-family: var(--font-heading, 'Roboto Slab', serif);
-  font-size: 10px;
-  letter-spacing: 1.6px;
-  font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.38);
-  pointer-events: none;
-}
-.mn-hero__exif b {
-  font-weight: 700;
-  color: var(--hero-orange);
-}
-.mn-hero__exif span {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
-}
-
-@media (max-width: 1280px) {
-  .mn-hero__exif { display: none; }
+  .mn-hero__inner { padding: 0 22px 44px; }
+  .mn-hero__title {
+    font-size: clamp(2.1rem, 11vw, 3.2rem);
+    line-height: 1.02;
+  }
+  .mn-hero__desc { font-size: 14px; margin-bottom: 34px; }
+  .mn-hero__actions { gap: 20px; flex-direction: column; align-items: flex-start; }
+  .mn-cta__disc { width: 50px; height: 50px; }
+  .mn-hero__band { height: clamp(260px, 42vh, 360px); }
+  .mn-hero__bandbar {
+    grid-template-columns: 1fr auto;
+    padding: 0 22px 18px;
+    font-size: 9px;
+    letter-spacing: 2px;
+  }
+  /* The third label has nowhere to go at this width without crowding
+     the scroll cue, so it steps out rather than wrapping. */
+  .mn-hero__bandbar > span:last-child { display: none; }
 }
 
 /* ── Reduced motion ────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  /* Blur/mask wala focus effect band — ye motion bhi hai aur
-     legibility ka maamla bhi. */
-  .mn-hero__plate--soft { filter: none; }
-  .mn-hero__streak,
-  .mn-hero__flare-core,
-  .mn-hero__ghost { opacity: 0.25; }
+  .mn-hero__scroll i::after { animation: none; }
+  .mn-cta__disc,
+  .mn-cta__disc svg { transition-duration: 0.01ms; }
 }

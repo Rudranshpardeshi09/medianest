@@ -1,0 +1,97 @@
+/* ============================================================
+   SHARED PRIMITIVES
+   Used by every rebuilt section. Imported once from main.jsx.
+   ============================================================ */
+
+/* ── MaskText ──────────────────────────────────────────────── */
+
+/* The clipping box. The padding / negative-margin pair gives descenders
+   (g, y, p) and any italic overhang room to sit inside the clip without
+   adding to the line height. */
+.mn-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
+}
+
+.mn-mask__word {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ── RevealImage ───────────────────────────────────────────── */
+
+.mn-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.mn-reveal img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── EdgeTitle ─────────────────────────────────────────────── */
+
+.mn-edge {
+  position: absolute;
+  inset-block: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: none;
+}
+
+/* Below this width there is no gutter to put it in without colliding
+   with the content column. */
+@media (min-width: 1200px) {
+  .mn-edge { display: block; }
+}
+
+.mn-edge--left { left: 8px; }
+.mn-edge--right { right: 8px; }
+
+.mn-edge__sticky {
+  position: sticky;
+  top: 20vh;
+}
+
+.mn-edge__stack {
+  position: relative;
+}
+
+.mn-edge__base,
+.mn-edge__fill {
+  writing-mode: vertical-rl;
+  display: block;
+  white-space: nowrap;
+  user-select: none;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 700;
+  font-size: clamp(3.2rem, 6.4vw, 7rem);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Hollow at rest */
+.mn-edge__base {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--mn-paper-edge, #ececf2);
+}
+
+/* Fills as the section scrolls through */
+.mn-edge__fill {
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--mn-orange, #e95523);
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-edge__fill { display: none; }
+}

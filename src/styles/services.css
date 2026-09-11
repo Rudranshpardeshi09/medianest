@@ -1,0 +1,321 @@
+/* ============================================================
+   SERVICES — sticky rail / scrolling cards
+   Light editorial theme, continuing hero + about.
+   ============================================================ */
+
+.mn-svc {
+  position: relative;
+  isolation: isolate;
+  background: var(--mn-paper-tint, #f6f6f9);
+  padding: clamp(72px, 11vh, 140px) 0 clamp(72px, 11vh, 140px);
+  /* `clip`, not `hidden`. overflow:hidden makes this section the sticky
+     scroll container, so the rail stuck to a box that never scrolls and
+     slid away by mid-section. `clip` clips without creating one. */
+  overflow: clip;
+}
+
+.mn-svc__inner {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 64px;
+  /* NOT align-items: start. That collapses the rail's cell to the rail's
+     own height, leaving position: sticky no range to travel within, so it
+     scrolled away halfway down the section. The column must stretch. */
+  align-items: stretch;
+}
+
+/* Grid item stretches; the rail inside it is what sticks. */
+.mn-svc__railcol {
+  position: relative;
+}
+
+/* ── Sticky rail ───────────────────────────────────────────── */
+
+.mn-svc__rail {
+  position: sticky;
+  top: 15vh;
+}
+
+.mn-svc__word {
+  margin: 0 0 28px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 5.6vw, 5rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: var(--mn-ink, #100d2b);
+}
+
+/* ── Service list — all three always visible ───────────────── */
+
+.mn-svc__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--mn-paper-edge, #ececf2);
+}
+
+.mn-svc__listitem {
+  border-bottom: 1px solid var(--mn-paper-edge, #ececf2);
+}
+
+.mn-svc__listbtn {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mn-svc__listnum {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-size: 13px;
+  flex: 0 0 auto;
+  color: var(--mn-ink-micro, #8e8ba1);
+  transition: color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.mn-svc__listtitle {
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--mn-ink-dim, #7d7a92);
+  transition: color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.mn-svc__listitem[data-on='true'] .mn-svc__listnum { color: var(--mn-orange, #e95523); }
+.mn-svc__listitem[data-on='true'] .mn-svc__listtitle { color: var(--mn-ink, #100d2b); }
+.mn-svc__listbtn:hover .mn-svc__listtitle { color: var(--mn-ink, #100d2b); }
+
+.mn-svc__detail {
+  overflow: hidden;
+}
+
+.mn-svc__desc {
+  margin: 0 0 16px;
+  max-width: 40ch;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--mn-ink-body, #5b5870);
+}
+
+.mn-svc__tags {
+  padding-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mn-svc__tags li {
+  padding: 6px 13px;
+  border: 1px solid var(--mn-paper-edge, #ececf2);
+  border-radius: 999px;
+  background: var(--mn-paper, #fff);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--mn-ink-dim, #7d7a92);
+}
+
+/* ── Cards ─────────────────────────────────────────────────── */
+
+.mn-svc__cards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 8vh, 90px);
+}
+
+/* Cards run narrower than the column and alternate their alignment.
+   Two reasons: three identical full-width blocks read as a template, and
+   at full width the 370x500 source images were being upscaled 2.46x into
+   mush. At this width the upscale drops to roughly 1.25x. */
+.mn-svc__card {
+  position: relative;
+  width: 62%;
+}
+.mn-svc__card:nth-child(even) {
+  margin-left: auto;
+}
+
+.mn-svc__frame {
+  position: relative;
+  /* 3:4 matches the source's 370x500 almost exactly, so cover crops
+     next to nothing. */
+  aspect-ratio: 3 / 4;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--mn-paper-edge, #ececf2);
+}
+.mn-svc__frame .mn-reveal {
+  position: absolute;
+  inset: 0;
+}
+.mn-svc__frame img {
+  transition: transform 1.3s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-svc__card:hover .mn-svc__frame img {
+  transform: scale(1.05);
+}
+
+/* Scrim only at the foot, where the title sits */
+.mn-svc__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(16, 13, 43, 0) 42%, rgba(16, 13, 43, 0.78) 100%);
+  pointer-events: none;
+}
+
+.mn-svc__cardhead {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 30px;
+  color: #fff;
+}
+
+.mn-svc__cardnum {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--mn-orange, #e95523);
+}
+
+.mn-svc__cardtitle {
+  margin: 0;
+  max-width: 17ch;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(1.15rem, 1.9vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.mn-svc__go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--mn-orange, #e95523);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.55s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform 0.55s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-svc__card:hover .mn-svc__go {
+  opacity: 1;
+  transform: translateY(0);
+}
+.mn-svc__go svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.9;
+}
+
+/* Tags shown under each card only where the rail is hidden */
+.mn-svc__cardtags {
+  display: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ── Secondary disciplines ─────────────────────────────────── */
+
+.mn-svc__more {
+  width: 100%;
+  max-width: 1500px;
+  margin: clamp(48px, 8vh, 90px) auto 0;
+  padding: 0 56px;
+}
+
+.mn-svc__morelist {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--mn-paper-edge, #ececf2);
+}
+.mn-svc__morelist li {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 22px 4px;
+  border-bottom: 1px solid var(--mn-paper-edge, #ececf2);
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--mn-ink, #100d2b);
+}
+.mn-svc__morelist i {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-size: 11px;
+  color: var(--mn-orange, #e95523);
+  flex: 0 0 auto;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .mn-svc__inner {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 0 36px;
+  }
+  /* Un-pin: a sticky rail above stacked cards just floats over them */
+  .mn-svc__rail { position: static; }
+  /* Cards apna number aur title khud carry karte hain, aur rail ab
+     un-pinned hai — list dohraav ban jati, isliye hata dete hain. */
+  .mn-svc__list { display: none; }
+  .mn-svc__more { padding: 0 36px; }
+  .mn-svc__card,
+  .mn-svc__card:nth-child(even) { width: 100%; margin-left: 0; }
+  .mn-svc__morelist { grid-template-columns: repeat(2, 1fr); }
+  .mn-svc__cardtags { display: flex; }
+}
+
+@media (max-width: 767px) {
+  .mn-svc__inner,
+  .mn-svc__more { padding: 0 22px; }
+  .mn-svc__card,
+  .mn-svc__card:nth-child(even) { width: 100%; margin-left: 0; }
+  .mn-svc__frame { aspect-ratio: 4 / 5; }
+  .mn-svc__cardhead { padding: 22px; }
+  .mn-svc__morelist { grid-template-columns: 1fr; }
+  .mn-svc__go { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-svc__frame img,
+  .mn-svc__go { transition-duration: 0.01ms; }
+}

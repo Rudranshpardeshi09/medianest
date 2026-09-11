@@ -2,33 +2,51 @@
    MEDIA NEST — DESIGN TOKENS
    Single source of truth. Imported first, before any other CSS.
 
-   Surfaces are navy throughout (see DESIGN-PLAN.md §2). The original
-   design alternated navy with #f5f5f5 full-bleed sections; that is
-   dropped. Contrast now comes from THREE navy depths rather than
-   switching to white, so the cinematic mood the hero sets is never
-   reset mid-page. The paper tone survives only as an accent.
+   The page is paper-first: the hero set a light editorial theme, so
+   white is the primary field and rhythm comes from paper tints. Two
+   dark bands punctuate it (Why Choose Us, and the footer) and both sit
+   in the same navy family as the brand mark, differing only in depth.
    ============================================================ */
 
 :root {
-  /* ── Surfaces: three depths, not navy-vs-white ───────────── */
-  --mn-navy: #1a1369; /* primary field */
-  --mn-navy-deep: #120d4f; /* recessed — shutter, footers, wells */
-  --mn-navy-lift: #232a6b; /* raised — cards, panels, hover states */
+  /* ── Surfaces: light editorial field ─────────────────────────
+     The hero established a light theme (storyboard frame 08), so the
+     page is paper-first. Rhythm comes from three paper tints plus the
+     occasional full-ink section — not from alternating navy/white. */
+  --mn-paper: #ffffff; /* primary field */
+  --mn-paper-tint: #f6f6f9; /* recessed band, subtle separation */
+  --mn-paper-edge: #ececf2; /* hairlines, card borders */
+
+  /* Ink surfaces — used sparingly, for one or two contrast sections */
+  /* Deep end of the SAME navy family as --mn-navy (hue ~245, s ~66%).
+     The previous #100d2b sat at s54% l11% — its hue matched, but the
+     drop in saturation made it read as a different colour next to the
+     Why Choose Us band. */
+  --mn-ink-surface: #100c3a;
+  --mn-ink-surface-lift: #1a1550;
+
+  /* Legacy navy, retained for the brand mark and the parked scaffold */
+  --mn-navy: #1a1369;
+  --mn-navy-deep: #120d4f;
+  --mn-navy-lift: #232a6b;
 
   /* ── Accent: orange is the only colour on the page ───────── */
   --mn-orange: #e95523;
   --mn-orange-soft: #ec7e69;
   --mn-orange-deep: #b8380c; /* pressed / gradient floor */
 
-  /* ── Ink ─────────────────────────────────────────────────── */
-  --mn-ink: #ffffff;
-  --mn-ink-body: rgba(255, 255, 255, 0.78);
-  --mn-ink-dim: rgba(255, 255, 255, 0.55);
-  --mn-ink-micro: rgba(255, 255, 255, 0.38);
-  --mn-hairline: rgba(255, 255, 255, 0.12);
+  /* ── Ink on paper ────────────────────────────────────────── */
+  --mn-ink: #100d2b; /* display type */
+  --mn-ink-body: #5b5870; /* body copy */
+  --mn-ink-dim: #7d7a92; /* secondary */
+  --mn-ink-micro: #8e8ba1; /* tracked-out micro type */
+  --mn-hairline: rgba(16, 13, 43, 0.1);
 
-  /* Paper — accent only. Never a section background. */
-  --mn-paper: #f5f5f5;
+  /* ── Ink on dark, for the contrast sections ──────────────── */
+  --mn-on-dark: #ffffff;
+  --mn-on-dark-body: rgba(255, 255, 255, 0.74);
+  --mn-on-dark-micro: rgba(255, 255, 255, 0.42);
+  --mn-hairline-dark: rgba(255, 255, 255, 0.14);
 
   /* ── Type ────────────────────────────────────────────────── */
   --mn-font-sans: 'Roboto', system-ui, -apple-system, sans-serif;
@@ -58,7 +76,10 @@
   --dark-blue: var(--mn-navy);
   --orange: var(--mn-orange);
   --orange-light: var(--mn-orange-soft);
-  --white: var(--mn-ink);
+  /* Literal, NOT var(--mn-ink): --mn-ink is now near-black for the light
+     theme, and globals.css uses --white 25 times for actual white text
+     and panels. Aliasing it would invert every one of them. */
+  --white: #ffffff;
   --black: #000000;
   --font-primary: var(--mn-font-sans);
   --font-heading: var(--mn-font-slab);
