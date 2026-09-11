@@ -18,17 +18,17 @@ export default function Clients() {
   }, [])
 
   const row1 = [
-    { img: '/images/IBSF-Logo.png', link: 'https://www.instagram.com/ibsf.media/', alt: 'IBSF' },
-    { img: '/images/ACBS-LOGO.png', link: 'https://www.instagram.com/acbsmedia/', alt: 'ACBS' },
-    { img: '/images/PABSA-LOGO.png', link: 'https://www.instagram.com/pabsaofficial/', alt: 'PABSA' },
-    { img: '/images/OGQ_logo_dark.jpg', link: 'https://www.ogq.org', alt: 'OGQ' },
+    { img: '/media/IBSF-Logo.webp', link: 'https://www.instagram.com/ibsf.media/', alt: 'IBSF' },
+    { img: '/media/ACBS-LOGO.webp', link: 'https://www.instagram.com/acbsmedia/', alt: 'ACBS' },
+    { img: '/media/PABSA-LOGO.webp', link: 'https://www.instagram.com/pabsaofficial/', alt: 'PABSA' },
+    { img: '/media/OGQ_logo_dark.webp', link: 'https://www.ogq.org', alt: 'OGQ' },
   ]
 
   const row2 = [
-    { img: '/images/indianoil.jpg', link: 'https://iocl.com', alt: 'Indian Oil' },
-    { img: '/images/OIL.jpg', link: 'https://www.oil-india.com', alt: 'OIL' },
-    { img: '/images/PSPB-Logo-White-Background.png', link: 'https://www.instagram.com/pspblive/', alt: 'PSPB' },
-    { img: '/images/CSI-Logo-Round-1.png', link: 'https://www.instagram.com/cuesportsindia/', alt: 'CSI' },
+    { img: '/media/indianoil.webp', link: 'https://iocl.com', alt: 'Indian Oil' },
+    { img: '/media/OIL.webp', link: 'https://www.oil-india.com', alt: 'OIL' },
+    { img: '/media/PSPB-Logo-White-Background.webp', link: 'https://www.instagram.com/pspblive/', alt: 'PSPB' },
+    { img: '/media/CSI-Logo-Round-1.webp', link: 'https://www.instagram.com/cuesportsindia/', alt: 'CSI' },
   ]
 
   return (

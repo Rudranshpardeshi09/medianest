@@ -24,7 +24,7 @@ export default function Team() {
       {/* Aditi Singh */}
       <div className="team-member">
         <div className="team-photo animate-on-scroll fade-in-left">
-          <img src="/images/ADITI-MAM-1.jpg" alt="Aditi Singh" />
+          <img src="/media/ADITI-MAM-1.webp" alt="Aditi Singh" />
         </div>
         <div className="team-info animate-on-scroll fade-in">
           <h3>ADITI SINGH</h3>
@@ -60,7 +60,7 @@ export default function Team() {
           </div>
         </div>
         <div className="team-photo animate-on-scroll fade-in-right">
-          <img src="/images/VIVEK-SIR-2.jpg" alt="Vivek Pathak" />
+          <img src="/media/VIVEK-SIR-2.webp" alt="Vivek Pathak" />
         </div>
       </div>
     </section>

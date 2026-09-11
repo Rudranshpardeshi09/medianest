@@ -18,14 +18,14 @@ export default function Portfolio() {
   }, [])
 
   const items = [
-    { img: '/images/photography.jpg', title: 'Photography', classes: 'p-half p-full-height' },
-    { img: '/images/cinematography_main.jpg', title: 'CINEMATOGRAPHY', classes: 'p-half' },
-    { img: '/images/INTERVIEW.jpeg', title: 'INTERVIEW', classes: '' },
-    { img: '/images/LIVE-STREAM.jpg', title: 'LIVE STREAM', classes: '' },
-    { img: '/images/video-edit.jpg', title: 'VIDEO EDIT', classes: '' },
-    { img: '/images/graphic-1.jpg', title: 'GRAPHIC DESIGN', classes: 'p-full-height' },
-    { img: '/images/EVENT.jpg', title: 'EVENT', classes: 'p-half p-full-height' },
-    { img: '/images/new_DIGITAL-MARKETING.jpg', title: 'DIGITAL MARKETING', classes: '' },
+    { img: '/media/photography.webp', title: 'Photography', classes: 'p-half p-full-height' },
+    { img: '/media/cinematography_main.webp', title: 'CINEMATOGRAPHY', classes: 'p-half' },
+    { img: '/media/INTERVIEW.webp', title: 'INTERVIEW', classes: '' },
+    { img: '/media/LIVE-STREAM.webp', title: 'LIVE STREAM', classes: '' },
+    { img: '/media/video-edit.webp', title: 'VIDEO EDIT', classes: '' },
+    { img: '/media/graphic-1.webp', title: 'GRAPHIC DESIGN', classes: 'p-full-height' },
+    { img: '/media/EVENT.webp', title: 'EVENT', classes: 'p-half p-full-height' },
+    { img: '/media/new_DIGITAL-MARKETING.webp', title: 'DIGITAL MARKETING', classes: '' },
   ]
 
   return (

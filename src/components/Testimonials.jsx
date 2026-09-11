@@ -6,13 +6,13 @@ export default function Testimonials() {
   const testimonials = [
     {
       content: 'MediaNest helps power PABSA, bringing billiards and snooker to the forefront in the Americas. We extends best wishes for their continued growth and success.',
-      img: '/images/ajeya-1.jpg',
+      img: '/media/ajeya-1.webp',
       name: 'AJEYA PRABHAKAR',
       position: 'President, Pan American Billiards & Snooker Association',
     },
     {
       content: 'I extend my best wishes to the Media Nest team for continued success and creative excellence. As you lead the way in brand image management, may your innovative ideas keep inspiring brilliance and leaving a lasting impact on the brands you collaborate with.',
-      img: '/images/spskalra.jpg',
+      img: '/media/spskalra.webp',
       name: 'SPS KALRA',
       position: 'Fashion & Cinematic Photographer',
     },

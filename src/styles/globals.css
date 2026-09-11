@@ -1,15 +1,7 @@
 /* ===== GLOBALS & RESET ===== */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root {
-  --dark-blue: #1a1369;
-  --orange: #e95523;
-  --orange-light: #ec7e69;
-  --white: #ffffff;
-  --black: #000000;
-  --font-primary: 'Roboto', sans-serif;
-  --font-heading: 'Roboto Slab', serif;
-}
+/* Tokens live in tokens.css (imported first). */
 
 html { scroll-behavior: smooth; }
 
@@ -68,7 +60,7 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-primary); font-weight: 600; }
 /* ===== HERO SECTION ===== */
 .section-hero {
   min-height: 100vh; display: flex; align-items: center;
-  background-image: url('/images/website-13.jpg');
+  background-image: url('/media/website-13.webp');
   background-size: cover; background-position: center center; background-repeat: no-repeat;
   padding: 120px 0 60px; position: relative;
 }

@@ -19,17 +19,17 @@ export default function Services() {
 
   const services = [
     {
-      img: '/images/PHOTOGRAPHY-AND-BRAND-1.jpg',
+      img: '/media/PHOTOGRAPHY-AND-BRAND-1.webp',
       title: "Photography & Brand's Visual Presence",
       desc: 'Professional photography that highlights the unique aspects of your brand.',
     },
     {
-      img: '/images/CINEMATOGRAPHY-PRODUCTION-1.jpg',
+      img: '/media/CINEMATOGRAPHY-PRODUCTION-1.webp',
       title: 'Cinematography & Quality Production',
       desc: 'Creative storytelling through high-quality, engaging film content.',
     },
     {
-      img: '/images/BRAND-IMAGE-STRATEGY-1.jpg',
+      img: '/media/BRAND-IMAGE-STRATEGY-1.webp',
       title: "Brand Image Strategy & Consultation",
       desc: "Tailored guidance to refine and align your brand's image with its business goals.",
     },

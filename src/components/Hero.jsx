@@ -1,7 +1,10 @@
-import { Fragment, useRef } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import {
+  animate,
   motion,
+  useMotionTemplate,
   useMotionValue,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -19,6 +22,26 @@ const LINES = [
   [{ t: 'Management' }, { t: '&' }, { t: 'Consultancy' }],
 ]
 
+/* Lens elements: same optical axis, alag depth. Perspective inhe apne
+   aap chhota-bada dikhati hai, isliye size me halka hi farak hai. */
+const RINGS = [
+  { z: -620, size: 78, cls: '' },
+  { z: -480, size: 66, cls: 'mn-hero__ring--glass' },
+  { z: -350, size: 55, cls: '' },
+  { z: -235, size: 44, cls: 'mn-hero__ring--glass' },
+  { z: -130, size: 33, cls: 'mn-hero__ring--coated' },
+]
+
+/* Flare ghosts — optical centre ki taraf badhti hui line par */
+const GHOSTS = [
+  { d: 95, s: 26, c: 'rgba(236,126,105,0.22)' },
+  { d: 205, s: 13, c: 'rgba(255,205,170,0.30)' },
+  { d: 335, s: 42, c: 'rgba(120,140,255,0.13)' },
+  { d: 470, s: 19, c: 'rgba(233,85,35,0.20)' },
+]
+
+const F_STOPS = ['1.8', '2.8', '4', '5.6', '8', '11', '16']
+
 const SOCIAL = [
   { icon: 'fab fa-facebook-f', label: 'Facebook', href: 'https://www.facebook.com/medianest2024' },
   { icon: 'fab fa-instagram', label: 'Instagram', href: 'https://www.instagram.com/medianest.official/' },
@@ -34,44 +57,81 @@ const SOCIAL = [
 export default function Hero() {
   const heroRef = useRef(null)
   const reduced = useReducedMotion()
+  const [shutterOpen, setShutterOpen] = useState(false)
+  const [fStop, setFStop] = useState(F_STOPS[0])
 
-  /* ── Scroll parallax ───────────────────────────────────────
-     Plate drifts slower than the page and dims as it leaves; the
-     copy lifts and fades. Together they read as a camera move. */
+  /* ── Scroll ────────────────────────────────────────────────
+     Plate dheere drift karta hai, aur camera lens stack ke
+     *andar se* guzarti hai (deck ka translateZ badhta hai). */
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   })
-  const plateY = useTransform(scrollYProgress, [0, 1], ['0%', '18%'])
-  const plateScale = useTransform(scrollYProgress, [0, 1], [1, 1.14])
+  const plateY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
+  const plateScale = useTransform(scrollYProgress, [0, 1], [1, 1.12])
+  const deckZ = useTransform(scrollYProgress, [0, 1], [0, 430])
   const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '-22%'])
   const contentFade = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
-  /* ── Cursor parallax + orbs ────────────────────────────────
-     One listener on the hero drives everything. Values are
-     normalised to -0.5..0.5 so depth is resolution-independent. */
+  /* 6. Exposure readout: scroll ke saath aperture "stop down" hoti hai */
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    const i = Math.min(F_STOPS.length - 1, Math.max(0, Math.floor(v * F_STOPS.length)))
+    setFStop((prev) => (prev === F_STOPS[i] ? prev : F_STOPS[i]))
+  })
+
+  /* ── Cursor ────────────────────────────────────────────────
+     Ek hi listener sab kuch chalata hai. mx/my -0.5..0.5 me
+     normalised hain taaki depth resolution-independent rahe. */
   const mx = useMotionValue(0)
   const my = useMotionValue(0)
-  const rawX = useMotionValue(-600)
-  const rawY = useMotionValue(-600)
+  const focusX = useMotionValue(50)
+  const focusY = useMotionValue(50)
+  const flareX = useMotionValue(-500)
+  const flareY = useMotionValue(-500)
+  const flareA = useMotionValue(0)
 
-  const shapeX = useSpring(useTransform(mx, (v) => v * -46), { stiffness: 46, damping: 18 })
-  const shapeY = useSpring(useTransform(my, (v) => v * -34), { stiffness: 46, damping: 18 })
+  const soft = { stiffness: 60, damping: 18 }
+
+  /* 1. Deck tilt — asli rotateX/rotateY, sirf translate nahi */
+  const rotY = useSpring(useTransform(mx, (v) => v * 13), soft)
+  const rotX = useSpring(useTransform(my, (v) => v * -9), soft)
   const copyX = useSpring(useTransform(mx, (v) => v * 14), { stiffness: 60, damping: 20 })
 
-  // Mismatched springs: the warm orb drags well behind the cool one.
-  const warmX = useSpring(rawX, { stiffness: 24, damping: 22, mass: 1.1 })
-  const warmY = useSpring(rawY, { stiffness: 24, damping: 22, mass: 1.1 })
-  const coolX = useSpring(rawX, { stiffness: 58, damping: 20, mass: 0.7 })
-  const coolY = useSpring(rawY, { stiffness: 58, damping: 20, mass: 0.7 })
+  /* 3. Focus point — mask cursor ke peeche halka lag ke chalta hai */
+  const fx = useSpring(focusX, { stiffness: 110, damping: 20 })
+  const fy = useSpring(focusY, { stiffness: 110, damping: 20 })
+  const focusMask = useMotionTemplate`radial-gradient(circle 250px at ${fx}% ${fy}%, #000 26%, rgba(0,0,0,0.45) 55%, transparent 78%)`
+
+  /* 4. Flare — cursor ke ulti taraf, optical centre se hoke */
+  const flx = useSpring(flareX, { stiffness: 45, damping: 20, mass: 0.9 })
+  const fly = useSpring(flareY, { stiffness: 45, damping: 20, mass: 0.9 })
+
+  /* 5. Chromatic aberration — kinaron par halke red/cyan fringes.
+     Ek hi element par text-shadow: text duplicate nahi hota, isliye
+     screen reader ko headline do baar nahi milti. */
+  const abR = useTransform(mx, (v) => (v * 4.5).toFixed(2))
+  const abC = useTransform(mx, (v) => (-v * 4.5).toFixed(2))
+  const titleShadow = useMotionTemplate`${abR}px 0 0 rgba(255,58,96,0.26), ${abC}px 0 0 rgba(0,224,255,0.20)`
 
   const onPointerMove = (e) => {
     if (reduced || !heroRef.current) return
     const r = heroRef.current.getBoundingClientRect()
-    mx.set((e.clientX - r.left) / r.width - 0.5)
-    my.set((e.clientY - r.top) / r.height - 0.5)
-    rawX.set(e.clientX - r.left)
-    rawY.set(e.clientY - r.top)
+    const px = e.clientX - r.left
+    const py = e.clientY - r.top
+
+    mx.set(px / r.width - 0.5)
+    my.set(py / r.height - 0.5)
+    focusX.set((px / r.width) * 100)
+    focusY.set((py / r.height) * 100)
+
+    // Flare optical centre ke aar-paar mirror hota hai
+    const gx = r.width - px
+    const gy = r.height - py
+    flareX.set(gx)
+    flareY.set(gy)
+    // Angle ko spring NAHI karte: ±180 par wrap hote waqt spring
+    // poora chakkar ghuma deti hai.
+    flareA.set((Math.atan2(r.height / 2 - gy, r.width / 2 - gx) * 180) / Math.PI)
   }
 
   const onPointerLeave = () => {
@@ -79,12 +139,37 @@ export default function Hero() {
     my.set(0)
   }
 
+  /* ── 2. Aperture reveal ────────────────────────────────────
+     Pehle ye ek <mask> ke andar <polygon> tha jo scale hota tha —
+     par <defs> ke elements render nahi hote aur Chrome un par
+     animation skip kar deta hai, to scale 0 par hi atka reh gaya
+     (yaani poora navy block, phir achanak gayab). Ab overlay ek
+     saadi div hai jiska radial mask ek motion value se chalta hai:
+     ye render hota hai, isliye bharose se animate hota hai. */
+  const irisR = useMotionValue(0)
+  const irisMask = useMotionTemplate`radial-gradient(circle ${irisR}px at 50% 50%, transparent 99%, #000 100%)`
+  const irisRing = useMotionTemplate`radial-gradient(circle ${irisR}px at 50% 50%, transparent 97.5%, rgba(233,85,35,0.55) 99%, transparent 100.5%)`
+
+  useEffect(() => {
+    if (reduced) {
+      setShutterOpen(true)
+      return
+    }
+    // Viewport ke kone tak pahunchna zaroori hai, warna kinare dhake reh jayenge.
+    const target = Math.hypot(window.innerWidth, window.innerHeight) * 1.05
+    const controls = animate(irisR, target, {
+      duration: 1,
+      ease: [0.7, 0, 0.2, 1],
+      onComplete: () => setShutterOpen(true),
+    })
+    return () => controls.stop()
+  }, [reduced, irisR])
+
   const goTo = (id) => {
     const el = document.querySelector(id)
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  // Words reveal in reading order across both lines.
   let wordIndex = -1
 
   return (
@@ -96,36 +181,85 @@ export default function Hero() {
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
       >
-        {/* Theme's arch/circle plate, on a slow parallax */}
-        <motion.div
-          className="mn-hero__plate"
-          aria-hidden
-          style={reduced ? undefined : { y: plateY, scale: plateScale }}
-        />
+        {/* ── 1 + 3: lens stack + focus ─────────────────── */}
+        <div className="mn-hero__stage" aria-hidden>
+          <motion.div
+            className="mn-hero__deck"
+            style={reduced ? undefined : { rotateX: rotX, rotateY: rotY, z: deckZ }}
+          >
+            {/* Soft base copy */}
+            <motion.div
+              className="mn-hero__plate mn-hero__plate--soft"
+              style={reduced ? undefined : { y: plateY, scale: plateScale }}
+            />
+            {/* Sharp copy, cursor ke around hi dikhti hai */}
+            {!reduced && (
+              <motion.div
+                className="mn-hero__plate mn-hero__plate--sharp"
+                style={{
+                  y: plateY,
+                  scale: plateScale,
+                  WebkitMaskImage: focusMask,
+                  maskImage: focusMask,
+                }}
+              />
+            )}
+
+            {RINGS.map((r) => (
+              <div
+                key={r.z}
+                className={`mn-hero__ring ${r.cls}`}
+                style={{
+                  width: `${r.size}vmax`,
+                  height: `${r.size}vmax`,
+                  transform: `translate(-50%, -50%) translateZ(${r.z}px)`,
+                }}
+              />
+            ))}
+          </motion.div>
+        </div>
+
         <div className="mn-hero__veil" aria-hidden />
 
-        {/* Motion graphics */}
+        {/* ── 4: anamorphic flare ───────────────────────── */}
+        {!reduced && (
+          <>
+            <motion.div className="mn-hero__flare" style={{ x: flx, y: fly }} aria-hidden>
+              <div className="mn-hero__flare-inner">
+                <span className="mn-hero__streak" />
+                <span className="mn-hero__flare-core" />
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="mn-hero__ghosts"
+              style={{ x: flx, y: fly, rotate: flareA }}
+              aria-hidden
+            >
+              {GHOSTS.map((g) => (
+                <span
+                  key={g.d}
+                  className="mn-hero__ghost"
+                  style={{
+                    left: `${g.d}px`,
+                    width: `${g.s}px`,
+                    height: `${g.s}px`,
+                    background: g.c,
+                  }}
+                />
+              ))}
+            </motion.div>
+          </>
+        )}
+
+        {/* Theme ke apne motion graphics */}
         <motion.div
           className="mn-hero__shapes"
           aria-hidden
-          style={reduced ? undefined : { x: shapeX, y: shapeY }}
+          style={reduced ? undefined : { x: copyX }}
         >
           <HeroShapes reduced={reduced} />
         </motion.div>
-
-        {/* Cursor-following orbs */}
-        {!reduced && (
-          <div className="mn-hero__shapes" aria-hidden>
-            <motion.div
-              className="mn-hero__orb mn-hero__orb--warm"
-              style={{ x: warmX, y: warmY, translateX: '-50%', translateY: '-50%' }}
-            />
-            <motion.div
-              className="mn-hero__orb mn-hero__orb--cool"
-              style={{ x: coolX, y: coolY, translateX: '-50%', translateY: '-50%' }}
-            />
-          </div>
-        )}
 
         <div className="mn-hero__grain" aria-hidden />
 
@@ -138,19 +272,22 @@ export default function Hero() {
             className="mn-hero__eyebrow"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: EASE, delay: 0.08 }}
+            transition={{ duration: 0.9, ease: EASE, delay: 0.42 }}
           >
             <span className="mn-hero__pulse" aria-hidden />
             Visual Excellence, Tangible Results
             <span className="mn-hero__rule" aria-hidden />
           </motion.p>
 
-          <h1 className="mn-hero__title">
+          <motion.h1
+            className="mn-hero__title"
+            style={reduced ? undefined : { textShadow: titleShadow }}
+          >
             {LINES.map((line, li) => (
               <span className="mn-hero__line" key={li}>
                 {line.map((word, wi) => {
                   wordIndex += 1
-                  const delay = 0.18 + wordIndex * 0.07
+                  const delay = 0.52 + wordIndex * 0.07
                   return (
                     <Fragment key={word.t}>
                       <span className="mn-hero__mask">
@@ -179,13 +316,13 @@ export default function Hero() {
               </span>
             ))}
             {!reduced && <span className="mn-hero__glint" aria-hidden />}
-          </h1>
+          </motion.h1>
 
           <motion.p
             className="mn-hero__desc"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: EASE, delay: 0.58 }}
+            transition={{ duration: 1, ease: EASE, delay: 0.92 }}
           >
             Media Nest is a premier Brand Image Management and Consultancy firm specializing in
             creating and curating impactful visual content that amplifies brand presence and
@@ -198,7 +335,7 @@ export default function Hero() {
             className="mn-hero__actions"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: EASE, delay: 0.72 }}
+            transition={{ duration: 1, ease: EASE, delay: 1.06 }}
           >
             <Magnetic strength={0.3}>
               <button type="button" className="mn-btn" onClick={() => goTo('#services')}>
@@ -219,17 +356,51 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
+        {/* ── 6: exposure readout ───────────────────────── */}
+        <motion.div
+          className="mn-hero__exif"
+          aria-hidden
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.9, delay: 1.3 }}
+          style={reduced ? undefined : { opacity: contentFade }}
+        >
+          ISO 400
+          <span />
+          <b>f/{fStop}</b>
+          <span />
+          1/250
+        </motion.div>
+
         <motion.div
           className="mn-hero__scroll"
           aria-hidden
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.05 }}
+          transition={{ duration: 1, delay: 1.3 }}
           style={reduced ? undefined : { opacity: contentFade }}
         >
           <span>Scroll</span>
           <i />
         </motion.div>
+
+        {/* ── 2: aperture reveal ────────────────────────── */}
+        {!reduced && !shutterOpen && (
+          <>
+            <motion.div
+              className="mn-hero__aperture"
+              aria-hidden
+              style={{ WebkitMaskImage: irisMask, maskImage: irisMask }}
+            />
+            {/* Khulte hue kinare par ember rim — isse ye lens iris
+                lagta hai, sirf ek circle wipe nahi. */}
+            <motion.div
+              className="mn-hero__aperture mn-hero__aperture--rim"
+              aria-hidden
+              style={{ backgroundImage: irisRing }}
+            />
+          </>
+        )}
       </section>
 
       <InfoBanner />
@@ -275,8 +446,9 @@ function BrushUnderline({ delay, reduced }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Motion graphics: arch motifs (the MN mark's language), soft circles
- * and the theme's orange edge ticks.
+ * Theme's own motion graphics: orange edge ticks + the MN arch motif.
+ * (The soft circles were dropped — the lens rings now carry that job,
+ * and two sets of circles read as clutter.)
  * ------------------------------------------------------------------ */
 
 function HeroShapes({ reduced }) {
@@ -303,7 +475,7 @@ function HeroShapes({ reduced }) {
               strokeWidth="3"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.3 + i * 0.12 }}
+              transition={{ duration: 0.8, ease: EASE, delay: 0.72 + i * 0.12 }}
             />
             <motion.circle
               cx="64"
@@ -314,45 +486,14 @@ function HeroShapes({ reduced }) {
               strokeWidth="3"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, ease: EASE, delay: 0.62 + i * 0.12 }}
+              transition={{ duration: 0.5, ease: EASE, delay: 1.02 + i * 0.12 }}
               style={{ transformOrigin: `64px ${y}px` }}
             />
           </g>
         ))}
       </svg>
 
-      {/* Soft circle, top right */}
-      <motion.svg
-        style={{ right: '-6%', top: '-14%' }}
-        width="620"
-        height="620"
-        viewBox="0 0 620 620"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.6, ease: EASE, delay: 0.2 }}
-        {...float(26, 13)}
-      >
-        <circle cx="310" cy="310" r="300" fill="rgba(255,255,255,0.035)" />
-        <circle cx="310" cy="310" r="300" fill="none" stroke="rgba(255,255,255,0.07)" />
-      </motion.svg>
-
-      {/* Soft circle, bottom left */}
-      <motion.svg
-        style={{ left: '6%', bottom: '-20%' }}
-        width="420"
-        height="420"
-        viewBox="0 0 420 420"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.6, ease: EASE, delay: 0.35 }}
-        {...float(20, 16, 1.2)}
-      >
-        <circle cx="210" cy="210" r="204" fill="rgba(91,108,255,0.07)" />
-      </motion.svg>
-
-      {/* Arch cluster, right — echoes the MN monogram.
-          Banner hero ke neeche 120px overlap karta hai, isliye ise
-          upar rakha gaya hai warna wo dhak jaata. */}
+      {/* Arch cluster — echoes the MN monogram */}
       <motion.svg
         style={{ right: '6%', bottom: '26%' }}
         width="360"
@@ -360,7 +501,7 @@ function HeroShapes({ reduced }) {
         viewBox="0 0 360 230"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.5, ease: EASE, delay: 0.5 }}
+        transition={{ duration: 1.5, ease: EASE, delay: 0.8 }}
         {...float(14, 11, 0.6)}
       >
         {[0, 1, 2].map((i) => (
@@ -373,7 +514,7 @@ function HeroShapes({ reduced }) {
             strokeLinecap="round"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 1.5, ease: EASE, delay: 0.3 + i * 0.15 }}
+            transition={{ duration: 1.5, ease: EASE, delay: 0.85 + i * 0.15 }}
           />
         ))}
       </motion.svg>
@@ -404,13 +545,15 @@ function InfoBanner() {
         className="mn-banner__card"
         initial={{ opacity: 0, y: 56 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.15, ease: EASE, delay: 0.8 }}
+        /* Shutter ~1s par khulta hai; banner uske baad aata hai warna
+           wo aperture ke bahar, uske khulne se pehle dikh jata. */
+        transition={{ duration: 1.15, ease: EASE, delay: 1.12 }}
       >
         <motion.dl
           className="mn-banner__grid"
           initial="hidden"
           animate="show"
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 1.0 } } }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 1.3 } } }}
         >
           {cols.map((col, i) => (
             <motion.div

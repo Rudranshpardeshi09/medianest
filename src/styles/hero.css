@@ -5,10 +5,7 @@
    ke purane .hero-* rules se koi takraav nahi hota.
    ============================================================ */
 
-/* Procedural film grain — inline SVG turbulence, zero network cost */
-:root {
-  --mn-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-}
+/* --mn-grain lives in tokens.css */
 
 .mn-hero {
   --hero-navy: var(--dark-blue, #1a1369);
@@ -33,12 +30,27 @@
 
 .mn-hero__plate {
   position: absolute;
-  inset: -8% 0 -8% 0;
-  z-index: -3;
-  background-image: url('/images/website-13.jpg');
+  inset: -10% -6%;
+  background-image: url('/media/website-13.webp');
   background-size: cover;
   background-position: center center;
   will-change: transform;
+}
+
+/* Base copy halki si out-of-focus rehti hai... */
+.mn-hero__plate--soft {
+  filter: blur(7px) saturate(0.92);
+}
+
+/* ...aur sharp copy ke upar ek radial mask hai jo cursor ko follow karta
+   hai. Do copies ka farak hi "lens focus kar raha hai" ka ehsaas deta hai. */
+.mn-hero__plate--sharp {
+  /* Plate ek flat graphic hai, isliye akela blur/sharp ka farak
+     aankh ko pakad me nahi aata. Focus spot ko brightness aur
+     contrast se bhi alag karte hain — tab ye "lens yahan focus
+     kar raha hai" jaisa padha jata hai. */
+  filter: brightness(1.28) contrast(1.14) saturate(1.1);
+  will-change: transform, mask-image;
 }
 
 /* Navy grade + vignette. Jaan-boojh kar halka rakha gaya hai: plate ke
@@ -68,31 +80,6 @@
   overflow: visible;
 }
 
-/* Cursor-following blurred orbs */
-.mn-hero__orb {
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.mn-hero__orb--warm {
-  width: 40rem;
-  height: 40rem;
-  opacity: 0.3;
-  filter: blur(110px);
-  background: radial-gradient(circle, var(--hero-orange) 0%, rgba(233, 85, 35, 0.22) 42%, transparent 68%);
-}
-
-.mn-hero__orb--cool {
-  width: 24rem;
-  height: 24rem;
-  opacity: 0.4;
-  filter: blur(80px);
-  background: radial-gradient(circle, #5b6cff 0%, rgba(91, 108, 255, 0.2) 45%, transparent 70%);
-}
 
 /* Fine grain — inline SVG turbulence, koi network request nahi */
 .mn-hero__grain {
@@ -515,4 +502,190 @@
   }
   .mn-hero__plate { inset: 0; }
   .mn-hero__glint { display: none; }
+}
+
+/* ============================================================
+   HERO = A LENS
+   Nav camera ban gayi; hero uska agla kadam hai — lens ke through
+   dekhna. Sab kuch CSS 3D / transforms par hai, koi WebGL nahi.
+   ============================================================ */
+
+/* ── 1. Lens depth stack ───────────────────────────────────── */
+
+/* Stage perspective deti hai, deck uske andar tilt karta hai.
+   Dono alag hain kyunki perspective parent par honi chahiye,
+   warna har child ka apna vanishing point ban jata hai. */
+.mn-hero__stage {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1150px;
+  perspective-origin: 50% 46%;
+}
+
+.mn-hero__deck {
+  position: absolute;
+  /* Deck jaan-boojh kar oversized hai: tilt hone par kinare
+     viewport ke andar nahi aane chahiye. */
+  inset: -9%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.mn-hero__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 0 60px rgba(120, 140, 255, 0.09);
+}
+
+/* Har teesri ring me halka glass sheen, taaki ye khokhle circle
+   na lagein balki lens elements lagein. */
+.mn-hero__ring--glass {
+  background: radial-gradient(
+    circle at 38% 32%,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(120, 140, 255, 0.03) 42%,
+    transparent 70%
+  );
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+/* Sabse andar wala element — halka orange coating, jaise lens par
+   anti-reflective coating chamakti hai. */
+.mn-hero__ring--coated {
+  border-color: rgba(233, 85, 35, 0.42);
+  box-shadow: inset 0 0 80px rgba(233, 85, 35, 0.07);
+}
+
+/* ── 4. Anamorphic lens flare ──────────────────────────────── */
+
+.mn-hero__flare,
+.mn-hero__ghosts {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.mn-hero__flare-inner {
+  position: relative;
+  transform: translate(-50%, -50%);
+}
+
+/* Horizontal streak — anamorphic lens ki pehchaan */
+.mn-hero__streak {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 46vw;
+  height: 2px;
+  transform: translate(-50%, -50%);
+  filter: blur(2.5px);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(236, 126, 105, 0.35) 28%,
+    rgba(255, 214, 196, 0.75) 50%,
+    rgba(236, 126, 105, 0.35) 72%,
+    transparent 100%
+  );
+}
+
+.mn-hero__flare-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 160px;
+  height: 160px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  filter: blur(22px);
+  background: radial-gradient(
+    circle,
+    rgba(255, 208, 178, 0.5) 0%,
+    rgba(233, 85, 35, 0.28) 38%,
+    transparent 70%
+  );
+}
+
+/* Ghosts optical centre ki taraf ek line me baithte hain — asli
+   flare aisa hi behave karta hai. Container ko us line par ghuma
+   dete hain, phir ghosts sirf local X par baith jaate hain. */
+.mn-hero__ghost {
+  position: absolute;
+  top: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+  /* Blur ke bina ye dhool ke kan lagte hain, lens ghost nahi */
+  filter: blur(3px);
+}
+
+/* ── 3. Focus point ────────────────────────────────────────── */
+/* CSS .mn-hero__plate--soft / --sharp me upar define hai */
+
+/* ── 2. Aperture reveal ────────────────────────────────────── */
+
+.mn-hero__aperture {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  background: #100c46;
+}
+
+/* Rim par sirf gradient hai, koi thos background nahi —
+   ye khulte hue kinare ki chamak hai. */
+.mn-hero__aperture--rim {
+  background: none;
+  z-index: 10;
+}
+
+/* ── 6. Exposure readout ───────────────────────────────────── */
+
+.mn-hero__exif {
+  position: absolute;
+  left: 40px;
+  bottom: 208px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-heading, 'Roboto Slab', serif);
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.38);
+  pointer-events: none;
+}
+.mn-hero__exif b {
+  font-weight: 700;
+  color: var(--hero-orange);
+}
+.mn-hero__exif span {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 1280px) {
+  .mn-hero__exif { display: none; }
+}
+
+/* ── Reduced motion ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Blur/mask wala focus effect band — ye motion bhi hai aur
+     legibility ka maamla bhi. */
+  .mn-hero__plate--soft { filter: none; }
+  .mn-hero__streak,
+  .mn-hero__flare-core,
+  .mn-hero__ghost { opacity: 0.25; }
 }

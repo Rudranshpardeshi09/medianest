@@ -1,0 +1,65 @@
+/* ============================================================
+   MEDIA NEST — DESIGN TOKENS
+   Single source of truth. Imported first, before any other CSS.
+
+   Surfaces are navy throughout (see DESIGN-PLAN.md §2). The original
+   design alternated navy with #f5f5f5 full-bleed sections; that is
+   dropped. Contrast now comes from THREE navy depths rather than
+   switching to white, so the cinematic mood the hero sets is never
+   reset mid-page. The paper tone survives only as an accent.
+   ============================================================ */
+
+:root {
+  /* ── Surfaces: three depths, not navy-vs-white ───────────── */
+  --mn-navy: #1a1369; /* primary field */
+  --mn-navy-deep: #120d4f; /* recessed — shutter, footers, wells */
+  --mn-navy-lift: #232a6b; /* raised — cards, panels, hover states */
+
+  /* ── Accent: orange is the only colour on the page ───────── */
+  --mn-orange: #e95523;
+  --mn-orange-soft: #ec7e69;
+  --mn-orange-deep: #b8380c; /* pressed / gradient floor */
+
+  /* ── Ink ─────────────────────────────────────────────────── */
+  --mn-ink: #ffffff;
+  --mn-ink-body: rgba(255, 255, 255, 0.78);
+  --mn-ink-dim: rgba(255, 255, 255, 0.55);
+  --mn-ink-micro: rgba(255, 255, 255, 0.38);
+  --mn-hairline: rgba(255, 255, 255, 0.12);
+
+  /* Paper — accent only. Never a section background. */
+  --mn-paper: #f5f5f5;
+
+  /* ── Type ────────────────────────────────────────────────── */
+  --mn-font-sans: 'Roboto', system-ui, -apple-system, sans-serif;
+  --mn-font-slab: 'Roboto Slab', Georgia, serif;
+
+  /* ── Motion ──────────────────────────────────────────────── */
+  --mn-ease: cubic-bezier(0.16, 1, 0.3, 1); /* house slow-out */
+  --mn-ease-in-out: cubic-bezier(0.83, 0, 0.17, 1); /* curtains, wipes */
+  --mn-dur-tap: 120ms;
+  --mn-dur-state: 350ms;
+  --mn-dur-hover: 550ms;
+  --mn-dur-enter: 900ms;
+  --mn-dur-text: 1150ms;
+  --mn-dur-curtain: 1200ms;
+  /* Springs live in JS (framer): stiffness 60 / damping 18 for
+     cursor-followers, 380/32 for layout indicators. */
+
+  /* ── Procedural film grain ───────────────────────────────── */
+  /* Inline SVG turbulence — no network request, no image asset. */
+  --mn-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+
+  /* ── Legacy aliases ──────────────────────────────────────────
+     The ten not-yet-redesigned sections still reference these names
+     from the original build. They are aliases, not separate values,
+     so there is exactly one place to change a colour. Remove each
+     alias as its section gets rebuilt. */
+  --dark-blue: var(--mn-navy);
+  --orange: var(--mn-orange);
+  --orange-light: var(--mn-orange-soft);
+  --white: var(--mn-ink);
+  --black: #000000;
+  --font-primary: var(--mn-font-sans);
+  --font-heading: var(--mn-font-slab);
+}
