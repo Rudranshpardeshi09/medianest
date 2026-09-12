@@ -138,7 +138,13 @@
 /* The name is the only element that crosses the portrait's edge. */
 .mn-fnd__name {
   position: relative;
-  margin: 0 0 22px -14%;
+  z-index: 3;
+  /* The name used to be pulled -14% toward the portrait. On the first row
+     that only ate the gutter — the body is left-aligned, so the pull goes
+     leftward into empty space. On the flipped row the body is right-aligned,
+     so the same pull put the surname directly under the photograph, and the
+     two rows read as different layouts. Neither crosses now. */
+  margin: 0 0 22px;
   font-family: var(--mn-font-sans, 'Roboto', sans-serif);
   font-weight: 700;
   font-size: clamp(2.2rem, 6vw, 5rem);
@@ -146,10 +152,7 @@
   letter-spacing: -0.035em;
   color: var(--mn-ink, #100d2b);
 }
-.mn-fnd__person--flip .mn-fnd__name {
-  margin-left: 0;
-  margin-right: -14%;
-}
+
 .mn-fnd__name span {
   display: block;
 }
@@ -259,4 +262,124 @@
 
 @media (prefers-reduced-motion: reduce) {
   .mn-fnd__frame img { transition-duration: 0.01ms; }
+}
+
+
+/* ── Decorative layer ──────────────────────────────────────────
+   Mirrored for the flipped row, so both founders get the same
+   composition rather than one of them getting the leftovers. */
+
+.mn-fnd__person {
+  position: relative;
+}
+
+.mn-fnd__decor {
+  position: absolute;
+  inset: -4% -2%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mn-fnd__ord {
+  position: absolute;
+  right: 5%;
+  top: 14%;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 700;
+  font-size: clamp(4rem, 11vw, 10rem);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: rgba(16, 13, 43, 0.07);
+}
+.mn-fnd__person--flip .mn-fnd__ord {
+  right: auto;
+  left: 2%;
+}
+
+.mn-fnd__ring {
+  position: absolute;
+  left: 62%;
+  top: 43%;
+  width: 22%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgba(233, 85, 35, 0.26);
+  animation: mn-fnd-drift 22s ease-in-out infinite;
+}
+.mn-fnd__ring::after {
+  content: '';
+  position: absolute;
+  inset: 17%;
+  border-radius: 50%;
+  border: 1px solid rgba(16, 13, 43, 0.09);
+}
+.mn-fnd__person--flip .mn-fnd__ring {
+  left: auto;
+  right: 62%;
+}
+
+.mn-fnd__dots {
+  position: absolute;
+  right: 2%;
+  bottom: 5%;
+  width: clamp(90px, 10vw, 140px);
+  height: clamp(60px, 7vw, 96px);
+  background-image: radial-gradient(rgba(16, 13, 43, 0.2) 1.1px, transparent 1.1px);
+  background-size: 13px 13px;
+}
+.mn-fnd__person--flip .mn-fnd__dots {
+  right: auto;
+  left: 0;
+}
+
+.mn-fnd__chip {
+  position: absolute;
+  right: 29%;
+  top: 51%;
+  width: 13px;
+  height: 13px;
+  background: var(--mn-orange, #e95523);
+  animation: mn-fnd-float 7s ease-in-out infinite;
+}
+.mn-fnd__person--flip .mn-fnd__chip {
+  right: auto;
+  left: 16%;
+}
+
+.mn-fnd__stem {
+  position: absolute;
+  left: 59%;
+  top: 9%;
+  width: 1px;
+  height: 19%;
+  transform-origin: top center;
+  background: linear-gradient(180deg, rgba(233, 85, 35, 0.55), rgba(233, 85, 35, 0));
+}
+.mn-fnd__person--flip .mn-fnd__stem {
+  left: auto;
+  right: 59%;
+}
+
+@keyframes mn-fnd-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-10px, -14px); }
+}
+@keyframes mn-fnd-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(45deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-fnd__ring,
+  .mn-fnd__chip {
+    animation: none;
+  }
+}
+
+/* Below the two-column breakpoint the decor has nowhere to sit without
+   colliding with the copy, so it steps out rather than crowding it. */
+@media (max-width: 900px) {
+  .mn-fnd__decor {
+    display: none;
+  }
 }

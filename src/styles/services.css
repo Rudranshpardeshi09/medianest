@@ -78,7 +78,7 @@
 .mn-svc__listnum {
   font-family: var(--mn-font-slab, 'Roboto Slab', serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: 15px;
   flex: 0 0 auto;
   color: var(--mn-ink-micro, #8e8ba1);
   transition: color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
@@ -86,7 +86,7 @@
 
 .mn-svc__listtitle {
   font-family: var(--mn-font-sans, 'Roboto', sans-serif);
-  font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
   font-weight: 700;
   letter-spacing: -0.018em;
   color: var(--mn-ink-dim, #7d7a92);
@@ -98,13 +98,29 @@
 .mn-svc__listbtn:hover .mn-svc__listtitle { color: var(--mn-ink, #100d2b); }
 
 .mn-svc__detail {
+  /* 0fr -> 1fr animates with nobody having to measure the content, which is
+     the whole point — see the note in Services.jsx. */
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-svc__detail[data-open] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+/* min-height: 0 is required: a grid item's automatic minimum size otherwise
+   refuses to shrink below its content, and the row never closes. */
+.mn-svc__detailin {
   overflow: hidden;
+  min-height: 0;
 }
 
 .mn-svc__desc {
   margin: 0 0 16px;
   max-width: 40ch;
-  font-size: 14.5px;
+  font-size: 16.5px;
   line-height: 1.8;
   color: var(--mn-ink-body, #5b5870);
 }
@@ -123,7 +139,7 @@
   border: 1px solid var(--mn-paper-edge, #ececf2);
   border-radius: 999px;
   background: var(--mn-paper, #fff);
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 500;
   letter-spacing: 1.8px;
   text-transform: uppercase;

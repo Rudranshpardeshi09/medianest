@@ -14,7 +14,6 @@ const NAV = [
   { id: 'projects', label: 'Projects' },
   { id: 'team', label: 'Team' },
   { id: 'clients', label: 'Clients' },
-  { id: 'video', label: 'Video' },
   { id: 'contact', label: 'Contact' },
 ]
 

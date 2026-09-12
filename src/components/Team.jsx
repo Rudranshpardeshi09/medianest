@@ -80,6 +80,54 @@ export default function Team() {
               key={p.id}
               className={`mn-fnd__person${i % 2 === 1 ? ' mn-fnd__person--flip' : ''}`}
             >
+              {/* Decorative layer: a ghosted ordinal, an aperture ring and a
+                  dot field, mirrored for the flipped row. z-index 0, behind
+                  everything, and aria-hidden — it carries nothing the copy
+                  does not already say. */}
+              <span className="mn-fnd__decor" aria-hidden>
+                <motion.span
+                  className="mn-fnd__ord"
+                  initial={{ opacity: 0, y: 26 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={VIEWPORT}
+                  transition={{ duration: 1.1, ease: EASE }}
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </motion.span>
+
+                <motion.span
+                  className="mn-fnd__ring"
+                  initial={{ opacity: 0, scale: 0.72 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={VIEWPORT}
+                  transition={{ duration: 1.3, ease: EASE, delay: 0.18 }}
+                />
+
+                <motion.span
+                  className="mn-fnd__dots"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={VIEWPORT}
+                  transition={{ duration: 1, delay: 0.34 }}
+                />
+
+                <motion.span
+                  className="mn-fnd__chip"
+                  initial={{ opacity: 0, scale: 0 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={VIEWPORT}
+                  transition={{ duration: 0.7, ease: EASE, delay: 0.5 }}
+                />
+
+                <motion.span
+                  className="mn-fnd__stem"
+                  initial={{ scaleY: 0 }}
+                  whileInView={{ scaleY: 1 }}
+                  viewport={VIEWPORT}
+                  transition={{ duration: 0.9, ease: EASE, delay: 0.42 }}
+                />
+              </span>
+
               <figure className="mn-fnd__figure">
                 <div className="mn-fnd__frame">
                   <RevealImage

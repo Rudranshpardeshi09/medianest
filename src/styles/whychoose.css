@@ -206,7 +206,19 @@
 }
 
 .mn-why__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.55s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__panel[data-open] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.mn-why__panelin {
   overflow: hidden;
+  min-height: 0;
 }
 
 .mn-why__body {
@@ -248,4 +260,282 @@
   .mn-why__sign,
   .mn-why__sign::before,
   .mn-why__sign::after { transition-duration: 0.01ms; }
+}
+
+/* ── Field ─────────────────────────────────────────────────────
+   A soft sphere, one orange sweep and a camera bleeding off the bottom
+   corner. All three sit under .mn-why__inner (z-index 1), and none of
+   them is announced. */
+
+.mn-why__orb {
+  position: absolute;
+  left: -12%;
+  top: -22%;
+  z-index: 0;
+  width: 58vw;
+  max-width: 900px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 34% 32%,
+    rgba(96, 86, 220, 0.4) 0%,
+    rgba(36, 28, 122, 0.22) 44%,
+    rgba(18, 13, 79, 0) 72%
+  );
+}
+
+.mn-why__sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  fill: none;
+  stroke: rgba(233, 85, 35, 0.5);
+  stroke-width: 1;
+}
+
+/* The photograph is texture here, not subject: it is masked away well
+   before it reaches the copy column. */
+.mn-why__bleed {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 0;
+  width: clamp(220px, 26vw, 420px);
+  aspect-ratio: 3 / 4;
+  pointer-events: none;
+  opacity: 0.42;
+  -webkit-mask-image: radial-gradient(120% 100% at 0% 100%, #000 20%, transparent 72%);
+  mask-image: radial-gradient(120% 100% at 0% 100%, #000 20%, transparent 72%);
+}
+.mn-why__bleed img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 45% center;
+  display: block;
+  filter: grayscale(1) contrast(1.15) brightness(0.62);
+  mix-blend-mode: luminosity;
+}
+
+/* ── Edge micro-type ───────────────────────────────────────── */
+
+.mn-why__edge {
+  position: absolute;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 9.5px;
+  font-weight: 500;
+  line-height: 2;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.42));
+}
+.mn-why__edge--tr {
+  top: clamp(26px, 4vh, 56px);
+  right: clamp(20px, 3vw, 52px);
+  text-align: right;
+}
+.mn-why__edge--br {
+  bottom: clamp(26px, 4vh, 56px);
+  right: clamp(20px, 3vw, 52px);
+  text-align: right;
+}
+.mn-why__edge--tr::after,
+.mn-why__edge--br::after {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 2px;
+  margin: 10px 0 0 auto;
+  background: var(--mn-orange, #e95523);
+}
+.mn-why__edge--l {
+  left: clamp(10px, 1.4vw, 22px);
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+}
+.mn-why__edge--l i {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  color: var(--mn-orange, #e95523);
+}
+
+/* ── CTA ───────────────────────────────────────────────────── */
+
+.mn-why__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 30px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--mn-on-dark, #fff);
+  transition: color 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__cta:hover {
+  color: var(--mn-orange, #e95523);
+}
+.mn-why__ctadisc {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1.5px solid rgba(233, 85, 35, 0.75);
+  color: var(--mn-orange, #e95523);
+  transition: background 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    color 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__ctadisc svg {
+  width: 17px;
+  height: 17px;
+}
+.mn-why__cta:hover .mn-why__ctadisc {
+  background: var(--mn-orange, #e95523);
+  color: #fff;
+  transform: scale(1.06);
+}
+
+/* ── Art label ─────────────────────────────────────────────── */
+
+.mn-why__art {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 34px);
+}
+.mn-why__artlabel {
+  margin: 0;
+  padding-left: clamp(12px, 1.4vw, 20px);
+  border-left: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.14));
+  font-size: 9.5px;
+  font-weight: 500;
+  line-height: 2;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.42));
+}
+
+/* ── Rows as cards ─────────────────────────────────────────── */
+
+.mn-why__item {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  transition: border-color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    background 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__item:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.mn-why__item[data-open='true'] {
+  border-color: rgba(233, 85, 35, 0.42);
+  background: rgba(255, 255, 255, 0.06);
+}
+.mn-why__btn {
+  padding-inline: clamp(18px, 2vw, 30px);
+}
+.mn-why__panelin {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(14px, 2vw, 30px);
+  padding: 0 clamp(18px, 2vw, 30px) 24px;
+}
+
+.mn-why__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1px solid rgba(233, 85, 35, 0.4);
+  color: var(--mn-orange, #e95523);
+}
+.mn-why__icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.mn-why__stat {
+  display: block;
+  padding-left: clamp(14px, 1.8vw, 26px);
+  border-left: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.14));
+  text-align: left;
+}
+.mn-why__stat b {
+  display: block;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(1.4rem, 2vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--mn-on-dark, #fff);
+}
+.mn-why__stat i {
+  display: block;
+  margin-top: 8px;
+  /* The label carries its own line break in the data */
+  white-space: pre-line;
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.7;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.42));
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  /* The vertical rail and the bleed both want the left gutter, and at this
+     width there is not one to give. */
+  .mn-why__edge--l,
+  .mn-why__bleed {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .mn-why__edge--tr,
+  .mn-why__edge--br {
+    display: none;
+  }
+  .mn-why__panelin {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .mn-why__stat {
+    padding-left: 0;
+    padding-top: 14px;
+    border-left: 0;
+    border-top: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.14));
+  }
+  .mn-why__art {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .mn-why__artlabel {
+    padding-left: 0;
+    border-left: 0;
+  }
 }

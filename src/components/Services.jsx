@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
 import RevealImage from './primitives/RevealImage'
 import { EASE, VIEWPORT } from '@/lib/motion'
@@ -86,24 +86,24 @@ export default function Services() {
                       <span className="mn-svc__listtitle">{s.short}</span>
                     </button>
 
-                    <AnimatePresence initial={false}>
-                      {on && (
-                        <motion.div
-                          className="mn-svc__detail"
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.5, ease: EASE }}
-                        >
-                          <p className="mn-svc__desc">{s.body}</p>
-                          <ul className="mn-svc__tags">
-                            {s.tags.map((t) => (
-                              <li key={t}>{t}</li>
-                            ))}
-                          </ul>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    {/* Opened by CSS (grid-template-rows 0fr -> 1fr), not by animating
+                        height to 'auto'. Framer Motion cannot know an auto
+                        height without measuring, and its measurement path
+                        saves window.scrollY, jumps the page to 0, reads the
+                        box, then calls window.scrollTo(0, saved). That restore
+                        cancels any smooth scroll in flight — which is why a
+                        nav click from the hero to Contact died here the moment
+                        a card's onViewportEnter switched the active service. */}
+                    <div className="mn-svc__detail" data-open={on || undefined}>
+                      <div className="mn-svc__detailin">
+                        <p className="mn-svc__desc">{s.body}</p>
+                        <ul className="mn-svc__tags">
+                          {s.tags.map((t) => (
+                            <li key={t}>{t}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </li>
                 )
               })}
