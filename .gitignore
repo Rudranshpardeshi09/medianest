@@ -42,6 +42,8 @@ scratch/
 # Alternative redesign build — kept on disk for reference, not shipped.
 src/_redesign/
 
-# Generated WebP derivatives. The site serves the originals from
-# public/images/, so these are a local build artifact.
-public/media/
+# public/media/ used to be ignored as "generated WebP derivatives", on the
+# reasoning that the site served originals from public/images/. That stopped
+# being true: src/ now references 25 files under /media/ and only 3 under
+# /images/, so the rule was shipping a repo whose every image 404s on a fresh
+# clone. The WebPs are the source assets now and belong in the repo (~1MB).
