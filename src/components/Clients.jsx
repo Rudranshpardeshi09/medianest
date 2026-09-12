@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
+import FloatField from './primitives/FloatField'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/clients.css'
 
@@ -69,13 +70,16 @@ const CLIENTS = [
 export default function Clients() {
   return (
     <section id="clients" className="mn-cl">
-      {/* Field: two soft warm washes and a pair of arcs, all decorative */}
-      <span className="mn-cl__wash mn-cl__wash--a" aria-hidden />
-      <span className="mn-cl__wash mn-cl__wash--b" aria-hidden />
+      {/* Field: a pair of hairline arcs. The two warm radial washes that used
+          to sit here are gone — on a field this light they read as a stain
+          in the corners rather than as depth. */}
       <svg className="mn-cl__arcs" viewBox="0 0 1440 900" aria-hidden focusable="false">
-        <path d="M1440,40 C1180,150 1120,330 1180,520" />
-        <path d="M-40,330 C90,470 90,690 -10,820" />
+        <path d="M1440,150 C1200,240 1140,390 1190,560" />
+        <path d="M-40,380 C80,490 80,660 -10,760" />
       </svg>
+
+      <FloatField place="top" variant="a" />
+      <FloatField place="bottom" variant="b" />
 
       <div className="mn-cl__inner">
         {/* ── Head ─────────────────────────────────────────── */}

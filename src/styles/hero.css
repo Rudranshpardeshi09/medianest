@@ -617,3 +617,127 @@
     transition-duration: 0.01ms;
   }
 }
+
+/* ── CTA hover, rebuilt ─────────────────────────────────────────
+   The old hover was transform: scale(1.06) on the disc and a 3px nudge
+   on the arrow. Both measured as applying and neither was visible. The
+   disc now throws a ring outward, the solid button replaces its arrow
+   rather than moving it, the outline button fills, and the label draws
+   a rule under itself. */
+
+.mn-cta__disc::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--hero-orange);
+  opacity: 0;
+  pointer-events: none;
+}
+.mn-cta:hover .mn-cta__disc::after,
+.mn-cta:focus-visible .mn-cta__disc::after {
+  animation: mn-cta-pulse 1.15s var(--hero-ease) infinite;
+}
+@keyframes mn-cta-pulse {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+
+/* Label gains a rule that draws in from the left */
+.mn-cta > span:last-child {
+  position: relative;
+}
+.mn-cta > span:last-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 1.5px;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--hero-orange);
+  transition: transform 0.45s var(--hero-ease);
+}
+.mn-cta:hover > span:last-child::after,
+.mn-cta:focus-visible > span:last-child::after {
+  transform: scaleX(1);
+}
+
+/* Solid: arrow replaced, not nudged */
+.mn-cta__swap {
+  position: relative;
+  display: block;
+  width: 17px;
+  height: 17px;
+  overflow: hidden;
+}
+.mn-cta__swap svg {
+  position: absolute;
+  inset: 0;
+  width: 17px;
+  height: 17px;
+  transition: transform 0.5s var(--hero-ease);
+}
+.mn-cta__swap svg:last-child {
+  transform: translateX(-135%);
+}
+.mn-cta--solid:hover .mn-cta__swap svg:first-child,
+.mn-cta--solid:focus-visible .mn-cta__swap svg:first-child {
+  transform: translateX(135%);
+}
+.mn-cta--solid:hover .mn-cta__swap svg:last-child,
+.mn-cta--solid:focus-visible .mn-cta__swap svg:last-child {
+  transform: translateX(0);
+}
+/* The scale(1.06) that used to carry the whole interaction is gone; the
+   disc only settles a little now that the ring and the swap do the work. */
+.mn-cta:hover .mn-cta__disc {
+  transform: scale(1.02);
+}
+
+/* Outline: the ring fills from the centre and the play mark turns over */
+.mn-cta--outline .mn-cta__disc {
+  position: relative;
+  overflow: hidden;
+}
+.mn-cta--outline .mn-cta__disc::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 50%;
+  transform: scale(0);
+  background: var(--hero-orange);
+  transition: transform 0.5s var(--hero-ease);
+}
+.mn-cta--outline:hover .mn-cta__disc::before,
+.mn-cta--outline:focus-visible .mn-cta__disc::before {
+  transform: scale(1);
+}
+.mn-cta--outline .mn-cta__disc svg {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.5s var(--hero-ease), fill 0.4s var(--hero-ease);
+}
+.mn-cta--outline:hover .mn-cta__disc svg,
+.mn-cta--outline:focus-visible .mn-cta__disc svg {
+  fill: #fff;
+  transform: scale(1.18);
+}
+.mn-cta--outline:hover .mn-cta__disc,
+.mn-cta--outline:focus-visible .mn-cta__disc {
+  box-shadow: inset 0 0 0 1.5px var(--hero-orange);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-cta:hover .mn-cta__disc::after {
+    animation: none;
+  }
+  .mn-cta__swap svg,
+  .mn-cta > span:last-child::after,
+  .mn-cta--outline .mn-cta__disc::before {
+    transition-duration: 0.01ms;
+  }
+}

@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
+import FloatField from './primitives/FloatField'
 import EdgeTitle from './primitives/EdgeTitle'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/contact.css'
@@ -129,6 +130,8 @@ export default function Contact() {
 
   return (
     <section id="contact" className="mn-contact">
+      <FloatField place="top" variant="a" />
+
       <EdgeTitle side="right">Hello</EdgeTitle>
 
       <div className="mn-contact__inner">

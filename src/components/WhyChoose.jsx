@@ -1,5 +1,5 @@
-import { useId, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useId, useRef, useState } from 'react'
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import MaskText from './primitives/MaskText'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/whychoose.css'
@@ -46,45 +46,157 @@ const REASONS = [
   },
 ]
 
+/* One row of the accordion. It lives in its own component because its
+   entrance is driven off the section's scroll progress, and hooks cannot be
+   called from inside a map. */
+function Reason({ r, i, isOpen, onToggle, uid, progress, reduced }) {
+  /* Each row claims its own slice of the section's travel, so the four
+     arrive one after another as you scroll rather than all at once. */
+  const from = 0.06 + i * 0.07
+  const to = from + 0.14
+  const opacity = useTransform(progress, [from, to], [0, 1])
+  const x = useTransform(progress, [from, to], [64, 0])
+  const btnId = `${uid}-b${i}`
+  const panelId = `${uid}-p${i}`
+
+  return (
+    <motion.li
+      className="mn-why__item"
+      data-open={isOpen || undefined}
+      style={reduced ? undefined : { opacity, x }}
+    >
+      <button
+        type="button"
+        id={btnId}
+        className="mn-why__btn"
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        onClick={onToggle}
+      >
+        <span className="mn-why__num" aria-hidden>
+          {r.n}
+        </span>
+        <span className="mn-why__label">{r.label}</span>
+        <span className="mn-why__sign" aria-hidden />
+      </button>
+
+      {/* Opened by CSS (grid-template-rows 0fr -> 1fr). Animating height to
+          'auto' forces a Framer Motion measurement pass that suspends and
+          then restores window.scrollY, killing any smooth scroll in flight.
+          Keeping the panel mounted also means aria-controls points at an
+          element that exists while the row is shut. */}
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={btnId}
+        className="mn-why__panel"
+        data-open={isOpen || undefined}
+      >
+        <div className="mn-why__panelin">
+          <span className="mn-why__icon" aria-hidden>
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path
+                d={r.icon}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+
+          <p className="mn-why__body">{r.body}</p>
+
+          <span className="mn-why__stat">
+            <b>{r.stat}</b>
+            <i>{r.statLabel}</i>
+          </span>
+        </div>
+      </div>
+    </motion.li>
+  )
+}
+
 export default function WhyChoose() {
   const [open, setOpen] = useState(0)
   const uid = useId()
+  const ref = useRef(null)
+  const reduced = useReducedMotion()
+
+  /* One progress value for the whole section, read from the moment its top
+     reaches the bottom of the viewport to the moment its bottom leaves the
+     top. Everything decorative hangs off it, so the section assembles itself
+     as you travel through it instead of firing once and being finished. */
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+  /* Softened, or every pixel of a trackpad flick shows up in the geometry. */
+  const p = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 })
+
+  const orbY = useTransform(p, [0, 1], ['-14%', '10%'])
+  const orbScale = useTransform(p, [0, 0.5, 1], [0.86, 1.06, 0.94])
+  const bleedY = useTransform(p, [0, 1], ['18%', '-12%'])
+  const bleedOpacity = useTransform(p, [0, 0.25, 0.85, 1], [0, 0.46, 0.46, 0.12])
+  const headY = useTransform(p, [0, 1], [42, -42])
+  const artY = useTransform(p, [0, 1], [70, -56])
+  const railY = useTransform(p, [0, 1], [26, -26])
+
+  /* The sweep and the lens geometry draw themselves, staged so the eye has
+     something to follow the whole way down. */
+  const sweepDraw = useTransform(p, [0.02, 0.45], [0, 1])
+  const ringsDraw = useTransform(p, [0.06, 0.44], [0, 1])
+  const bladesDraw = useTransform(p, [0.16, 0.52], [0, 1])
+  const archesDraw = useTransform(p, [0.24, 0.6], [0, 1])
 
   const goTo = (id) =>
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
+  // Reduced motion gets the finished state, not a scrubbed one.
+  const m = (style) => (reduced ? undefined : style)
+
   return (
-    <section className="mn-why" aria-labelledby={`${uid}-heading`}>
-      {/* Field: a soft sphere top-left, an orange sweep, and a camera
-          bleeding off the bottom corner. All decorative. */}
-      <span className="mn-why__orb" aria-hidden />
+    <section ref={ref} className="mn-why" aria-labelledby={`${uid}-heading`}>
+      {/* Field: a soft sphere, an orange sweep that draws itself, and a
+          camera bleeding off the bottom corner. All decorative. */}
+      <motion.span className="mn-why__orb" aria-hidden style={m({ y: orbY, scale: orbScale })} />
+
       <svg className="mn-why__sweep" viewBox="0 0 1440 900" aria-hidden focusable="false">
-        <path d="M560,905 C820,745 1140,705 1500,772" />
+        <motion.path
+          d="M560,905 C820,745 1140,705 1500,772"
+          style={m({ pathLength: sweepDraw })}
+        />
       </svg>
-      <span className="mn-why__bleed" aria-hidden>
+
+      <motion.span
+        className="mn-why__bleed"
+        aria-hidden
+        style={m({ y: bleedY, opacity: bleedOpacity })}
+      >
         <img src="/media/PHOTOGRAPHY-AND-BRAND-1.webp" alt="" loading="lazy" decoding="async" />
-      </span>
+      </motion.span>
 
       {/* Edge micro-type */}
-      <p className="mn-why__edge mn-why__edge--tr" aria-hidden>
+      <motion.p className="mn-why__edge mn-why__edge--tr" aria-hidden style={m({ y: railY })}>
         Ideas
         <br />
         into
         <br />
         impact
-      </p>
-      <p className="mn-why__edge mn-why__edge--br" aria-hidden>
+      </motion.p>
+      <motion.p className="mn-why__edge mn-why__edge--br" aria-hidden style={m({ y: railY })}>
         Creative people
         <br />
         Lasting brands
-      </p>
+      </motion.p>
       <p className="mn-why__edge mn-why__edge--l" aria-hidden>
         <i>01</i>
         <span>Stronger brands</span>
       </p>
 
       <div className="mn-why__inner">
-        <div className="mn-why__head">
+        <motion.div className="mn-why__head" style={m({ y: headY })}>
           <motion.p
             className="mn-eyebrow"
             initial={{ opacity: 0, y: 12 }}
@@ -138,17 +250,11 @@ export default function WhyChoose() {
             Discover our approach
           </motion.button>
 
-          {/* Brand geometry — lens rings and the MN arch, the same
-              vocabulary the nav and hero already use. */}
-          <div className="mn-why__art" aria-hidden>
-            <motion.svg
-              viewBox="0 0 440 300"
-              fill="none"
-              initial="hidden"
-              whileInView="show"
-              viewport={VIEWPORT}
-              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }}
-            >
+          {/* Brand geometry — lens rings and the MN arch, the same vocabulary
+              the nav and hero already use. Drawn by scroll rather than on a
+              viewport trigger, so it keeps pace with the reader. */}
+          <motion.div className="mn-why__art" aria-hidden style={m({ y: artY })}>
+            <svg viewBox="0 0 440 300" fill="none">
               {[132, 104, 78, 54].map((r, i) => (
                 <motion.circle
                   key={r}
@@ -157,10 +263,7 @@ export default function WhyChoose() {
                   r={r}
                   stroke={i === 3 ? 'var(--mn-orange, #e95523)' : 'rgba(255,255,255,0.18)'}
                   strokeWidth={i === 3 ? 1.4 : 1}
-                  variants={{
-                    hidden: { pathLength: 0, opacity: 0 },
-                    show: { pathLength: 1, opacity: 1, transition: { duration: 1.3, ease: EASE } },
-                  }}
+                  style={m({ pathLength: ringsDraw })}
                 />
               ))}
 
@@ -173,11 +276,7 @@ export default function WhyChoose() {
                   y2="204"
                   stroke="rgba(255,255,255,0.14)"
                   strokeWidth="1"
-                  style={{ transformOrigin: '150px 150px', rotate: a }}
-                  variants={{
-                    hidden: { pathLength: 0 },
-                    show: { pathLength: 1, transition: { duration: 1, ease: EASE } },
-                  }}
+                  style={m({ pathLength: bladesDraw, transformOrigin: '150px 150px', rotate: a })}
                 />
               ))}
 
@@ -188,13 +287,10 @@ export default function WhyChoose() {
                   stroke="rgba(255,255,255,0.16)"
                   strokeWidth="3"
                   strokeLinecap="round"
-                  variants={{
-                    hidden: { pathLength: 0, opacity: 0 },
-                    show: { pathLength: 1, opacity: 1, transition: { duration: 1.1, ease: EASE } },
-                  }}
+                  style={m({ pathLength: archesDraw })}
                 />
               ))}
-            </motion.svg>
+            </svg>
 
             <p className="mn-why__artlabel">
               People
@@ -203,78 +299,23 @@ export default function WhyChoose() {
               <br />
               Impact
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* ── Accordion ─────────────────────────────────────── */}
         <ul className="mn-why__list">
-          {REASONS.map((r, i) => {
-            const isOpen = i === open
-            const btnId = `${uid}-b${i}`
-            const panelId = `${uid}-p${i}`
-            return (
-              <motion.li
-                key={r.n}
-                className="mn-why__item"
-                data-open={isOpen || undefined}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={VIEWPORT}
-                transition={{ duration: 0.7, ease: EASE, delay: i * 0.08 }}
-              >
-                <button
-                  type="button"
-                  id={btnId}
-                  className="mn-why__btn"
-                  aria-expanded={isOpen}
-                  aria-controls={panelId}
-                  onClick={() => setOpen(isOpen ? -1 : i)}
-                >
-                  <span className="mn-why__num" aria-hidden>
-                    {r.n}
-                  </span>
-                  <span className="mn-why__label">{r.label}</span>
-                  <span className="mn-why__sign" aria-hidden />
-                </button>
-
-                {/* Opened by CSS (grid-template-rows 0fr -> 1fr). Animating
-                    height to 'auto' forces a Framer Motion measurement pass
-                    that suspends and then restores window.scrollY, which
-                    kills any smooth scroll in flight. Keeping the panel
-                    mounted also means aria-controls points at an element
-                    that exists while the row is shut. */}
-                <div
-                  id={panelId}
-                  role="region"
-                  aria-labelledby={btnId}
-                  className="mn-why__panel"
-                  data-open={isOpen || undefined}
-                >
-                  <div className="mn-why__panelin">
-                    <span className="mn-why__icon" aria-hidden>
-                      <svg viewBox="0 0 24 24" focusable="false">
-                        <path
-                          d={r.icon}
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-
-                    <p className="mn-why__body">{r.body}</p>
-
-                    <span className="mn-why__stat">
-                      <b>{r.stat}</b>
-                      <i>{r.statLabel}</i>
-                    </span>
-                  </div>
-                </div>
-              </motion.li>
-            )
-          })}
+          {REASONS.map((r, i) => (
+            <Reason
+              key={r.n}
+              r={r}
+              i={i}
+              uid={uid}
+              progress={p}
+              reduced={reduced}
+              isOpen={i === open}
+              onToggle={() => setOpen(i === open ? -1 : i)}
+            />
+          ))}
         </ul>
       </div>
     </section>

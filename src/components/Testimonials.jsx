@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/voices.css'
+import FloatField from './primitives/FloatField'
 
 const QUOTES = [
   {
@@ -69,6 +70,8 @@ export default function Testimonials() {
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
+      <FloatField place="bottom" variant="b" />
+
       <span className="mn-quote__mark" aria-hidden>
         &ldquo;
       </span>

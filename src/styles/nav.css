@@ -74,18 +74,7 @@
   backdrop-filter: blur(18px) saturate(150%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
   box-shadow: 0 20px 54px -26px rgba(16, 11, 58, 0.62);
-}
-
-/* "Stop down" ka matlab kam roshni — aur kam content. Pill sikudti hai
-   to sajawati cheezein (tagline, phone) hat jaati hain, taaki links aur
-   CTA ko poori jagah mile. Bina iske CTA clip ho jata tha. */
-.mn-nav[data-state='scrolled'] .mn-nav__tag,
-.mn-nav[data-state='scrolled'] .mn-nav__rule,
-.mn-nav[data-state='scrolled'] .mn-nav__phone {
-  display: none;
-}
-
-/* ── Brand ─────────────────────────────────────────────────── */
+}/* ── Brand ─────────────────────────────────────────────────── */
 
 .mn-nav__brand {
   display: inline-flex;
@@ -300,99 +289,7 @@
   align-items: center;
   gap: 16px;
   flex: 0 0 auto;
-}
-
-/* 4. FRAME COUNTER — "03/08", cinematographer ki bhasha */
-.mn-nav__counter {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 1px;
-  font-family: var(--font-heading, 'Roboto Slab', serif);
-  font-size: 10px;
-  letter-spacing: 1px;
-  font-variant-numeric: tabular-nums;
-  color: var(--nav-ink-dim);
-  transition: color 0.55s var(--nav-ease);
-}
-.mn-nav__counter b {
-  font-weight: 700;
-  color: var(--nav-orange);
-}
-.mn-nav__counter s {
-  text-decoration: none;
-  opacity: 0.5;
-}
-
-.mn-nav__phone {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--nav-ink-dim);
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.4px;
-  white-space: nowrap;
-  transition: color 0.4s var(--nav-ease);
-}
-.mn-nav__phone:hover {
-  color: var(--nav-orange);
-}
-.mn-nav__phone svg {
-  width: 13px;
-  height: 13px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-}
-
-/* CTA — liquid orange fill neeche se */
-.mn-nav__cta {
-  position: relative;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  overflow: hidden;
-  padding: 12px 22px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--nav-orange);
-  color: #fff;
-  font-family: var(--font-primary, 'Roboto', sans-serif);
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.mn-nav__cta::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  transform: scaleY(0);
-  transform-origin: bottom;
-  background: linear-gradient(to top, #b8380c, var(--nav-orange-soft));
-  transition: transform 0.6s var(--nav-ease);
-}
-.mn-nav__cta:hover::before,
-.mn-nav__cta:focus-visible::before {
-  transform: scaleY(1);
-}
-.mn-nav__cta svg {
-  width: 12px;
-  height: 12px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  transition: transform 0.5s var(--nav-ease);
-}
-.mn-nav__cta:hover svg {
-  transform: translate(2px, -2px);
-}
-
-/* ── 4. Scroll rail — film / exposure scale ────────────────── */
+}/* ── 4. Scroll rail — film / exposure scale ────────────────── */
 
 .mn-nav__rail {
   position: absolute;
@@ -599,13 +496,7 @@
   .mn-nav__tag { display: none; }
 }
 
-@media (max-width: 1340px) {
-  .mn-nav__phone { display: none; }
-}
-
-@media (max-width: 1220px) {
-  .mn-nav__counter { display: none; }
-  .mn-nav__link { padding: 10px 10px; letter-spacing: 1.3px; }
+@media (max-width: 1220px) {.mn-nav__link { padding: 10px 10px; letter-spacing: 1.3px; }
 }
 
 @media (max-width: 1080px) {
@@ -627,17 +518,7 @@
 
 /* ── Reduced motion ────────────────────────────────────────── */
 
-@media (prefers-reduced-motion: reduce) {
-  .mn-nav__bar,
-  .mn-nav__logo,
-  .mn-nav__swap span,
-  .mn-nav__cta::before,
-  .mn-nav__idx,
-  .mn-nav__iris,
-  .mn-nav__hoverframe i {
-    transition-duration: 0.01ms;
-  }
-  .mn-nav__frame i {
+@media (prefers-reduced-motion: reduce) {.mn-nav__frame i {
     animation: none;
   }
   /* Focus-pull blur band — motion sensitivity ke saath-saath ye
@@ -645,5 +526,106 @@
   .mn-nav__links:hover .mn-nav__link:not(:hover) {
     filter: none;
     opacity: 0.7;
+  }
+}
+
+/* ── CTA (rebuilt) ──────────────────────────────────────────────
+   The old hover was a dark orange fill rising from the bottom, which
+   read as the button dimming rather than responding. It now lifts,
+   takes a single diagonal sheen, and swaps its arrow: the first leaves
+   through the top-right corner while a second arrives from the
+   bottom-left, so the mark is replaced rather than nudged along. */
+
+.mn-nav__cta {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--nav-orange);
+  color: #fff;
+  font-family: var(--font-primary, 'Roboto', sans-serif);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px -12px rgba(233, 85, 35, 0.9);
+  transition: transform 0.45s var(--nav-ease), box-shadow 0.45s var(--nav-ease);
+}
+.mn-nav__cta:hover,
+.mn-nav__cta:focus-visible {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 16px 34px -12px rgba(16, 12, 58, 0.6);
+}
+.mn-nav__cta:active {
+  transform: translateY(0);
+}
+
+/* The whole pill turns over on hover: a deep-ink panel wipes across on the
+   diagonal. The previous sheen was a 0.38-alpha highlight on orange, which
+   measured as working but was far too quiet to read as a response. */
+.mn-nav__cta::before {
+  content: '';
+  position: absolute;
+  inset: -2px -30%;
+  z-index: -1;
+  transform: translateX(-118%) skewX(-14deg);
+  background: var(--mn-ink-surface, #100c3a);
+  transition: transform 0.55s var(--nav-ease);
+}
+.mn-nav__cta:hover::before,
+.mn-nav__cta:focus-visible::before {
+  transform: translateX(0) skewX(-14deg);
+}
+
+.mn-nav__ctalabel {
+  position: relative;
+  z-index: 1;
+}
+
+/* Arrow swap. Both arrows sit in one square; only one is ever in it. */
+.mn-nav__ctaicon {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+.mn-nav__ctaicon svg {
+  position: absolute;
+  inset: 0;
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  transition: transform 0.5s var(--nav-ease);
+}
+/* second arrow waits below-left, out of the box */
+.mn-nav__ctaicon svg:last-child {
+  transform: translate(-160%, 160%);
+}
+.mn-nav__cta:hover .mn-nav__ctaicon svg:first-child,
+.mn-nav__cta:focus-visible .mn-nav__ctaicon svg:first-child {
+  transform: translate(160%, -160%);
+}
+.mn-nav__cta:hover .mn-nav__ctaicon svg:last-child,
+.mn-nav__cta:focus-visible .mn-nav__ctaicon svg:last-child {
+  transform: translate(0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-nav__cta,
+  .mn-nav__cta::before,
+  .mn-nav__ctaicon svg {
+    transition-duration: 0.01ms;
   }
 }

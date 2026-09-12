@@ -182,31 +182,22 @@ export default function Header() {
 
           {/* ── Right ─────────────────────────────────── */}
           <div className="mn-nav__right">
-            {/* Frame counter — kaunsa "shot" chal raha hai */}
-            <span className="mn-nav__counter" aria-hidden>
-              <b>{String(activeIndex + 1).padStart(2, '0')}</b>
-              <s>/</s>
-              <s>{String(NAV.length).padStart(2, '0')}</s>
-            </span>
-
-            <a className="mn-nav__phone" href="tel:+918448112770">
-              <svg viewBox="0 0 24 24" aria-hidden focusable="false">
-                <path
-                  d="M6.2 3.5h3l1.5 3.8-2 1.4a11.4 11.4 0 0 0 5.6 5.6l1.4-2 3.8 1.5v3a2 2 0 0 1-2.2 2A16.6 16.6 0 0 1 4.2 5.7a2 2 0 0 1 2-2.2Z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              +91-8448112770
-            </a>
-
             <Magnetic strength={0.28}>
               <button type="button" className="mn-nav__cta" onClick={() => go('contact')}>
-                <span>Let’s Talk</span>
-                <svg viewBox="0 0 24 24" aria-hidden focusable="false">
-                  <path d="M7.5 16.5 16.5 7.5M9 7.5h7.5V15" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
+                  <span className="mn-nav__ctalabel">Let’s Talk</span>
+                  {/* Two arrows in one clipped box: on hover the first leaves
+                      through the top-right corner and the second arrives from
+                      the bottom-left, so the mark is replaced rather than
+                      nudged along. */}
+                  <span className="mn-nav__ctaicon" aria-hidden>
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M7.5 16.5 16.5 7.5M9 7.5h7.5V15" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M7.5 16.5 16.5 7.5M9 7.5h7.5V15" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </button>
             </Magnetic>
           </div>
 

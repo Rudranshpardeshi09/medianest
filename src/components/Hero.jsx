@@ -151,10 +151,18 @@ export default function Hero() {
                 className="mn-cta mn-cta--solid"
                 onClick={() => goTo('#projects')}
               >
+                {/* Two arrows in one clipped disc: on hover the first exits
+                    right and the second arrives from the left, so the mark is
+                    replaced rather than nudged. */}
                 <span className="mn-cta__disc" aria-hidden>
-                  <svg viewBox="0 0 24 24" focusable="false">
-                    <path d="M4 12h15M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <span className="mn-cta__swap">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M4 12h15M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M4 12h15M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
                 </span>
                 <span>Explore Our Work</span>
               </button>
