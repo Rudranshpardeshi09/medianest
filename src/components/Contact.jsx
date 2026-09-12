@@ -146,10 +146,10 @@ export default function Contact() {
 
           <h2 className="mn-contact__title">
             <MaskText>Let us make your brand look</MaskText>{' '}
-            <MaskText as="em" delay={0.24}>
+            <MaskText as="em" delay={0.1}>
               inevitable
             </MaskText>
-            <MaskText delay={0.3}>.</MaskText>
+            <MaskText delay={0.14}>.</MaskText>
           </h2>
 
           <motion.p

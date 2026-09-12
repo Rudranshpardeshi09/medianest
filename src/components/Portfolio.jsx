@@ -43,10 +43,10 @@ export default function Portfolio() {
 
             <h2 className="mn-work__title">
               <MaskText>Frames that carry a</MaskText>{' '}
-              <MaskText as="em" delay={0.2}>
+              <MaskText as="em" delay={0.1}>
                 brand
               </MaskText>
-              <MaskText delay={0.26}>.</MaskText>
+              <MaskText delay={0.14}>.</MaskText>
             </h2>
           </div>
 

@@ -67,10 +67,10 @@ export default function Team() {
 
           <h2 className="mn-fnd__title">
             <MaskText>Two photographers running a</MaskText>{' '}
-            <MaskText as="em" delay={0.24}>
+            <MaskText as="em" delay={0.1}>
               practice
             </MaskText>
-            <MaskText delay={0.3}>.</MaskText>
+            <MaskText delay={0.14}>.</MaskText>
           </h2>
         </div>
 

@@ -97,10 +97,10 @@ export default function WhyChoose() {
 
           <h2 className="mn-why__title" id={`${uid}-heading`}>
             <MaskText>Four reasons brands</MaskText>{' '}
-            <MaskText as="em" delay={0.2}>
+            <MaskText as="em" delay={0.1}>
               stay
             </MaskText>
-            <MaskText delay={0.26}>.</MaskText>
+            <MaskText delay={0.14}>.</MaskText>
           </h2>
 
           <motion.p

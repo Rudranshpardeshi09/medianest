@@ -93,10 +93,10 @@ export default function Clients() {
 
             <h2 className="mn-cl__title">
               <MaskText>Federations, institutions and</MaskText>{' '}
-              <MaskText as="em" delay={0.24}>
+              <MaskText as="em" delay={0.1}>
                 enterprises
               </MaskText>
-              <MaskText delay={0.3}>.</MaskText>
+              <MaskText delay={0.14}>.</MaskText>
             </h2>
           </div>
 

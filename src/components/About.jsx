@@ -57,10 +57,10 @@ export default function About() {
                 document outline stopped at the hero's <h1>. */}
             <h2 className="mn-about__title">
               <MaskText>We shape the way a brand is</MaskText>{' '}
-              <MaskText as="em" delay={0.24}>
+              <MaskText as="em" delay={0.1}>
                 seen
               </MaskText>
-              <MaskText delay={0.3}>, frame by frame.</MaskText>
+              <MaskText delay={0.14}>, frame by frame.</MaskText>
             </h2>
           </div>
 

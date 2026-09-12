@@ -372,3 +372,23 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-primary); font-weight: 600; }
   white-space: nowrap;
   border: 0;
 }
+
+/* ── Anchor targets under the fixed nav ─────────────────────────
+   Every section is a nav target, and the nav is fixed above the page, so a
+   bare scrollIntoView parks a section flush with the viewport top — which is
+   underneath the nav. Measured before this rule: the nav's compact state ends
+   at 89px on desktop and 74px below 1024px, while section eyebrows landed at
+   99-108px, clearing it by 10-19px with no tolerance at all. Clients, which
+   settles about 69px past its target as the page finishes loading, ended up
+   with both its eyebrow and its heading painted over by the nav. */
+section[id],
+footer[id] {
+  scroll-margin-top: 104px;
+}
+
+@media (max-width: 1024px) {
+  section[id],
+  footer[id] {
+    scroll-margin-top: 88px;
+  }
+}

@@ -8,12 +8,13 @@
 /* The clipping box. The padding / negative-margin pair gives descenders
    (g, y, p) and any italic overhang room to sit inside the clip without
    adding to the line height. */
+/* No overflow clipping: MaskText fades its words up a short distance rather
+   than sliding them out of a box, so there is no partial glyph to catch and
+   no descender to trim. The element stays for layout and for the callers
+   that style it. The hero keeps its own clipped variant, .mn-hero__mask. */
 .mn-mask {
   display: inline-block;
-  overflow: hidden;
   vertical-align: bottom;
-  padding-bottom: 0.18em;
-  margin-bottom: -0.18em;
 }
 
 .mn-mask__word {
