@@ -1,0 +1,583 @@
+/* ============================================================
+   MEDIA NEST — CINEMATIC OPENING SEQUENCE
+
+   A sticky 100vh stage inside a tall section. Everything visible here
+   is positioned by CSS and moved by one scroll value written from
+   MediaNestIntro.jsx; this file sets the rest state and the field.
+
+   The section's height is set inline by the component — it is the
+   speed knob — so nothing here should set it.
+
+   Namespaced .mn-mi-* throughout. It shares nothing with the homepage
+   and can be deleted whole.
+   ============================================================ */
+
+.mn-mi {
+  /* Sampled from the frames' own corner pixels. Painting the section the
+     same colour is what lets the canvas sit on it with no visible edge,
+     at any pane size, without a mask. It is 1% off the hero's #f5f2ec —
+     below anyone's threshold, and the two never share an edge. */
+  --mi-field: #f2efe7;
+  --mi-ink: #12102f;
+  --mi-body: #58556d;
+  --mi-micro: #8e8ba1;
+  --mi-orange: var(--mn-orange, #e95523);
+  --mi-rule: rgba(18, 16, 47, 0.15);
+  --mi-rule-fine: rgba(18, 16, 47, 0.07);
+
+  position: relative;
+  isolation: isolate;
+  background: var(--mi-field);
+  color: var(--mi-ink);
+}
+
+.mn-mi__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.mn-mi__content {
+  position: relative;
+  height: 100%;
+  /* clip-path and opacity are written here by the closing iris. */
+}
+
+.mn-mi__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  gap: clamp(18px, 3.2vw, 54px);
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  /* The top figure clears the site nav, which stays exactly as it is and
+     floats over this section: ~120px at rest, ~74px once it stops down to
+     the pill, which it has done by the time anyone is a screen into this. */
+  padding: clamp(104px, 13vh, 146px) clamp(22px, 4.6vw, 72px) clamp(34px, 6vh, 60px);
+}
+
+/* ── Left: the story ───────────────────────────────────────── */
+
+.mn-mi__story {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  min-width: 0;
+}
+
+/* 01 / 05 — the stage indicator, top of the column */
+.mn-mi__count {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  line-height: 1;
+}
+.mn-mi__count-n {
+  font-size: clamp(1.25rem, 1.7vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--mi-ink);
+}
+.mn-mi__count-of {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--mi-micro);
+}
+/* The orange tick under the counter — the reference's one hard accent */
+.mn-mi__count::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -11px;
+  width: 26px;
+  height: 2px;
+  background: var(--mi-orange);
+}
+
+/* The five beats share one cell, so the column never reflows as they swap */
+.mn-mi__beats {
+  display: grid;
+}
+.mn-mi__beat {
+  grid-area: 1 / 1;
+  align-self: center;
+  min-width: 0;
+}
+
+.mn-mi__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 clamp(14px, 2.2vh, 22px);
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 3.2px;
+  text-transform: uppercase;
+  color: var(--mi-orange);
+}
+/* Accent rule — scaled from the left by the same progress as the type */
+.mn-mi__eyebrow i {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* The headline is the house serif, not a second display face: the reader
+   crosses into the existing hero a couple of seconds after this, and a
+   font switch at that seam would read as two different websites. The
+   accent word keeps the site's own convention — slab italic, orange. */
+.mn-mi__head {
+  margin: 0;
+  font-family: var(--mn-font-slab, 'Roboto Slab', Georgia, serif);
+  font-weight: 300;
+  font-size: clamp(1.85rem, 3.5vw, 3.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  color: var(--mi-ink);
+}
+
+/* One mask per line. The padding is descender and ascender room — Roboto
+   Slab's glyph box is taller than a 1.12 line-height, so without it the
+   mask would shave the tops of capitals and the tails of g and y. The
+   negative margin takes the space back so the lines still set solid. */
+.mn-mi__mask {
+  display: block;
+  overflow: hidden;
+  padding: 0.12em 0 0.2em;
+  margin: -0.12em 0 -0.2em;
+}
+.mn-mi__line {
+  display: block;
+}
+.mn-mi__accent {
+  font-style: italic;
+  color: var(--mi-orange);
+}
+
+.mn-mi__sub {
+  margin: clamp(14px, 2vh, 20px) 0 0;
+  font-family: var(--mn-font-slab, 'Roboto Slab', Georgia, serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(0.95rem, 1.35vw, 1.26rem);
+  line-height: 1.42;
+  color: var(--mi-body);
+}
+
+.mn-mi__desc {
+  margin: clamp(16px, 2.4vh, 24px) 0 0;
+  max-width: 44ch;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(0.84rem, 1vw, 0.95rem);
+  font-weight: 300;
+  line-height: 1.78;
+  color: var(--mi-body);
+}
+
+.mn-mi__ctarow {
+  margin: clamp(22px, 3.4vh, 34px) 0 0;
+}
+.mn-mi__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--mn-font-slab, 'Roboto Slab', Georgia, serif);
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  font-weight: 400;
+  color: var(--mi-ink);
+  cursor: pointer;
+}
+.mn-mi__cta > span {
+  position: relative;
+  padding-bottom: 4px;
+}
+/* The underline draws on hover rather than sitting there — the CTA is the
+   last thing on the page and does not need to shout before it is reached. */
+.mn-mi__cta > span::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: var(--mi-orange);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-mi__cta:hover > span::after,
+.mn-mi__cta:focus-visible > span::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.mn-mi__cta i {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--mi-orange);
+  border-radius: 50%;
+  transition: background-color 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-mi__cta i svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: var(--mi-orange);
+  stroke-width: 1.5;
+  transition: stroke 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-mi__cta:hover i,
+.mn-mi__cta:focus-visible i {
+  background: var(--mi-orange);
+  transform: translateX(4px);
+}
+.mn-mi__cta:hover i svg,
+.mn-mi__cta:focus-visible i svg {
+  stroke: #fff;
+}
+
+/* SCROLL — bottom of the story column. Deliberately still: nothing in this
+   section is allowed to move on its own clock. */
+.mn-mi__hint {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: var(--mi-micro);
+}
+.mn-mi__hint i {
+  width: 46px;
+  height: 1px;
+  background: var(--mi-rule);
+}
+
+/* ── Right: the camera ─────────────────────────────────────── */
+
+.mn-mi__camera {
+  position: relative;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+.mn-mi__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Construction lines. Thin enough to read as registration marks on a
+   contact sheet rather than as an interface. */
+.mn-mi__marks {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 108%;
+  width: auto;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  fill: none;
+  /* The canvas paints opaque ivory across the whole drawn frame, so marks
+     underneath it would simply be covered. Multiplying instead gets the
+     reference's look exactly: over the field the hairline shows, over the
+     black camera bodies it multiplies into them and disappears. The lines
+     read as passing behind the camera without ever being behind it. */
+  mix-blend-mode: multiply;
+}
+.mn-mi__orbit {
+  transform-origin: 300px 300px;
+}
+.mn-mi__orbit circle {
+  stroke: var(--mi-rule-fine);
+  stroke-width: 1;
+}
+.mn-mi__dash {
+  stroke-dasharray: 2 13;
+}
+/* The one arc that carries colour — it draws across the whole sequence */
+.mn-mi__arc {
+  stroke: var(--mi-orange);
+  stroke-width: 1.2;
+  opacity: 0.4;
+  transform: rotate(-90deg);
+  transform-origin: 300px 300px;
+}
+.mn-mi__cross {
+  stroke: var(--mi-rule);
+  stroke-width: 1;
+}
+
+/* Marginalia — one note per beat, stacked in the same cell */
+.mn-mi__notes {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  text-align: right;
+}
+.mn-mi__note {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 9.5px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: var(--mi-micro);
+  opacity: 0;
+}
+
+/* ── Progress rail ─────────────────────────────────────────── */
+
+.mn-mi__rail {
+  position: absolute;
+  left: clamp(9px, 1.5vw, 24px);
+  top: 26%;
+  bottom: 26%;
+  width: 1px;
+  background: var(--mi-rule-fine);
+}
+.mn-mi__rail i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--mi-orange);
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+/* ── Closing iris ──────────────────────────────────────────── */
+/* A hairline ring that contracts with the clip, so the composition reads
+   as closing down rather than as simply being cut off. */
+.mn-mi__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 62vmax;
+  height: 62vmax;
+  border: 1px solid var(--mi-orange);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+}
+
+/* ── Loading ───────────────────────────────────────────────── */
+
+.mn-mi__load {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: var(--mi-field);
+}
+.mn-mi__load-mark {
+  margin: 0;
+  font-family: var(--mn-font-slab, 'Roboto Slab', Georgia, serif);
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--mi-ink);
+}
+.mn-mi__load-bar {
+  display: block;
+  width: clamp(150px, 20vw, 240px);
+  height: 1.5px;
+  overflow: hidden;
+  background: var(--mi-rule);
+}
+.mn-mi__load-bar i {
+  display: block;
+  height: 100%;
+  background: var(--mi-orange);
+  transform-origin: left;
+}
+.mn-mi__load-label {
+  margin: 0;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 2.8px;
+  text-transform: uppercase;
+  color: var(--mi-micro);
+}
+
+/* ── Skip ──────────────────────────────────────────────────── */
+
+.mn-mi__skip {
+  position: absolute;
+  right: clamp(18px, 4vw, 48px);
+  bottom: clamp(20px, 4vh, 38px);
+  z-index: 6;
+  padding: 9px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--mi-rule);
+  background: transparent;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: var(--mi-micro);
+  cursor: pointer;
+  transition: color 0.35s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color 0.35s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-mi__skip:hover,
+.mn-mi__skip:focus-visible {
+  color: var(--mi-orange);
+  border-color: var(--mi-orange);
+}
+
+/* ── Rest state before the first scroll pass ────────────────
+   The beats are stacked in one cell, so until the component has parked
+   them they would all be legible at once. Beat 01 is the rest state. */
+.mn-mi[data-reduced='false'] .mn-mi__beat {
+  visibility: hidden;
+}
+.mn-mi[data-reduced='false'] .mn-mi__beat:first-child {
+  visibility: visible;
+}
+
+/* ── Stacked layout ────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .mn-mi__grid {
+    grid-template-columns: minmax(0, 1fr);
+    /* Camera first, story under it: the exploded frame needs the width,
+       and the type reads fine in the space that is left. */
+    grid-template-rows: minmax(0, 0.86fr) auto;
+    gap: clamp(10px, 2.4vh, 24px);
+    padding: clamp(88px, 11vh, 118px) clamp(20px, 6vw, 40px) clamp(46px, 7vh, 64px);
+  }
+  .mn-mi__camera {
+    order: -1;
+  }
+  .mn-mi__story {
+    justify-content: flex-start;
+    height: auto;
+  }
+  /* Counter and hint come out of the corners once the column is short */
+  .mn-mi__count {
+    position: static;
+    margin-bottom: 20px;
+  }
+  .mn-mi__count::after {
+    display: none;
+  }
+  /* The hint anchors to the story column, which is full height on desktop
+     and only as tall as its own type here — so it would land on the
+     description. Making the column static hands the hint to .mn-mi__content
+     instead, which is the whole stage, and the offsets below match the
+     grid's own padding so it still lines up with the copy. */
+  .mn-mi__story {
+    position: static;
+  }
+  .mn-mi__hint {
+    left: clamp(20px, 6vw, 40px);
+    bottom: clamp(18px, 3vh, 26px);
+  }
+  .mn-mi__notes {
+    top: auto;
+    bottom: 0;
+  }
+  .mn-mi__rail {
+    display: none;
+  }
+  .mn-mi__marks {
+    height: auto;
+    width: 104%;
+  }
+  .mn-mi__head {
+    font-size: clamp(1.7rem, 6.6vw, 2.6rem);
+  }
+  .mn-mi__desc {
+    max-width: 52ch;
+  }
+  .mn-mi__cta i {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (max-width: 560px) {
+  .mn-mi__sub {
+    display: none; /* second sentence of beat 01; the headline carries it */
+  }
+  .mn-mi__notes {
+    display: none;
+  }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────
+   No scroll scrubbing, no tall container, no sequence: one static frame
+   of the assembled camera, the opening beat, and the way in. */
+@media (prefers-reduced-motion: reduce) {
+  .mn-mi__cta i,
+  .mn-mi__cta > span::after,
+  .mn-mi__skip {
+    transition: none;
+  }
+}
+
+.mn-mi[data-reduced='true'] {
+  height: auto;
+}
+/* A definite height, not min-height: every box below this one sizes with
+   `height: 100%`, and a percentage against an auto-height parent computes to
+   auto — which collapses the story column and drops the stage counter on top
+   of the eyebrow. */
+.mn-mi[data-reduced='true'] .mn-mi__stage {
+  position: static;
+  height: 100vh;
+  height: 100svh;
+}
+.mn-mi[data-reduced='true'] .mn-mi__beat:not(:first-child),
+.mn-mi[data-reduced='true'] .mn-mi__note:not(:first-child),
+.mn-mi[data-reduced='true'] .mn-mi__hint,
+.mn-mi[data-reduced='true'] .mn-mi__rail {
+  display: none;
+}
+/* These rest at zero because the scroll pass drives them; with no scroll
+   pass they need their finished state instead. */
+.mn-mi[data-reduced='true'] .mn-mi__eyebrow i {
+  transform: scaleX(1);
+}
+.mn-mi[data-reduced='true'] .mn-mi__note {
+  opacity: 1;
+}
