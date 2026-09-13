@@ -5,6 +5,10 @@
     <link rel="icon" type="image/png" href="/images/cropped-logo_square.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <title>Media Nest | Brand Image Management &amp; Consultancy | VISUAL EXCELLENCE, TANGIBLE RESULTS</title>
+    <!-- The intro cannot start until this has buffered, and the request would
+         otherwise wait for the JS bundle to parse and React to mount. Asking
+         for it here starts the fetch while the HTML is still being read. -->
+    <link rel="preload" as="video" type="video/mp4" href="/camera-sequence.mp4" />
     <meta name="description" content="Media Nest is a premier Brand Image Management and Consultancy firm specializing in creating and curating impactful visual content that amplifies brand presence and identity." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

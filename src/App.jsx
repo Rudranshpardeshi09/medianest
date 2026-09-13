@@ -12,22 +12,24 @@ import Testimonials from './components/Testimonials'
 import Clients from './components/Clients'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import SiteIntro from './components/SiteIntro'
 
 export function App() {
-  const [loading, setLoading] = useState(true)
+  /* The intro decides when it is done: it ends on the video ending, a hard
+     timeout, an error or a blocked autoplay — whichever comes first. The
+     loader it replaces was a flat 800ms timer with the logo, which had
+     nothing to do with whether anything was actually ready. */
+  const [intro, setIntro] = useState(true)
 
+  /* Nothing scrolls behind the intro. */
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800)
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="doc-loader">
-        <img src="/images/cropped-logo_square.png" alt="Media Nest" />
-      </div>
-    )
-  }
+    if (!intro) return undefined
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [intro])
 
   return (
     // reducedMotion="user" se Framer OS ki "reduce motion" setting ka
@@ -35,6 +37,8 @@ export function App() {
     // Framer ka default "never" hai — yani preference ignore hoti hai —
     // isliye ise yahan root par ek baar set karna zaroori hai.
     <MotionConfig reducedMotion="user">
+      {intro && <SiteIntro onDone={() => setIntro(false)} />}
+
       <div className="site-wrapper">
         <Header />
         <div id="content" className="site-content">

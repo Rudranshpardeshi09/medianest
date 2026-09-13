@@ -47,3 +47,9 @@ src/_redesign/
 # being true: src/ now references 25 files under /media/ and only 3 under
 # /images/, so the rule was shipping a repo whose every image 404s on a fresh
 # clone. The WebPs are the source assets now and belong in the repo (~1MB).
+
+# Source archives dropped into public/. Vite copies everything in public/
+# straight into dist, so a frame export left here ships to every visitor —
+# ezgif-339a31adbebe6967-jp-full.zip was 1.1MB of it. The frames these
+# contain are only ever an intermediate step; the site serves the mp4.
+public/**/*.zip
