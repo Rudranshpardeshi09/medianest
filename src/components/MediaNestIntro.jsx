@@ -121,10 +121,18 @@ const STAGES = [
   },
 ]
 
-/* The closing iris. The beats are fully told by 0.94; the last stretch
-   belongs to the handoff, where the composition contracts to a point and
-   leaves the reader on the field the homepage already uses. */
-const IRIS_FROM = 0.94
+/* Where the story ends and the handoff begins.
+
+   The two used to share one progress value, which meant the closing iris
+   got whatever was left of the scroll — about 20vh, two notches of a wheel,
+   and it was over before it read as anything. They are split here so the
+   handoff can be given its own room without re-timing a single beat: the
+   ranges in STAGES stay story-relative, and the stretch past this point is
+   the iris alone, with the camera assembled and beat 05 held.
+
+   At 480vh the story keeps the ~320vh it always had and the iris gets ~61vh
+   instead of ~20 — three times the distance for the same move. */
+const STORY_END = 0.84
 
 const Arrow = () => (
   <i aria-hidden>
@@ -364,11 +372,15 @@ export default function MediaNestIntro() {
     if (p === lastPRef.current) return
     lastPRef.current = p
 
+    /* Story progress. Everything the sequence tells runs off this and is
+       finished at STORY_END; `p` itself carries on to 1 through the handoff. */
+    const sp = clamp01(p / STORY_END)
+
     /* 1 — the camera. Linear across the whole sequence: the supplied frames
        already hold, spread and settle at their own pace, and re-timing them
        would be inventing camera movement that is not in the source. */
     const { numbers } = framesRef.current
-    const i = Math.round(p * (numbers.length - 1))
+    const i = Math.round(sp * (numbers.length - 1))
     targetRef.current = i
     if (i !== drawnRef.current) {
       drawnRef.current = i
@@ -380,7 +392,7 @@ export default function MediaNestIntro() {
     let current = 0
     for (let s = 0; s < STAGES.length; s += 1) {
       const [a, b] = STAGES[s].at
-      if (p >= a) current = s
+      if (sp >= a) current = s
 
       /* A beat starts arriving just before it owns the progress and is gone
          by the time the next one is established, so the two always overlap
@@ -390,8 +402,8 @@ export default function MediaNestIntro() {
          the reader would arrive to a headline permanently a quarter of the
          way through its own reveal. Every other beat is approached from
          somewhere, and enters. */
-      const tin = s === 0 ? 1 : smooth(at01(p, a - 0.035, a + 0.075))
-      const tout = s === STAGES.length - 1 ? 0 : smooth(at01(p, b - 0.055, b + 0.01))
+      const tin = s === 0 ? 1 : smooth(at01(sp, a - 0.035, a + 0.075))
+      const tout = s === STAGES.length - 1 ? 0 : smooth(at01(sp, b - 0.055, b + 0.01))
 
       const rec = animRef.current[s]
       const note = noteRefs.current[s]
@@ -443,14 +455,16 @@ export default function MediaNestIntro() {
     setStage((v) => (v === current ? v : current))
 
     /* 3 — the construction lines, off the same value. */
-    if (orbitRef.current) orbitRef.current.style.transform = `rotate(${p * 42}deg)`
-    if (arcRef.current) arcRef.current.style.strokeDashoffset = `${(1 - p) * 620}`
+    if (orbitRef.current) orbitRef.current.style.transform = `rotate(${sp * 42}deg)`
+    if (arcRef.current) arcRef.current.style.strokeDashoffset = `${(1 - sp) * 620}`
+    /* `p`, not `sp`: the rail reads the section, so it should still be
+       travelling while the handoff plays rather than sitting full. */
     if (railRef.current) railRef.current.style.transform = `scaleY(${p})`
 
     /* 4 — the handoff. The composition contracts to a point behind a closing
        ring and leaves the reader on the field the homepage is already
        painted in, so the two sections meet on the same colour. */
-    const iris = at01(p, IRIS_FROM, 1)
+    const iris = at01(p, STORY_END, 1)
     const content = contentRef.current
     const ring = ringRef.current
     if (content) {
@@ -524,12 +538,14 @@ export default function MediaNestIntro() {
       data-reduced={reduced ? 'true' : 'false'}
       /* ── THE SPEED KNOB ──────────────────────────────────────────────
          The sticky stage is 100vh, so the distance the sequence is actually
-         scrubbed across is (this - 100)vh. At 440 that is 340vh for 240
-         frames — about 1.4vh per frame, and roughly 68vh per beat. Raise it
-         for a slower, more deliberate read; drop it towards 320 if it starts
-         to feel like work. Nothing else needs touching: every value
-         downstream is normalised to 0-1. */
-      style={reduced ? undefined : { height: '440vh' }}
+         scrubbed across is (this - 100)vh. At 480 that is 380vh: STORY_END
+         gives 319vh of it to the five beats and 240 frames — about 1.3vh per
+         frame, roughly 64vh per beat — and the remaining 61vh to the closing
+         iris. Raise it for a slower, more deliberate read; drop it towards
+         360 if it starts to feel like work. To change only how long the
+         handoff takes, move STORY_END instead. Nothing else needs touching:
+         every value downstream is normalised to 0-1. */
+      style={reduced ? undefined : { height: '480vh' }}
       aria-label="Media Nest opening sequence"
     >
       <div className="mn-mi__stage">
@@ -676,7 +692,7 @@ export default function MediaNestIntro() {
           </div>
         )}
 
-        {/* A 440vh opening needs a way past it. Instant, not smooth: a smooth
+        {/* A 480vh opening needs a way past it. Instant, not smooth: a smooth
             scroll over this distance is not a skip. */}
         {!reduced && (
           <button type="button" className="mn-mi__skip" onClick={() => goHome(true)}>
