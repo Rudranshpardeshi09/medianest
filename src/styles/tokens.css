@@ -18,12 +18,17 @@
   --mn-paper-edge: #ececf2; /* hairlines, card borders */
 
   /* Ink surfaces — used sparingly, for one or two contrast sections */
-  /* Deep end of the SAME navy family as --mn-navy (hue ~245, s ~66%).
-     The previous #100d2b sat at s54% l11% — its hue matched, but the
-     drop in saturation made it read as a different colour next to the
-     Why Choose Us band. */
-  --mn-ink-surface: #100c3a;
-  --mn-ink-surface-lift: #1a1550;
+  /* The page's two dark areas — Why Choose Us and the footer — are built
+     from these three and nothing else, so they cannot drift apart.
+
+     Hue was never the problem: Why Choose Us, the footer and the brand navy
+     all measured at h245-247. Saturation was. At s66-71% a full-screen field
+     of it reads violet and synthetic rather than deep. These sit at s~50%
+     and low lightness, which lets the orange carry the only real colour on
+     the page. */
+  --mn-ink-deep: #090820; /* edges, and the floor of the footer */
+  --mn-ink-surface: #11102f; /* the body of a dark field */
+  --mn-ink-surface-lift: #282468; /* glows and lifts, never a flat fill */
 
   /* Legacy navy, retained for the brand mark and the parked scaffold */
   --mn-navy: #1a1369;
@@ -45,7 +50,9 @@
   /* ── Ink on dark, for the contrast sections ──────────────── */
   --mn-on-dark: #ffffff;
   --mn-on-dark-body: rgba(255, 255, 255, 0.74);
-  --mn-on-dark-micro: rgba(255, 255, 255, 0.42);
+  /* 0.42 measured 4.05:1 against the new, deeper ink surface — under the 4.5
+     these 9.5px tracked-out labels need. 0.5 measures 4.94:1. */
+  --mn-on-dark-micro: rgba(255, 255, 255, 0.5);
   --mn-hairline-dark: rgba(255, 255, 255, 0.14);
 
   /* ── Type ────────────────────────────────────────────────── */

@@ -1,381 +1,337 @@
 /* ============================================================
-   WHY CHOOSE US — the one deep-ink section
-   Everything else in this page is paper. A single dark band gives the
-   scroll a beat without returning to the old navy-everywhere theme.
+   WHY CHOOSE US — the line that rewrites itself
+
+   Light editorial, like the rest of the page. The glass, the aurora
+   and the floating orbs are gone: that combination is the default
+   look of a generated page, and it made a considered section read as
+   a template.
+
+   What sets this section apart is structure, not colour — a margin
+   column carrying the whole set, a main column carrying one of them
+   at display size, column rules, crop marks. Its neighbours are
+   white; this is a half-step warmer, eased at both seams so the
+   change of section is felt rather than seen.
+
+   The section holds its own h2 still and rewrites the reason beneath
+   it as you scroll. All four are stacked in one box; only one is
+   opaque at a time and the words turn over individually. Scrubbed off
+   raw scroll progress with no spring, so the line moves only while
+   the reader does.
+
+   240vh buys the travel. Below 900px, and for reduced motion, nothing
+   pins — the four unstack into a plain list.
    ============================================================ */
 
 .mn-why {
+  --why-orange: var(--mn-orange, #e95523);
+  --why-rule: rgba(16, 13, 43, 0.12);
+  --why-rule-fine: rgba(16, 13, 43, 0.055);
+
   position: relative;
   isolation: isolate;
-  /* Brand navy, not the desaturated near-black. #100d2b read as flat and
-     empty; the real #1a1369 with a gradient gives the band colour and
-     depth, and ties it back to the logo. */
-  background:
-    linear-gradient(158deg, #241c7a 0%, var(--mn-navy, #1a1369) 44%, #120d4f 100%);
-  color: var(--mn-on-dark, #fff);
-  padding: clamp(76px, 12vh, 150px) 0;
-  overflow: clip;
+  height: 240vh;
+  background: linear-gradient(
+    180deg,
+    var(--mn-paper, #fff) 0%,
+    #faf8f4 9%,
+    #faf8f4 91%,
+    var(--mn-paper, #fff) 100%
+  );
+  color: var(--mn-ink, #100d2b);
 }
 
-/* Fine grain over the whole band — stops the gradient from banding and
-   keeps large flat areas from looking dead. Inline SVG, no request. */
-.mn-why::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.2;
-  mix-blend-mode: overlay;
-  background-image: var(--mn-grain);
-  background-size: 170px 170px;
-}
-
-/* Two ambient glows give the band a light direction instead of a flat wash */
-.mn-why::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(38rem 38rem at 88% -8%, rgba(233, 85, 35, 0.30) 0%, transparent 64%),
-    radial-gradient(34rem 34rem at 4% 108%, rgba(96, 118, 255, 0.26) 0%, transparent 66%);
-}
-
-/* Brand geometry filling the left column's lower half — lens rings and
-   the MN arch, the same vocabulary as the nav and hero. */
-.mn-why__art {
-  position: relative;
-  margin-top: clamp(28px, 5vh, 56px);
-  width: 100%;
-  max-width: 440px;
-  pointer-events: none;
-}
-.mn-why__art svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
-
-@media (max-width: 1100px) {
-  .mn-why__art { display: none; }
-}
-
-.mn-why__inner {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 1500px;
-  margin: 0 auto;
-  padding: 0 56px;
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: clamp(40px, 5vw, 84px);
-  align-items: start;
-}
-
-.mn-why__head {
+.mn-why__stage {
   position: sticky;
-  top: 20vh;
-}
-
-/* The eyebrow rule is shared, but on ink it needs its own colour */
-.mn-why .mn-eyebrow {
-  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.42));
-}
-
-.mn-why__title {
-  margin: 0;
-  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
-  font-weight: 700;
-  font-size: clamp(1.9rem, 3.5vw, 3.4rem);
-  line-height: 1.04;
-  letter-spacing: -0.025em;
-  color: var(--mn-on-dark, #fff);
-}
-.mn-why__lede {
-  margin: 20px 0 0;
-  max-width: 34ch;
-  font-size: 14.5px;
-  line-height: 1.8;
-  color: var(--mn-on-dark-body, rgba(255, 255, 255, 0.74));
-}
-
-.mn-why__title em {
-  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
-  font-style: italic;
-  font-weight: 400;
-  color: var(--mn-orange, #e95523);
-}
-
-/* ── Disclosure list ───────────────────────────────────────── */
-
-.mn-why__list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.18));
-}
-
-.mn-why__item {
-  border-bottom: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.18));
-}
-
-.mn-why__btn {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  width: 100%;
-  padding: clamp(16px, 2.2vh, 24px) 0;
-  border: 0;
-  background: transparent;
-  text-align: left;
-  cursor: pointer;
-}
-
-/* Muted numeral that turns orange when open. These were outlined
-   (text-stroke) at 4.4rem — at that size in italic slab they read as
-   drawing artifacts rather than numbers. */
-.mn-why__num {
-  flex: 0 0 auto;
-  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.34);
-  transition: color 0.55s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
-}
-.mn-why__item[data-open='true'] .mn-why__num {
-  color: var(--mn-orange, #e95523);
-}
-
-.mn-why__label {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
-  font-size: clamp(1.05rem, 1.7vw, 1.55rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.62);
-  transition: color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
-}
-.mn-why__item[data-open='true'] .mn-why__label,
-.mn-why__btn:hover .mn-why__label,
-.mn-why__btn:focus-visible .mn-why__label {
-  color: #fff;
-}
-
-/* Plus → minus */
-.mn-why__sign {
-  position: relative;
-  flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: border-color 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
-}
-.mn-why__item[data-open='true'] .mn-why__sign {
-  border-color: var(--mn-orange, #e95523);
-}
-.mn-why__sign::before,
-.mn-why__sign::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 13px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.75);
-  transform: translate(-50%, -50%);
-  transition: transform 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
-    background-color 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
-}
-.mn-why__sign::after {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-.mn-why__item[data-open='true'] .mn-why__sign::before,
-.mn-why__item[data-open='true'] .mn-why__sign::after {
-  background: var(--mn-orange, #e95523);
-}
-.mn-why__item[data-open='true'] .mn-why__sign::after {
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-.mn-why__panel {
+  top: 0;
+  height: 100vh;
+  height: 100svh;
   display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transition: grid-template-rows 0.55s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
-    opacity 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
-}
-.mn-why__panel[data-open] {
-  grid-template-rows: 1fr;
-  opacity: 1;
-}
-.mn-why__panelin {
+  place-items: center;
   overflow: hidden;
-  min-height: 0;
 }
 
-.mn-why__body {
-  max-width: 62ch;
-  margin: 0;
-  padding: 0 0 clamp(18px, 2.6vh, 28px) 0;
-  /* Small indent to align under the label, clear of the numeral */
-  margin-left: calc(clamp(1.15rem, 1.8vw, 1.5rem) + 18px);
-  font-size: 15px;
-  line-height: 1.8;
-  color: var(--mn-on-dark-body, rgba(255, 255, 255, 0.74));
-}
-
-/* ── Responsive ────────────────────────────────────────────── */
-
-@media (max-width: 1100px) {
-  .mn-why__inner {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 0 36px;
-  }
-  /* Stacked, a sticky heading would just hover over the list */
-  .mn-why__head { position: static; }
-}
-
-@media (max-width: 767px) {
-  .mn-why__inner { padding: 0 22px; }
-  .mn-why__btn { gap: 16px; }
-  .mn-why__sign { width: 32px; height: 32px; }
-  .mn-why__body {
-    margin-left: 0;
-    font-size: 14px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mn-why__num,
-  .mn-why__label,
-  .mn-why__sign,
-  .mn-why__sign::before,
-  .mn-why__sign::after { transition-duration: 0.01ms; }
-}
-
-/* ── Field ─────────────────────────────────────────────────────
-   A soft sphere, one orange sweep and a camera bleeding off the bottom
-   corner. All three sit under .mn-why__inner (z-index 1), and none of
-   them is announced. */
-
-.mn-why__orb {
+/* Column rules — a print grid, not a tech grid: verticals only, and they
+   stop short of the edges the way a page's do. */
+.mn-why__cols {
   position: absolute;
-  left: -12%;
-  top: -22%;
+  inset: 12% 0;
+  left: 0;
+  right: 0;
   z-index: 0;
-  width: 58vw;
-  max-width: 900px;
-  aspect-ratio: 1;
-  border-radius: 50%;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
   pointer-events: none;
-  background: radial-gradient(
-    circle at 34% 32%,
-    rgba(96, 86, 220, 0.4) 0%,
-    rgba(36, 28, 122, 0.22) 44%,
-    rgba(18, 13, 79, 0) 72%
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--why-rule-fine) 0 1px,
+    transparent 1px calc(100% / 6)
   );
 }
 
-.mn-why__sweep {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  fill: none;
-  stroke: rgba(233, 85, 35, 0.5);
-  stroke-width: 1;
-}
-
-/* The photograph is texture here, not subject: it is masked away well
-   before it reaches the copy column. */
-.mn-why__bleed {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  z-index: 0;
-  width: clamp(220px, 26vw, 420px);
-  aspect-ratio: 3 / 4;
-  pointer-events: none;
-  opacity: 0.42;
-  -webkit-mask-image: radial-gradient(120% 100% at 0% 100%, #000 20%, transparent 72%);
-  mask-image: radial-gradient(120% 100% at 0% 100%, #000 20%, transparent 72%);
-}
-.mn-why__bleed img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 45% center;
-  display: block;
-  filter: grayscale(1) contrast(1.15) brightness(0.62);
-  mix-blend-mode: luminosity;
-}
-
-/* ── Edge micro-type ───────────────────────────────────────── */
-
-.mn-why__edge {
+/* Crop marks at two opposite corners */
+.mn-why__crop {
   position: absolute;
   z-index: 1;
-  margin: 0;
-  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
-  font-size: 9.5px;
-  font-weight: 500;
-  line-height: 2;
-  letter-spacing: 2.4px;
-  text-transform: uppercase;
-  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.42));
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+  border: 1px solid var(--why-orange);
 }
-.mn-why__edge--tr {
-  top: clamp(26px, 4vh, 56px);
-  right: clamp(20px, 3vw, 52px);
-  text-align: right;
+.mn-why__crop--tl {
+  left: clamp(18px, 2.4vw, 40px);
+  top: clamp(18px, 3vh, 44px);
+  border-right: 0;
+  border-bottom: 0;
 }
-.mn-why__edge--br {
-  bottom: clamp(26px, 4vh, 56px);
-  right: clamp(20px, 3vw, 52px);
-  text-align: right;
-}
-.mn-why__edge--tr::after,
-.mn-why__edge--br::after {
-  content: '';
-  display: block;
-  width: 20px;
-  height: 2px;
-  margin: 10px 0 0 auto;
-  background: var(--mn-orange, #e95523);
-}
-.mn-why__edge--l {
-  left: clamp(10px, 1.4vw, 22px);
-  top: 50%;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  transform: translateY(-50%) rotate(180deg);
-  writing-mode: vertical-rl;
-}
-.mn-why__edge--l i {
-  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
-  font-style: italic;
-  color: var(--mn-orange, #e95523);
+.mn-why__crop--br {
+  right: clamp(18px, 2.4vw, 40px);
+  bottom: clamp(18px, 3vh, 44px);
+  border-left: 0;
+  border-top: 0;
 }
 
-/* ── CTA ───────────────────────────────────────────────────── */
+/* Paper tooth rather than film grain — multiply, not overlay, and light. */
+.mn-why__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0.38;
+  mix-blend-mode: multiply;
+  background-image: var(--mn-grain);
+  background-size: 180px 180px;
+}
+
+/* ── Two columns: the set, and the one on show ─────────────── */
+
+.mn-why__inner {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 232px) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 72px);
+  width: 100%;
+  max-width: 1320px;
+  padding: 0 clamp(22px, 5vw, 76px);
+}
+
+.mn-why__side {
+  padding-top: 6px;
+  border-top: 2px solid var(--mn-ink, #100d2b);
+}
+
+.mn-why .mn-eyebrow {
+  margin-top: 14px;
+  color: var(--mn-ink-micro, #8e8ba1);
+}
+
+/* The whole set, listed. The one on show is marked. */
+.mn-why__index {
+  margin: clamp(24px, 4vh, 44px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.mn-why__index li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--why-rule-fine);
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mn-ink-micro, #8e8ba1);
+  transition: color 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__index li i {
+  flex: 0 0 auto;
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  font-size: 10px;
+}
+.mn-why__index li[data-on] {
+  color: var(--mn-ink, #100d2b);
+}
+.mn-why__index li[data-on] i {
+  color: var(--why-orange);
+}
+/* The marker is a rule that draws itself, not a dot that lights up. */
+.mn-why__index li span {
+  position: relative;
+}
+.mn-why__index li span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1.5px;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--why-orange);
+  transition: transform 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-why__index li[data-on] span::after {
+  transform: scaleX(1);
+}
+
+/* ── Main column ───────────────────────────────────────────── */
+
+.mn-why__main {
+  min-width: 0;
+}
+
+.mn-why__frame {
+  margin: 0;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--why-rule);
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 400;
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--mn-ink-body, #5b5870);
+}
+.mn-why__frame em {
+  font-family: var(--mn-font-slab, 'Roboto Slab', serif);
+  font-style: italic;
+  color: var(--why-orange);
+}
+
+/* ── The part that rewrites ────────────────────────────────── */
+
+.mn-why__display {
+  position: relative;
+  /* Sized against the longest label on one line plus its support copy, so
+     nothing below shifts as the reason changes. */
+  min-height: clamp(210px, 30vh, 290px);
+  margin-top: clamp(24px, 4vh, 44px);
+}
+
+.mn-why__panel {
+  position: absolute;
+  inset: 0;
+}
+
+/* Ghosted ordinal, set out in the margin of the main column */
+.mn-why__ord {
+  position: absolute;
+  right: 0;
+  top: -30%;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 700;
+  font-size: clamp(5rem, 12vw, 10rem);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: var(--mn-ink, #100d2b);
+  pointer-events: none;
+}
+
+.mn-why__line {
+  margin: 0;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-weight: 700;
+  /* Sized so "Comprehensive Services" and "Client-Centric Approach" — both
+     22 characters — stay on one line. When they wrapped, their figure ran
+     12px past the display box and left 15px to the foot against 100 and
+     130px on the one-line panels: the composition moved as you scrolled. */
+  max-width: 94%;
+  font-size: clamp(2rem, 5vw, 4.3rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  color: var(--mn-ink, #100d2b);
+}
+
+/* Each word is its own box so the line can turn over word by word. */
+.mn-why__wordbox {
+  display: inline-block;
+  margin-right: 0.24em;
+}
+.mn-why__word {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
+.mn-why__support {
+  max-width: 46ch;
+  margin: clamp(20px, 3vh, 32px) 0 0;
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.75;
+  color: var(--mn-ink-body, #5b5870);
+}
+
+.mn-why__stat {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: clamp(16px, 2.4vh, 26px);
+}
+.mn-why__stat b {
+  padding-left: 16px;
+  border-left: 2px solid var(--why-orange);
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--mn-ink, #100d2b);
+}
+.mn-why__stat i {
+  font-style: normal;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--mn-ink-micro, #8e8ba1);
+}
+
+/* ── Foot: counter, progress rule, CTA ─────────────────────── */
+
+.mn-why__foot {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.6vw, 40px);
+  margin-top: clamp(20px, 3vh, 36px);
+  padding-top: clamp(18px, 2.6vh, 30px);
+  border-top: 1px solid var(--why-rule);
+}
+
+.mn-why__count b {
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--why-orange);
+}
+.mn-why__count s {
+  margin-left: 6px;
+  text-decoration: none;
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  color: var(--mn-ink-micro, #8e8ba1);
+}
+
+.mn-why__rail {
+  flex: 1 1 auto;
+  max-width: 420px;
+  height: 1px;
+  background: var(--why-rule);
+}
+.mn-why__rail i {
+  display: block;
+  height: 100%;
+  transform-origin: left;
+  background: var(--why-orange);
+}
 
 .mn-why__cta {
   display: inline-flex;
   align-items: center;
-  gap: 18px;
-  margin-top: 30px;
+  gap: 16px;
+  margin-left: auto;
   padding: 0;
   border: 0;
   background: transparent;
@@ -385,157 +341,128 @@
   font-weight: 700;
   letter-spacing: 2.4px;
   text-transform: uppercase;
-  color: var(--mn-on-dark, #fff);
+  color: var(--mn-ink, #100d2b);
+  white-space: nowrap;
   transition: color 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
 }
 .mn-why__cta:hover {
-  color: var(--mn-orange, #e95523);
+  color: var(--why-orange);
 }
 .mn-why__ctadisc {
   display: grid;
   place-items: center;
-  width: 54px;
-  height: 54px;
+  width: 48px;
+  height: 48px;
   flex: 0 0 auto;
   border-radius: 50%;
-  border: 1.5px solid rgba(233, 85, 35, 0.75);
-  color: var(--mn-orange, #e95523);
+  border: 1.5px solid rgba(233, 85, 35, 0.6);
+  color: var(--why-orange);
   transition: background 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
     color 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
     transform 0.5s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
 }
 .mn-why__ctadisc svg {
-  width: 17px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
 }
 .mn-why__cta:hover .mn-why__ctadisc {
-  background: var(--mn-orange, #e95523);
+  background: var(--why-orange);
   color: #fff;
   transform: scale(1.06);
 }
 
-/* ── Art label ─────────────────────────────────────────────── */
+/* ── Folio ─────────────────────────────────────────────────── */
 
-.mn-why__art {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 2vw, 34px);
-}
-.mn-why__artlabel {
+.mn-why__edge {
+  position: absolute;
+  right: clamp(20px, 3vw, 56px);
+  bottom: clamp(24px, 4vh, 52px);
+  z-index: 3;
   margin: 0;
-  padding-left: clamp(12px, 1.4vw, 20px);
-  border-left: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.14));
+  text-align: right;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
   font-size: 9.5px;
   font-weight: 500;
   line-height: 2;
   letter-spacing: 2.4px;
   text-transform: uppercase;
-  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.42));
+  color: var(--mn-ink-micro, #8e8ba1);
 }
-
-/* ── Rows as cards ─────────────────────────────────────────── */
-
-.mn-why__item {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.035);
-  transition: border-color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
-    background 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
-}
-.mn-why__item:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-.mn-why__item[data-open='true'] {
-  border-color: rgba(233, 85, 35, 0.42);
-  background: rgba(255, 255, 255, 0.06);
-}
-.mn-why__btn {
-  padding-inline: clamp(18px, 2vw, 30px);
-}
-.mn-why__panelin {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(14px, 2vw, 30px);
-  padding: 0 clamp(18px, 2vw, 30px) 24px;
-}
-
-.mn-why__icon {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  border: 1px solid rgba(233, 85, 35, 0.4);
-  color: var(--mn-orange, #e95523);
-}
-.mn-why__icon svg {
-  width: 19px;
-  height: 19px;
-}
-
-.mn-why__stat {
+.mn-why__edge::after {
+  content: '';
   display: block;
-  padding-left: clamp(14px, 1.8vw, 26px);
-  border-left: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.14));
-  text-align: left;
-}
-.mn-why__stat b {
-  display: block;
-  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
-  font-size: clamp(1.4rem, 2vw, 1.9rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--mn-on-dark, #fff);
-}
-.mn-why__stat i {
-  display: block;
-  margin-top: 8px;
-  /* The label carries its own line break in the data */
-  white-space: pre-line;
-  font-style: normal;
-  font-size: 9px;
-  font-weight: 500;
-  line-height: 1.7;
-  letter-spacing: 2.2px;
-  text-transform: uppercase;
-  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.42));
+  width: 20px;
+  height: 2px;
+  margin: 10px 0 0 auto;
+  background: var(--why-orange);
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
+/* ── Unpinned fallback ─────────────────────────────────────────
+   Below 900px and under reduced motion the section does not pin. The
+   four panels come out of their shared box and stack, and the inline
+   styles the scrubber sets — which know nothing about the breakpoint
+   — are overridden hard. Everything was already in the DOM. */
 
-@media (max-width: 1100px) {
-  /* The vertical rail and the bleed both want the left gutter, and at this
-     width there is not one to give. */
-  .mn-why__edge--l,
-  .mn-why__bleed {
-    display: none;
+@media (prefers-reduced-motion: reduce), (max-width: 900px) {
+  .mn-why {
+    height: auto;
   }
-}
-
-@media (max-width: 720px) {
-  .mn-why__edge--tr,
-  .mn-why__edge--br {
-    display: none;
+  .mn-why__stage {
+    position: static;
+    height: auto;
+    padding: clamp(72px, 10vh, 130px) 0;
   }
-  .mn-why__panelin {
+  .mn-why__inner {
     grid-template-columns: 1fr;
-    gap: 16px;
   }
+  .mn-why__display {
+    min-height: 0;
+    display: grid;
+    gap: clamp(36px, 7vw, 56px);
+    margin-top: clamp(30px, 6vw, 46px);
+  }
+  .mn-why__panel {
+    position: static;
+    padding-top: 24px;
+    border-top: 1px solid var(--why-rule);
+  }
+  .mn-why__word,
+  .mn-why__support,
   .mn-why__stat {
-    padding-left: 0;
-    padding-top: 14px;
-    border-left: 0;
-    border-top: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.14));
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
-  .mn-why__art {
-    flex-direction: column;
-    align-items: flex-start;
+  .mn-why__ord {
+    position: static;
+    display: block;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    letter-spacing: 2px;
+    opacity: 1 !important;
+    color: var(--why-orange);
   }
-  .mn-why__artlabel {
-    padding-left: 0;
-    border-left: 0;
+  .mn-why__line {
+    max-width: none;
+    margin-top: 8px;
+    font-size: clamp(1.9rem, 8vw, 2.8rem);
+  }
+  .mn-why__foot {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .mn-why__index,
+  .mn-why__rail,
+  .mn-why__count,
+  .mn-why__edge,
+  .mn-why__cols,
+  .mn-why__crop {
+    display: none;
+  }
+  .mn-why__side {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .mn-why__cta {
+    margin-left: 0;
   }
 }
