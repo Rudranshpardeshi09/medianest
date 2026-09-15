@@ -14,48 +14,64 @@ import '../styles/mn-intro.css'
  * Remove <MediaNestIntro /> from App.jsx and the site is exactly what it was.
  */
 
-/* ── The sequence ─────────────────────────────────────────────────────
-   public/sequence/ezgif-frame-001.jpg … -240.jpg, extracted from the
-   supplied archive. All 240 are 640x360 and ~5KB each (1.2MB for the set),
-   which is why they are served as individual files rather than packed into
-   an atlas: over HTTP/2 the requests are multiplexed, and serving them
-   separately is what makes it possible to prioritise the opening run. */
+/* -- The sequence -----------------------------------------------------
+   public/sequence/ezgif-frame-001.jpg ... -240.jpg, extracted from the
+   supplied archive. All 240 are 1280x720 and ~15KB each, 3.5MB for the set.
+
+   This is the same 240-frame animation that was here at 640x360, at twice
+   the resolution and with real detail behind it rather than an upscale: on
+   the camera body the new frames carry a third more high-frequency energy
+   than the old ones resampled to the same size. Every measured constant
+   below is the old one doubled, so neither the framing nor the timing
+   moves -- only what is drawn into them.
+
+   They are served as individual files rather than packed into an atlas:
+   over HTTP/2 the requests are multiplexed, and serving them separately is
+   what makes it possible to prioritise the opening run. */
 const FRAME_COUNT = 240
 const frameSrc = (n) => `/sequence/ezgif-frame-${String(n).padStart(3, '0')}.jpg`
 
-/* The frames' own background, sampled from their corners: rgb(242,239,231).
-   The section is painted the same colour, so the canvas has no visible edge
-   at any size. It is 1% off the hero's #f5f2ec — below the point anyone can
-   see a step — and the two never share an edge. */
-const FIELD_RGB = '242, 239, 231'
+/* The frames' own background, re-sampled from the new set: the median of 245
+   edge samples across the sequence is rgb(241,238,229), a point under what
+   the old set measured. The section is painted the same colour, so the
+   canvas has no visible edge at any size. It is 1% off the hero's #f5f2ec,
+   below the point anyone can see a step, and the two never share an edge. */
+const FIELD_RGB = '241, 238, 229'
 
-/* ── Framing ──────────────────────────────────────────────────────────
-   Measured across all 240 frames (luma < 165): the camera never leaves
-   x 112-505 or y 0-349 of the 640x360 render. Over a third of the frame's
-   width is field it never uses, and drawing that empty width would leave
-   the exploded camera about a third of the pane.
+/* -- Framing ----------------------------------------------------------
+   Re-measured across all 240 of the new frames (luma < 165): the camera
+   never leaves x 224-1012 or y 0-697 of the 1280x720 render, which is the
+   bounds the 640x360 set had, doubled. Over a third of the frame's width is
+   field it never uses, and drawing that empty width would leave the
+   exploded camera about a third of the pane.
 
-   This window keeps ~36px of clear air on each side of the widest frame —
-   it is centred on the content, not on the frame — and the full height.
+   This window keeps ~70px of clear air on each side of the widest frame,
+   centred on the content rather than on the frame, and the full height.
    Nothing of the camera is cropped at any point in the sequence; what is
-   trimmed is background the same colour as the page. */
-const SAFE = { x: 76, y: 0, w: 464, h: 360 }
+   trimmed is background the same colour as the page. Doubling the old
+   window rather than deriving a new one is deliberate: the ratios come out
+   identical, so the camera lands on screen at exactly the size it did. */
+const SAFE = { x: 152, y: 0, w: 928, h: 720 }
 
-/* The source is 640x360. Past roughly 1.8x it stops reading as a render and
-   starts reading as an upscale, so the drawn box is capped there and very
-   large displays simply keep more air around it. */
-const MAX_SCALE = 1.8
+/* The largest the safe window may be drawn, as a multiple of its own pixels.
+   0.9 is the same on-screen limit that 1.8 was against the old 640x360 set
+   (928 x 0.9 = 464 x 1.8), so the cap has not moved -- only the source under
+   it. At 1280x720 it is insurance rather than a constraint: the grid tops
+   out at 1500px, which never asks for more than about 0.8, so the frame is
+   now drawn at or below native on every layout this has. */
+const MAX_SCALE = 0.9
 
 /* The lens hood leaves the top of the render on the way out and returns the
-   same way: row 0 of frames 42-85 and 156-199 carries 23-75px of it, so the
-   source itself clips it. Those pixels were never rendered and nothing can
-   bring them back — but the field is flat, so feathering the drawn frame's
+   same way, and the new set clips it in the same place: row 0 carries it on
+   frames 42-84 and 157-199, within a frame of where the old set did. The
+   source itself does this -- those pixels were never rendered and nothing can
+   bring them back -- but the field is flat, so feathering the drawn frame's
    top edge, only while it is actually cut, turns a hard slice into the hood
    drifting out of the light. Every other frame has clear air above the
    camera and is left alone. */
 const TOP_CLIPPED = [
-  [42, 85],
-  [156, 199],
+  [42, 84],
+  [157, 199],
 ]
 const FEATHER_RAMP = 5
 

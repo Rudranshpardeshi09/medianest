@@ -13,11 +13,12 @@
    ============================================================ */
 
 .mn-mi {
-  /* Sampled from the frames' own corner pixels. Painting the section the
+  /* Sampled from the frames' own corner pixels, re-sampled for the 1280x720
+     set which sits a point darker than the 640x360 one did. Painting the
      same colour is what lets the canvas sit on it with no visible edge,
      at any pane size, without a mask. It is 1% off the hero's #f5f2ec —
      below anyone's threshold, and the two never share an edge. */
-  --mi-field: #f2efe7;
+  --mi-field: #f1eee5;
   --mi-ink: #12102f;
   --mi-body: #58556d;
   --mi-micro: #8e8ba1;

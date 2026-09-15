@@ -48,13 +48,15 @@ src/_redesign/
 # /images/, so the rule was shipping a repo whose every image 404s on a fresh
 # clone. The WebPs are the source assets now and belong in the repo (~1MB).
 
-# Frame archives. Vite copies the whole of public/ into dist verbatim, so an
-# archive left in there ships as a megabyte nothing ever requests - the one
-# for this sequence now lives in assets-src/sequence/ instead, and this rule
-# is the guard against the next one being dropped in the web root.
+# Frame sources. Vite copies the whole of public/ into dist verbatim, so an
+# archive or a source clip left in there ships as megabytes nothing ever
+# requests - the ones behind this sequence now live in assets-src/sequence/
+# instead, and these rules guard against the next one landing in the web root.
 public/**/*.zip
+public/*.mp4
 
 # The archive itself is not tracked: its 240 frames are, under
 # public/sequence/, which is what the site actually serves. Keeping both
 # would put the same 1.2MB in the repo twice.
 assets-src/sequence/*.zip
+assets-src/sequence/*.mp4
