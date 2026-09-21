@@ -38,10 +38,6 @@ reference ss/
 # screenshots and throwaway puppeteer scripts (~15MB). Local only.
 scratch/
 
-# ── Not part of the shipped site ────────────────────────────
-# Alternative redesign build — kept on disk for reference, not shipped.
-src/_redesign/
-
 # public/media/ used to be ignored as "generated WebP derivatives", on the
 # reasoning that the site served originals from public/images/. That stopped
 # being true: src/ now references 25 files under /media/ and only 3 under
