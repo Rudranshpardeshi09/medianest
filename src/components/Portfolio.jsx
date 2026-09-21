@@ -1,7 +1,10 @@
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
 import RevealImage from './primitives/RevealImage'
 import EdgeTitle from './primitives/EdgeTitle'
+import MediaLightbox from './MediaLightbox'
+import { WORK } from '@/lib/work'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/portfolio.css'
 
@@ -12,18 +15,23 @@ import '../styles/portfolio.css'
  *   live-stream 650x650 · event 1300x1300 · graphic 342x684
  *   video-edit 650x650 · digital 650x650
  */
-const TILES = [
-  { id: 'photography', name: 'Photography', meta: 'Stills', img: '/media/photography.webp', span: '6x2' },
-  { id: 'cinematography', name: 'Cinematography', meta: 'Motion', img: '/media/cinematography_main.webp', span: '6x1' },
-  { id: 'interview', name: 'Interview', meta: 'Voice', img: '/media/INTERVIEW.webp', span: '3x1' },
-  { id: 'live-stream', name: 'Live Stream', meta: 'Broadcast', img: '/media/LIVE-STREAM.webp', span: '3x1' },
-  { id: 'event', name: 'Event', meta: 'Coverage', img: '/media/EVENT.webp', span: '5x2' },
-  { id: 'graphic-design', name: 'Graphic Design', meta: 'Identity', img: '/media/graphic-1.webp', span: '3x2' },
-  { id: 'video-edit', name: 'Video Edit', meta: 'Post', img: '/media/video-edit.webp', span: '4x1' },
-  { id: 'digital-marketing', name: 'Digital Marketing', meta: 'Reach', img: '/media/new_DIGITAL-MARKETING.webp', span: '4x1' },
-]
 
 export default function Portfolio() {
+  /* Which tile's media is showing, and which item of it. `null` is closed. */
+  const [playing, setPlaying] = useState(null)
+  /* The tile that opened the lightbox, so focus can go back to it on close
+     instead of being dumped at the top of the document. */
+  const triggerRef = useRef(null)
+
+  const openMedia = (tile, el) => {
+    triggerRef.current = el
+    setPlaying({ tile, index: 0 })
+  }
+  const closeMedia = () => {
+    setPlaying(null)
+    triggerRef.current?.focus()
+  }
+
   return (
     <section id="projects" className="mn-work">
       <EdgeTitle side="right">Portfolio</EdgeTitle>
@@ -68,7 +76,7 @@ export default function Portfolio() {
           viewport={VIEWPORT}
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
         >
-          {TILES.map((t) => (
+          {WORK.map((t) => (
             <motion.article
               key={t.id}
               className={`mn-tile mn-tile--${t.span}`}
@@ -80,6 +88,19 @@ export default function Portfolio() {
               <RevealImage src={t.img} alt={`${t.name} — Media Nest`} />
 
               <span className="mn-tile__tint" aria-hidden />
+
+              {/* Without this nothing signals that a tile opens anything at
+                  all. A film gets a play mark; a gallery gets its frame count,
+                  so the two are told apart before anyone clicks. */}
+              <span className="mn-tile__play" aria-hidden>
+                {t.media[0].type === 'video' ? (
+                  <svg viewBox="0 0 20 20" focusable="false">
+                    <path d="M6.5 3.8 16 10l-9.5 6.2Z" />
+                  </svg>
+                ) : (
+                  <b className="mn-tile__count">{t.media.length}</b>
+                )}
+              </span>
               <span className="mn-tile__panel" aria-hidden />
 
               <p className="mn-tile__resting" aria-hidden>
@@ -92,12 +113,29 @@ export default function Portfolio() {
               </div>
 
               {/* The whole tile is the control, so hover state is also
-                  reachable by keyboard via :focus-within. */}
-              <a className="mn-tile__link" href="#contact" aria-label={`${t.name} — enquire`} />
+                  reachable by keyboard via :focus-within. Every tile now
+                  opens what is behind it rather than the enquiry form. */}
+              <button
+                type="button"
+                className="mn-tile__link"
+                aria-label={`${t.name} — ${
+                  t.media[0].type === 'video' ? 'play film' : 'view stills'
+                }`}
+                onClick={(e) => openMedia(t, e.currentTarget)}
+              />
             </motion.article>
           ))}
         </motion.div>
       </div>
+
+      <MediaLightbox
+        open={!!playing}
+        items={playing ? playing.tile.media : null}
+        index={playing ? playing.index : 0}
+        label={playing ? playing.tile.name : ''}
+        onIndex={(i) => setPlaying((p) => (p ? { ...p, index: i } : p))}
+        onClose={closeMedia}
+      />
     </section>
   )
 }

@@ -1,0 +1,177 @@
+/* ============================================================
+   VIDEO LIGHTBOX
+
+   Opens over the page when a portfolio tile that has a film is
+   clicked. The original site did the same thing through Elementor's
+   lightbox; this is the house version of it.
+
+   Namespaced .mn-lb-*. Nothing else on the page reads these.
+   ============================================================ */
+
+.mn-lb {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; /* over the nav, which sits at 1000 */
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 48px);
+  /* Deep ink rather than black: the page's own dark value, so the backdrop
+     belongs to this site and not to a generic player chrome. */
+  background: rgba(9, 8, 32, 0.88);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.mn-lb__panel {
+  width: min(1120px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Head ───────────────────────────────────────────────────── */
+
+.mn-lb__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.mn-lb__title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-family: var(--mn-font-slab, 'Roboto Slab', Georgia, serif);
+  font-size: clamp(1rem, 1.6vw, 1.4rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--mn-on-dark, #fff);
+}
+
+.mn-lb__eyebrow {
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mn-orange, #e95523);
+}
+
+.mn-lb__close {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.14));
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.35s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color 0.35s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-lb__close svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: var(--mn-on-dark, #fff);
+  stroke-width: 1.5;
+}
+.mn-lb__close:hover,
+.mn-lb__close:focus-visible {
+  background: var(--mn-orange, #e95523);
+  border-color: var(--mn-orange, #e95523);
+}
+
+/* ── Player ─────────────────────────────────────────────────── */
+
+.mn-lb__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #000;
+}
+.mn-lb__frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Stills are not 16:9 and must not be letterboxed into it: the photography
+   slides are 1.41:1 and the graphic-design ones are square. The frame gives
+   up its ratio and the image sizes itself inside a height cap instead. */
+.mn-lb__frame--still {
+  aspect-ratio: auto;
+  display: grid;
+  place-items: center;
+  max-height: 78vh;
+  background: transparent;
+}
+.mn-lb__frame--still img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+}
+
+/* ── Pager (only the Video Edit tile has two films) ─────────── */
+
+.mn-lb__pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.4px;
+  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.5));
+}
+.mn-lb__pager button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--mn-hairline-dark, rgba(255, 255, 255, 0.14));
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.3s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-lb__pager button svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: var(--mn-on-dark, #fff);
+  stroke-width: 1.5;
+}
+.mn-lb__pager button:hover,
+.mn-lb__pager button:focus-visible {
+  border-color: var(--mn-orange, #e95523);
+}
+
+@media (max-width: 620px) {
+  .mn-lb__head {
+    align-items: center;
+  }
+  .mn-lb__close {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-lb__close,
+  .mn-lb__pager button {
+    transition: none;
+  }
+}

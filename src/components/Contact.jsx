@@ -23,11 +23,20 @@ async function deliver(payload) {
   return { ok: true }
 }
 
+/* Country is back: the old WordPress form collected it (`your-country`
+   alongside `your-city`) and the rebuild had quietly dropped it. It is
+   optional, like City -- the firm works globally, so knowing where an
+   enquiry comes from is useful, but nobody should be stopped by it.
+
+   `wide` puts a field across both grid columns. Name takes it so the five
+   fields fill two-and-a-bit rows without leaving a hole beside the last one,
+   and City and Country end up paired, which is how they read. */
 const FIELDS = [
-  { name: 'name', label: 'Your name', type: 'text', required: true, autoComplete: 'name' },
+  { name: 'name', label: 'Your name', type: 'text', required: true, autoComplete: 'name', wide: true },
   { name: 'email', label: 'Email address', type: 'email', required: true, autoComplete: 'email' },
   { name: 'phone', label: 'Mobile number', type: 'tel', required: true, autoComplete: 'tel' },
   { name: 'city', label: 'City', type: 'text', required: false, autoComplete: 'address-level2' },
+  { name: 'country', label: 'Country', type: 'text', required: false, autoComplete: 'country-name' },
 ]
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -198,7 +207,7 @@ export default function Contact() {
         {/* ── Right: the form ─────────────────────────────── */}
         <form className="mn-form" onSubmit={onSubmit} noValidate>
           <div className="mn-form__grid">
-            {FIELDS.map((f) => renderField(f))}
+            {FIELDS.map((f) => renderField(f, f.wide))}
             {renderField(
               { name: 'message', label: 'Tell us about the project', type: 'textarea', required: true },
               true,

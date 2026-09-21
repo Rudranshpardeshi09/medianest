@@ -200,10 +200,76 @@
 }
 
 /* Keyboard reachability — the tile itself is the control */
+/* Either an <a> to the enquiry or a <button> that plays the tile's film,
+   so the button needs the UA chrome taken off it. */
 .mn-tile__link {
   position: absolute;
   inset: 0;
   z-index: 4;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ── Play badge ─────────────────────────────────────────────
+   Only on the five tiles that carry a film. Without it those tiles look
+   identical to the three that do not and the films stay undiscovered.
+   It sits away from the caption, which occupies the bottom-left. */
+.mn-tile__play {
+  position: absolute;
+  top: clamp(12px, 1.4vw, 20px);
+  right: clamp(12px, 1.4vw, 20px);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: clamp(38px, 3.4vw, 50px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background: rgba(9, 8, 32, 0.34);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  transition: background-color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform 0.45s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-tile__play svg {
+  width: 38%;
+  height: 38%;
+  /* nudged right: a triangle's optical centre sits left of its box */
+  margin-left: 8%;
+  fill: #fff;
+}
+/* Galleries show how many frames are behind the tile instead of a play
+   mark, so a still set is never mistaken for a film. */
+.mn-tile__count {
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.mn-tile:hover .mn-tile__play,
+.mn-tile:focus-within .mn-tile__play {
+  background: var(--mn-orange, #e95523);
+  border-color: var(--mn-orange, #e95523);
+  transform: scale(1.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-tile__play {
+    transition: none;
+  }
+  .mn-tile:hover .mn-tile__play,
+  .mn-tile:focus-within .mn-tile__play {
+    transform: none;
+  }
 }
 .mn-tile__link:focus-visible {
   outline: 2px solid var(--mn-orange, #e95523);

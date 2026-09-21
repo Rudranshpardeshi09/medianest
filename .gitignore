@@ -60,3 +60,5 @@ public/*.mp4
 # would put the same 1.2MB in the repo twice.
 assets-src/sequence/*.zip
 assets-src/sequence/*.mp4
+BACKEND-PLAN.md
+fornt-design-.md

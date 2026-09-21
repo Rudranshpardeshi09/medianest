@@ -1,6 +1,8 @@
-import { Fragment } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import Magnetic from './Magnetic'
+import MediaLightbox from './MediaLightbox'
+import { SHOWREEL } from '@/lib/work'
 import '../styles/hero.css'
 
 /* House easing — decisive start, long settle. */
@@ -66,6 +68,13 @@ export default function Hero() {
   const goTo = (id) => {
     document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
+
+  /* The showreel plays here rather than sending anyone down the page. It used
+     to scroll to `#video`, which is the id the Testimonials section carries
+     -- a leftover from the Video nav item that was removed -- so the button
+     landed on a carousel of written quotes. */
+  const [reel, setReel] = useState(false)
+  const reelBtn = useRef(null)
 
   // Words reveal in reading order across all three lines.
   let wordIndex = -1
@@ -172,7 +181,8 @@ export default function Hero() {
               <button
                 type="button"
                 className="mn-cta mn-cta--outline"
-                onClick={() => goTo('#video')}
+                ref={reelBtn}
+                onClick={() => setReel(true)}
               >
                 <span className="mn-cta__disc" aria-hidden>
                   <svg viewBox="0 0 20 20" focusable="false">
@@ -289,6 +299,18 @@ export default function Hero() {
           </p>
         </div>
       </motion.div>
+
+      <MediaLightbox
+        open={reel}
+        items={SHOWREEL.media}
+        index={0}
+        label={SHOWREEL.name}
+        onIndex={() => {}}
+        onClose={() => {
+          setReel(false)
+          reelBtn.current?.focus()
+        }}
+      />
     </section>
   )
 }
