@@ -13,13 +13,14 @@
    change of section is felt rather than seen.
 
    The section holds its own h2 still and rewrites the reason beneath
-   it as you scroll. All four are stacked in one box; only one is
+   it as you scroll. They are all stacked in one box; only one is
    opaque at a time and the words turn over individually. Scrubbed off
    raw scroll progress with no spring, so the line moves only while
    the reader does.
 
-   240vh buys the travel. Below 900px, and for reduced motion, nothing
-   pins — the four unstack into a plain list.
+   The section's height buys the travel and is computed from the number
+   of reasons — see `--why-count`. Below 900px, and for reduced motion,
+   nothing pins: they unstack into a plain list.
    ============================================================ */
 
 .mn-why {
@@ -29,7 +30,17 @@
 
   position: relative;
   isolation: isolate;
-  height: 240vh;
+
+  /* Scroll travel, set by how many reasons there are.
+
+     The stage is pinned for 100vh, so everything past that is the travel the
+     panels turn over in — 35vh each. The count comes from the component as
+     `--why-count`, because the reasons are editable now: at a fixed 240vh a
+     fifth reason would have had all five sharing the four's travel and the
+     line would turn over noticeably faster than it does today. The fallback
+     of 4 keeps this honest if the property ever fails to land. */
+  --why-travel: 35vh;
+  height: calc(100vh + var(--why-count, 4) * var(--why-travel));
   background: linear-gradient(
     180deg,
     var(--mn-paper, #fff) 0%,
@@ -205,9 +216,14 @@
 
 .mn-why__display {
   position: relative;
-  /* Sized against the longest label on one line plus its support copy, so
-     nothing below shifts as the reason changes. */
-  min-height: clamp(210px, 30vh, 290px);
+  /* Holds the tallest reason — longest label on one line plus a three-line
+     support paragraph — so the foot rule below does not move as the copy
+     changes. Measured at 189px; the rest is headroom for a longer paragraph.
+
+     It was 290px when each reason also carried a figure beneath the copy.
+     With the figure gone that left a band of empty paper under every reason,
+     so the box came down with it. */
+  min-height: clamp(180px, 23vh, 215px);
   margin-top: clamp(24px, 4vh, 44px);
 }
 
@@ -255,37 +271,16 @@
   will-change: transform, opacity, filter;
 }
 
+/* The reason's copy. Set larger than it was: the figure that used to sit
+   beneath it is gone, and without it the panel had a band of empty paper under
+   14px type. The measure is held in `ch` so the line length stays the same
+   number of characters as the size moves with the viewport. */
 .mn-why__support {
   max-width: 46ch;
   margin: clamp(20px, 3vh, 32px) 0 0;
-  font-size: clamp(14px, 1.1vw, 16px);
-  line-height: 1.75;
+  font-size: clamp(15px, 1.35vw, 19px);
+  line-height: 1.7;
   color: var(--mn-ink-body, #5b5870);
-}
-
-.mn-why__stat {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  margin-top: clamp(16px, 2.4vh, 26px);
-}
-.mn-why__stat b {
-  padding-left: 16px;
-  border-left: 2px solid var(--why-orange);
-  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
-  font-size: clamp(1.4rem, 2.2vw, 2rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--mn-ink, #100d2b);
-}
-.mn-why__stat i {
-  font-style: normal;
-  font-size: 9.5px;
-  font-weight: 500;
-  letter-spacing: 2.4px;
-  text-transform: uppercase;
-  color: var(--mn-ink-micro, #8e8ba1);
 }
 
 /* ── Foot: counter, progress rule, CTA ─────────────────────── */
@@ -297,21 +292,6 @@
   margin-top: clamp(20px, 3vh, 36px);
   padding-top: clamp(18px, 2.6vh, 30px);
   border-top: 1px solid var(--why-rule);
-}
-
-.mn-why__count b {
-  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
-  font-size: clamp(1.2rem, 1.8vw, 1.7rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--why-orange);
-}
-.mn-why__count s {
-  margin-left: 6px;
-  text-decoration: none;
-  font-size: 10.5px;
-  letter-spacing: 2px;
-  color: var(--mn-ink-micro, #8e8ba1);
 }
 
 .mn-why__rail {
@@ -427,8 +407,7 @@
     border-top: 1px solid var(--why-rule);
   }
   .mn-why__word,
-  .mn-why__support,
-  .mn-why__stat {
+  .mn-why__support {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
@@ -452,7 +431,6 @@
   }
   .mn-why__index,
   .mn-why__rail,
-  .mn-why__count,
   .mn-why__edge,
   .mn-why__cols,
   .mn-why__crop {

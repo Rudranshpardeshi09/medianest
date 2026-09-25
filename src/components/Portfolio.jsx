@@ -5,15 +5,14 @@ import RevealImage from './primitives/RevealImage'
 import EdgeTitle from './primitives/EdgeTitle'
 import MediaLightbox from './MediaLightbox'
 import { WORK } from '@/lib/work'
+import { SETTINGS, focal } from '@/lib/content'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/portfolio.css'
 
 /**
- * Tile spans are paired with each source image's real pixel size so nothing
- * is upscaled into mush (the mistake caught in the services section):
- *   photography 1300x1300 · cinematography 684x342 · interview 900x900
- *   live-stream 650x650 · event 1300x1300 · graphic 342x684
- *   video-edit 650x650 · digital 650x650
+ * Tiles come from the CMS; the spans do not. See `lib/work.js` for why the
+ * grid keeps its own eight-slot layout, and the admin's own crop preview for
+ * the pixel size each slot needs to stay sharp.
  */
 
 export default function Portfolio() {
@@ -65,7 +64,8 @@ export default function Portfolio() {
             viewport={VIEWPORT}
             transition={{ duration: 0.85, ease: EASE, delay: 0.12 }}
           >
-            Nine disciplines, one visual language — shot, directed and finished in-house.
+            {SETTINGS.discipline_count_word} disciplines, one visual language — shot, directed and
+            finished in-house.
           </motion.p>
         </div>
 
@@ -76,55 +76,71 @@ export default function Portfolio() {
           viewport={VIEWPORT}
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
         >
-          {WORK.map((t) => (
-            <motion.article
-              key={t.id}
-              className={`mn-tile mn-tile--${t.span}`}
-              variants={{
-                hidden: { opacity: 0 },
-                show: { opacity: 1, transition: { duration: 0.6, ease: EASE } },
-              }}
-            >
-              <RevealImage src={t.img} alt={`${t.name} — Media Nest`} />
+          {WORK.map((t) => {
+            /* A tile can now be created in the admin before anything is put
+               behind it. That used to be impossible, so `media[0]` was read
+               directly; with the content editable it would take the whole page
+               down at build time. An empty tile still shows -- cover, name and
+               all -- it just is not a control. */
+            const film = t.media[0]?.type === 'video'
+            const opens = t.media.length > 0
 
-              <span className="mn-tile__tint" aria-hidden />
+            return (
+              <motion.article
+                key={t.id}
+                className={`mn-tile mn-tile--${t.span}`}
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: { opacity: 1, transition: { duration: 0.6, ease: EASE } },
+                }}
+              >
+                <RevealImage
+                  src={t.img}
+                  alt={`${t.name} — Media Nest`}
+                  objectPosition={focal(t)}
+                />
 
-              {/* Without this nothing signals that a tile opens anything at
-                  all. A film gets a play mark; a gallery gets its frame count,
-                  so the two are told apart before anyone clicks. */}
-              <span className="mn-tile__play" aria-hidden>
-                {t.media[0].type === 'video' ? (
-                  <svg viewBox="0 0 20 20" focusable="false">
-                    <path d="M6.5 3.8 16 10l-9.5 6.2Z" />
-                  </svg>
-                ) : (
-                  <b className="mn-tile__count">{t.media.length}</b>
-                )}
-              </span>
-              <span className="mn-tile__panel" aria-hidden />
+                <span className="mn-tile__tint" aria-hidden />
 
-              <p className="mn-tile__resting" aria-hidden>
-                {t.name}
-              </p>
+                {/* Without this nothing signals that a tile opens anything at
+                    all. A film gets a play mark; a gallery gets its frame count,
+                    so the two are told apart before anyone clicks. */}
+                {opens ? (
+                  <span className="mn-tile__play" aria-hidden>
+                    {film ? (
+                      <svg viewBox="0 0 20 20" focusable="false">
+                        <path d="M6.5 3.8 16 10l-9.5 6.2Z" />
+                      </svg>
+                    ) : (
+                      <b className="mn-tile__count">{t.media.length}</b>
+                    )}
+                  </span>
+                ) : null}
+                <span className="mn-tile__panel" aria-hidden />
 
-              <div className="mn-tile__cap">
-                <span className="mn-tile__meta">{t.meta}</span>
-                <h3 className="mn-tile__name">{t.name}</h3>
-              </div>
+                <p className="mn-tile__resting" aria-hidden>
+                  {t.name}
+                </p>
 
-              {/* The whole tile is the control, so hover state is also
-                  reachable by keyboard via :focus-within. Every tile now
-                  opens what is behind it rather than the enquiry form. */}
-              <button
-                type="button"
-                className="mn-tile__link"
-                aria-label={`${t.name} — ${
-                  t.media[0].type === 'video' ? 'play film' : 'view stills'
-                }`}
-                onClick={(e) => openMedia(t, e.currentTarget)}
-              />
-            </motion.article>
-          ))}
+                <div className="mn-tile__cap">
+                  <span className="mn-tile__meta">{t.meta}</span>
+                  <h3 className="mn-tile__name">{t.name}</h3>
+                </div>
+
+                {/* The whole tile is the control, so hover state is also
+                    reachable by keyboard via :focus-within. Every tile now
+                    opens what is behind it rather than the enquiry form. */}
+                {opens ? (
+                  <button
+                    type="button"
+                    className="mn-tile__link"
+                    aria-label={`${t.name} — ${film ? 'play film' : 'view stills'}`}
+                    onClick={(e) => openMedia(t, e.currentTarget)}
+                  />
+                ) : null}
+              </motion.article>
+            )
+          })}
         </motion.div>
       </div>
 

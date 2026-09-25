@@ -1,0 +1,467 @@
+{
+  "settings": {
+    "tagline": "Visual Excellence, Tangible Results",
+    "firm_name": "Media Nest",
+    "email": "connect@medianest.co.in",
+    "phone_display": "+91-8448112770",
+    "phone_e164": "+918448112770",
+    "whatsapp_message": "Hi, I visited your website and want to know more.",
+    "years_of_practice": "5+",
+    "discipline_count": "9",
+    "discipline_count_word": "Nine",
+    "hours_compact": "24/7",
+    "hours_spaced": "24 x 7",
+    "coverage": "Global"
+  },
+  "about": {
+    "heading": "We shape the way a brand is *seeeen*, frame by frame.",
+    "description": "Media Nest is a brand image management and consultancy practice. We create and curate visual content that drives engagement, trust and lasting presence — from photography and cinematography through to strategy, events and digital.",
+    "figure": "/media/cms/about/INTERVIEW.webp",
+    "figure_alt": "A Media Nest studio set lit for an interview shoot",
+    "focal_x": 50,
+    "focal_y": 50,
+    "pillars": [
+      {
+        "title": "Holistic Approach",
+        "body": "We treat brand image as one system, focusing on visual and tangible content that drives engagement and trust.",
+        "is_wide": false
+      },
+      {
+        "title": "Tailored Services",
+        "body": "High-quality film production, professional photography and content strategy, shaped to position brands as industry leaders.",
+        "is_wide": false
+      },
+      {
+        "title": "Extensive Networking",
+        "body": "Deep professional experience and rooted networking opportunities, so every engagement carries further than the work itself.",
+        "is_wide": true
+      }
+    ]
+  },
+  "services": [
+    {
+      "title": "Photography & Brand Visual Presence",
+      "label": "Photography",
+      "body": "Professional photography that highlights the unique aspects of your brand — considered, lit and directed to carry a visual identity.",
+      "tags": [
+        "Editorial",
+        "Product",
+        "Sports",
+        "Profiling"
+      ],
+      "image": "/media/cms/services/PHOTOGRAPHY-AND-BRAND-1.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "is_featured": true
+    },
+    {
+      "title": "Cinematography & Quality Production",
+      "label": "Cinematography",
+      "body": "Creative storytelling through high-quality, engaging film content — from concept and shoot through to the finished cut.",
+      "tags": [
+        "Brand films",
+        "Documentary",
+        "Live stream",
+        "Post"
+      ],
+      "image": "/media/cms/services/CINEMATOGRAPHY-PRODUCTION-1.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "is_featured": true
+    },
+    {
+      "title": "Brand Image Strategy & Consultation",
+      "label": "Brand Strategy",
+      "body": "Tailored guidance to refine and align your brand image with its business goals, across every surface it appears on.",
+      "tags": [
+        "Positioning",
+        "Art direction",
+        "Content strategy",
+        "Rollout"
+      ],
+      "image": "/media/cms/services/BRAND-IMAGE-STRATEGY-1.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "is_featured": true
+    }
+  ],
+  "service_strip": [
+    {
+      "title": "Interviews",
+      "label": "Interviews",
+      "body": "",
+      "tags": [],
+      "image": null,
+      "focal_x": 50,
+      "focal_y": 50,
+      "is_featured": false
+    },
+    {
+      "title": "Live Streaming",
+      "label": "Live Streaming",
+      "body": "",
+      "tags": [],
+      "image": null,
+      "focal_x": 50,
+      "focal_y": 50,
+      "is_featured": false
+    },
+    {
+      "title": "Video Editing",
+      "label": "Video Editing",
+      "body": "",
+      "tags": [],
+      "image": null,
+      "focal_x": 50,
+      "focal_y": 50,
+      "is_featured": false
+    },
+    {
+      "title": "Graphic Design",
+      "label": "Graphic Design",
+      "body": "",
+      "tags": [],
+      "image": null,
+      "focal_x": 50,
+      "focal_y": 50,
+      "is_featured": false
+    },
+    {
+      "title": "Events",
+      "label": "Events",
+      "body": "",
+      "tags": [],
+      "image": null,
+      "focal_x": 50,
+      "focal_y": 50,
+      "is_featured": false
+    },
+    {
+      "title": "Digital Marketing",
+      "label": "Digital Marketing",
+      "body": "",
+      "tags": [],
+      "image": null,
+      "focal_x": 50,
+      "focal_y": 50,
+      "is_featured": false
+    }
+  ],
+  "disciplines": [
+    {
+      "id": "photography",
+      "name": "Photography",
+      "meta": "Stills",
+      "img": "/media/cms/disciplines/photography.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "media": [
+        {
+          "type": "image",
+          "src": "/media/cms/disciplines/gallery/gal-photography-1.webp",
+          "alt": "Sports photography by Media Nest"
+        },
+        {
+          "type": "image",
+          "src": "/media/cms/disciplines/gallery/gal-photography-2.webp",
+          "alt": "Sports photography by Media Nest"
+        },
+        {
+          "type": "image",
+          "src": "/media/cms/disciplines/gallery/gal-photography-3.webp",
+          "alt": "Sports photography by Media Nest"
+        }
+      ]
+    },
+    {
+      "id": "cinematography",
+      "name": "Cinematography",
+      "meta": "Motion",
+      "img": "/media/cms/disciplines/cinematography_main.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "media": [
+        {
+          "type": "video",
+          "id": "Cldlv3d36Jc",
+          "title": "Cinematography"
+        }
+      ]
+    },
+    {
+      "id": "interview",
+      "name": "Interview",
+      "meta": "Voice",
+      "img": "/media/cms/disciplines/INTERVIEW.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "media": [
+        {
+          "type": "video",
+          "id": "tz4CPFl_YfU",
+          "title": "Interviews"
+        }
+      ]
+    },
+    {
+      "id": "live-stream",
+      "name": "Live Stream",
+      "meta": "Broadcast",
+      "img": "/media/cms/disciplines/LIVE-STREAM.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "media": [
+        {
+          "type": "video",
+          "id": "EDtsbsAljU8",
+          "title": "Live Stream"
+        }
+      ]
+    },
+    {
+      "id": "event",
+      "name": "Event",
+      "meta": "Coverage",
+      "img": "/media/cms/disciplines/EVENT.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "media": [
+        {
+          "type": "video",
+          "id": "fU1PKUO0FyI",
+          "title": "Event"
+        }
+      ]
+    },
+    {
+      "id": "graphic-design",
+      "name": "Graphic Design",
+      "meta": "Identity",
+      "img": "/media/cms/disciplines/graphic-1.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "media": [
+        {
+          "type": "image",
+          "src": "/media/cms/disciplines/gallery/gal-graphic-1.webp",
+          "alt": "Graphic design work by Media Nest"
+        },
+        {
+          "type": "image",
+          "src": "/media/cms/disciplines/gallery/gal-graphic-2.webp",
+          "alt": "Graphic design work by Media Nest"
+        }
+      ]
+    },
+    {
+      "id": "video-edit",
+      "name": "Video Edit",
+      "meta": "Post",
+      "img": "/media/cms/disciplines/video-edit.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "media": [
+        {
+          "type": "video",
+          "id": "wGwSSFfbcEs",
+          "title": "Football Teaser"
+        },
+        {
+          "type": "video",
+          "id": "kvHo80ZIUxU",
+          "title": "Hockey Teaser"
+        }
+      ]
+    },
+    {
+      "id": "digital-marketing",
+      "name": "Digital Marketing",
+      "meta": "Reach",
+      "img": "/media/cms/disciplines/new_DIGITAL-MARKETING.webp",
+      "focal_x": 50,
+      "focal_y": 50,
+      "media": [
+        {
+          "type": "image",
+          "src": "/media/cms/disciplines/gallery/gal-digital-1.webp",
+          "alt": "Digital marketing work by Media Nest"
+        },
+        {
+          "type": "image",
+          "src": "/media/cms/disciplines/gallery/gal-digital-2.webp",
+          "alt": "Digital marketing work by Media Nest"
+        }
+      ]
+    }
+  ],
+  "why_choose": {
+    "heading": "Four reasons brands *stay*.",
+    "reasons": [
+      {
+        "label": "Proven Expertise",
+        "body": "A team of experts with over 5+ years of hands-on experience in brand image management."
+      },
+      {
+        "label": "Comprehensive Services",
+        "body": "From strategy to execution, we provide a full suite of services designed to enhance your brand visibility."
+      },
+      {
+        "label": "Industry Networking",
+        "body": "With our robust network of industry contacts, we offer unique opportunities for collaboration and growth."
+      },
+      {
+        "label": "Client-Centric Approach",
+        "body": "We tailor our services to the specific needs of each client, ensuring every project is personalized and effective."
+      }
+    ]
+  },
+  "team": {
+    "heading": "Two photographers running a *practice*.",
+    "people": [
+      {
+        "first_name": "Aditi",
+        "last_name": "Singh",
+        "role": "Managing Partner",
+        "photo": "/media/cms/team/ADITI-MAM-1.webp",
+        "focal_x": 50,
+        "focal_y": 50,
+        "lines": [
+          "Still Life & Sports Photographer",
+          "Artist & Poet"
+        ],
+        "social": [
+          {
+            "platform": "instagram",
+            "url": "https://www.instagram.com/aditisinghphotography"
+          },
+          {
+            "platform": "youtube",
+            "url": "https://youtube.com/@aditisinghphotography"
+          }
+        ]
+      },
+      {
+        "first_name": "Vivek",
+        "last_name": "Pathak",
+        "role": "Managing Partner",
+        "photo": "/media/cms/team/VIVEK-SIR-2.webp",
+        "focal_x": 50,
+        "focal_y": 50,
+        "lines": [
+          "Former Athlete",
+          "Sports Administrator",
+          "Sports & Profiling Photographer"
+        ],
+        "social": [
+          {
+            "platform": "instagram",
+            "url": "https://www.instagram.com/pafcoms"
+          },
+          {
+            "platform": "linkedin",
+            "url": "https://www.linkedin.com/in/vivek-pathak-5257312a"
+          }
+        ]
+      }
+    ]
+  },
+  "testimonials": [
+    {
+      "quote": "MediaNest helps power PABSA, bringing billiards and snooker to the forefront in the Americas. We extend best wishes for their continued growth and success.",
+      "name": "Ajeya Prabhakar",
+      "role": "President, Pan American Billiards & Snooker Association",
+      "photo": "/media/cms/testimonials/ajeya-1.webp"
+    },
+    {
+      "quote": "I extend my best wishes to the Media Nest team for continued success and creative excellence. As you lead the way in brand image management, may your innovative ideas keep inspiring brilliance and leaving a lasting impact on the brands you collaborate with.",
+      "name": "SPS Kalra",
+      "role": "Fashion & Cinematic Photographer",
+      "photo": "/media/cms/testimonials/spskalra.webp"
+    }
+  ],
+  "clients": {
+    "heading": "Federations, institutions and *enterprises*.",
+    "note": "The organisations we produce for, across sport, energy and public enterprise. Together we create stories that move people and build lasting impact.",
+    "items": [
+      {
+        "name": "IBSF",
+        "sector": "International Federation",
+        "logo": "/media/cms/clients/IBSF-Logo.webp",
+        "url": "https://www.instagram.com/ibsf.media/"
+      },
+      {
+        "name": "ACBS",
+        "sector": "Asian Confederation",
+        "logo": "/media/cms/clients/ACBS-LOGO.webp",
+        "url": "https://www.instagram.com/acbsmedia/"
+      },
+      {
+        "name": "PABSA",
+        "sector": "Pan American Association",
+        "logo": "/media/cms/clients/PABSA-LOGO.webp",
+        "url": "https://www.instagram.com/pabsaofficial/"
+      },
+      {
+        "name": "OGQ",
+        "sector": "Olympic Gold Quest",
+        "logo": "/media/cms/clients/OGQ_logo_dark.webp",
+        "url": "https://www.ogq.org"
+      },
+      {
+        "name": "Indian Oil",
+        "sector": "Energy",
+        "logo": "/media/cms/clients/indianoil.webp",
+        "url": "https://iocl.com"
+      },
+      {
+        "name": "Oil India",
+        "sector": "Energy",
+        "logo": "/media/cms/clients/OIL.webp",
+        "url": "https://www.oil-india.com"
+      },
+      {
+        "name": "PSPB",
+        "sector": "Sports Promotion Board",
+        "logo": "/media/cms/clients/PSPB-Logo-White-Background.webp",
+        "url": "https://www.instagram.com/pspblive/"
+      },
+      {
+        "name": "Cue Sports India",
+        "sector": "National Federation",
+        "logo": "/media/cms/clients/CSI-Logo-Round-1.webp",
+        "url": "https://www.instagram.com/cuesportsindia/"
+      }
+    ]
+  },
+  "contact": {
+    "heading": "Let us make your brand look *inevitable*.",
+    "lede": "Tell us what you are building. We reply within one working day — every day, 24 x 7."
+  },
+  "footer": {
+    "blurb": "Brand Image Management & Consultancy. Creating and curating impactful visual content that amplifies brand presence and identity.",
+    "legal_note": "All rights reserved."
+  },
+  "social": [
+    {
+      "platform": "facebook",
+      "url": "https://www.facebook.com/medianest2024"
+    },
+    {
+      "platform": "instagram",
+      "url": "https://www.instagram.com/medianest.official/"
+    },
+    {
+      "platform": "whatsapp",
+      "url": ""
+    },
+    {
+      "platform": "youtube",
+      "url": "https://youtube.com/@medianesttv?feature=shared"
+    },
+    {
+      "platform": "linkedin",
+      "url": "https://www.linkedin.com/company/104838310/"
+    }
+  ],
+  "generated_at": "2026-09-24T13:33:02.492Z"
+}

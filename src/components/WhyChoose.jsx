@@ -9,47 +9,29 @@ import {
   useTransform,
 } from 'framer-motion'
 import MaskText from './primitives/MaskText'
+import { WHY_CHOOSE, pad2, splitAccent } from '@/lib/content'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/whychoose.css'
 
-/* Every `stat` is one the site already states in About — 5+ years, nine
-   disciplines, a 24/7 window, global coverage. None is invented, and neither
-   is the framing sentence: the section's own h2 is the line that holds still
-   while the reason beneath it rewrites. */
-const REASONS = [
-  {
-    n: '01',
-    label: 'Proven Expertise',
-    body:
-      'A team of experts with over 5+ years of hands-on experience in brand image management.',
-    stat: '5+',
-    statLabel: 'Years of practice',
-  },
-  {
-    n: '02',
-    label: 'Comprehensive Services',
-    body:
-      'From strategy to execution, we provide a full suite of services designed to enhance your brand visibility.',
-    stat: '9',
-    statLabel: 'Disciplines in-house',
-  },
-  {
-    n: '03',
-    label: 'Industry Networking',
-    body:
-      'With our robust network of industry contacts, we offer unique opportunities for collaboration and growth.',
-    stat: 'Global',
-    statLabel: 'Coverage',
-  },
-  {
-    n: '04',
-    label: 'Client-Centric Approach',
-    body:
-      'We tailor our services to the specific needs of each client, ensuring every project is personalized and effective.',
-    stat: '24/7',
-    statLabel: 'Operational window',
-  },
-]
+/* The section's own h2 is the line that holds still while the reason beneath
+   it rewrites.
+
+   Reasons come from the CMS, and there can be any number of them: they stack
+   in one box rather than tiling a grid, so a fifth does not leave a hole. Two
+   things follow the count instead of limiting it — the heading spells the
+   number out (the API resolves `{count}` before sending it), and the section's
+   scroll height is computed from it below, so the panels keep turning over at
+   the pace they do at four rather than sharing a fixed travel.
+
+   Each reason used to carry a figure as well — 5+ years, nine disciplines, a
+   24/7 window, global coverage — set beside the copy. They are gone. Every one
+   of them was a number About already states, under the same label, and once
+   About started reading them from the CMS the two could disagree on the same
+   screen: settings saying 7+ while this section still said 5+. A figure that
+   has to be kept in step with another section is a figure this section does
+   not need. The reasons now carry copy only, and where a number belongs in the
+   prose it is part of the sentence, which is edited as a sentence. */
+const REASONS = WHY_CHOOSE.reasons
 
 /* Framer Motion hands scroll-linked transforms to a native ScrollTimeline via
    element.animate(), and the useTransform input stops become WAAPI keyframe
@@ -90,8 +72,8 @@ function Word({ p, stops, op, ys, blurs, reduced, children }) {
   )
 }
 
-/* One reason. All four are stacked in the same box and all four stay in the
-   DOM, so a screen reader still reads four headings in order. */
+/* One reason. They are all stacked in the same box and all stay in the DOM,
+   so a screen reader still reads every heading in order. */
 function Panel({ r, i, n, p, reduced }) {
   const w0 = i / n
   const w1 = (i + 1) / n
@@ -131,14 +113,16 @@ function Panel({ r, i, n, p, reduced }) {
 
   return (
     <div className="mn-why__panel">
+      {/* The number is the row's position, not a stored field: a stored one
+          goes stale the moment the order changes in the admin. */}
       <motion.span className="mn-why__ord" aria-hidden style={m({ opacity: ordO })}>
-        {r.n}
+        {pad2(i + 1)}
       </motion.span>
 
       <h3 className="mn-why__line">
         {words.map((w, j) => (
           <Word
-            key={w}
+            key={`${j}-${w}`}
             p={p}
             reduced={reduced}
             /* a hair of stagger per word, so the line turns over rather than
@@ -157,11 +141,6 @@ function Panel({ r, i, n, p, reduced }) {
       <motion.p className="mn-why__support" style={m({ opacity: supportO, y: supportY })}>
         {r.body}
       </motion.p>
-
-      <motion.span className="mn-why__stat" style={m({ opacity: supportO, y: supportY })}>
-        <b>{r.stat}</b>
-        <i>{r.statLabel}</i>
-      </motion.span>
     </div>
   )
 }
@@ -209,7 +188,16 @@ export default function WhyChoose() {
   const m = (style) => (reduced ? undefined : style)
 
   return (
-    <section ref={ref} className="mn-why" aria-labelledby={`${uid}-heading`}>
+    <section
+      ref={ref}
+      className="mn-why"
+      aria-labelledby={`${uid}-heading`}
+      /* The section's height is 100vh of pinned stage plus this many panels'
+         worth of travel — see `--why-count` in the stylesheet. Set here rather
+         than in CSS because only the component knows how many reasons the CMS
+         sent. */
+      style={{ '--why-count': n }}
+    >
       <div className="mn-why__stage">
         {/* Field: column rules and crop marks. Printed-page furniture, not
             atmosphere — the section is set apart by its structure, not by a
@@ -234,8 +222,8 @@ export default function WhyChoose() {
 
             <ol className="mn-why__index" aria-hidden>
               {REASONS.map((r, i) => (
-                <li key={r.n} data-on={i === active || undefined}>
-                  <i>{r.n}</i>
+                <li key={`${i}-${r.label}`} data-on={i === active || undefined}>
+                  <i>{pad2(i + 1)}</i>
                   <span>{r.label}</span>
                 </li>
               ))}
@@ -243,28 +231,32 @@ export default function WhyChoose() {
           </div>
 
           <div className="mn-why__main">
-          {/* The line that holds still. */}
+          {/* The line that holds still. The count word is already in the
+              string — the API fills {count} before sending it — so the number
+              here can never disagree with the list below. */}
           <h2 className="mn-why__frame" id={`${uid}-heading`}>
-            <MaskText>Four reasons brands</MaskText>{' '}
-            <MaskText as="em" delay={0.1}>
-              stay
-            </MaskText>
-            <MaskText delay={0.14}>.</MaskText>
+            {/* No separator between the segments: the split keeps the space
+                inside the text, and MaskText emits real spaces between words.
+                Adding one here would double it. Same as About. */}
+            {splitAccent(WHY_CHOOSE.heading).map((part, i) => (
+              <MaskText key={i} as={part.accent ? 'em' : undefined} delay={i * 0.05 + (i ? 0.05 : 0)}>
+                {part.text}
+              </MaskText>
+            ))}
           </h2>
 
           {/* The part that rewrites, between two rules. */}
           <div className="mn-why__display">
             {REASONS.map((r, i) => (
-              <Panel key={r.n} r={r} i={i} n={n} p={p} reduced={reduced} />
+              <Panel key={`${i}-${r.label}`} r={r} i={i} n={n} p={p} reduced={reduced} />
             ))}
           </div>
 
+          {/* No numeric counter here. The reason on show already carries its
+              own number, set large and ghosted in the margin of the main
+              column, and the rail beside this says how far through the set the
+              reader is. A third count saying the same thing was noise. */}
           <div className="mn-why__foot">
-            <span className="mn-why__count" aria-hidden>
-              <b>{REASONS[active].n}</b>
-              <s>/ {String(n).padStart(2, '0')}</s>
-            </span>
-
             <div className="mn-why__rail" aria-hidden>
               <motion.i style={reduced ? { scaleX: 1 } : { scaleX: railScale }} />
             </div>

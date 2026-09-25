@@ -1,71 +1,25 @@
 import { motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
 import FloatField from './primitives/FloatField'
+import { CLIENTS, splitAccent } from '@/lib/content'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/clients.css'
 
 /* `sector` is what the organisation is, not a claim about the work. Logos
    run in full colour here: several of these marks are filled badges whose
    detail is carried entirely by hue, and desaturating them collapsed each
-   one into a solid disc. */
-const CLIENTS = [
-  {
-    id: 'ibsf',
-    name: 'IBSF',
-    sector: 'International Federation',
-    logo: '/media/IBSF-Logo.webp',
-    href: 'https://www.instagram.com/ibsf.media/',
-  },
-  {
-    id: 'acbs',
-    name: 'ACBS',
-    sector: 'Asian Confederation',
-    logo: '/media/ACBS-LOGO.webp',
-    href: 'https://www.instagram.com/acbsmedia/',
-  },
-  {
-    id: 'pabsa',
-    name: 'PABSA',
-    sector: 'Pan American Association',
-    logo: '/media/PABSA-LOGO.webp',
-    href: 'https://www.instagram.com/pabsaofficial/',
-  },
-  {
-    id: 'ogq',
-    name: 'OGQ',
-    sector: 'Olympic Gold Quest',
-    logo: '/media/OGQ_logo_dark.webp',
-    href: 'https://www.ogq.org',
-  },
-  {
-    id: 'iocl',
-    name: 'Indian Oil',
-    sector: 'Energy',
-    logo: '/media/indianoil.webp',
-    href: 'https://iocl.com',
-  },
-  {
-    id: 'oil',
-    name: 'Oil India',
-    sector: 'Energy',
-    logo: '/media/OIL.webp',
-    href: 'https://www.oil-india.com',
-  },
-  {
-    id: 'pspb',
-    name: 'PSPB',
-    sector: 'Sports Promotion Board',
-    logo: '/media/PSPB-Logo-White-Background.webp',
-    href: 'https://www.instagram.com/pspblive/',
-  },
-  {
-    id: 'csi',
-    name: 'Cue Sports India',
-    sector: 'National Federation',
-    logo: '/media/CSI-Logo-Round-1.webp',
-    href: 'https://www.instagram.com/cuesportsindia/',
-  },
-]
+   one into a solid disc.
+
+   The count is free. The grid is four columns wide, three between 821 and
+   1180px and two below, so only a multiple of twelve fills every row at every
+   width — but these are separate cards rather than a tessellation, and a short
+   last row reads as a list that ended rather than a layout that broke. The
+   admin says which counts fill it and leaves the choice alone.
+
+   A link is optional. Without one the card is a <div> rather than an <a>, and
+   it drops the arrow badge and the hover lift with it: a card that rises under
+   the cursor and then does nothing is worse than one that never moved. */
+const ITEMS = CLIENTS.items
 
 export default function Clients() {
   return (
@@ -96,11 +50,15 @@ export default function Clients() {
             </motion.p>
 
             <h2 className="mn-cl__title">
-              <MaskText>Federations, institutions and</MaskText>{' '}
-              <MaskText as="em" delay={0.1}>
-                enterprises
-              </MaskText>
-              <MaskText delay={0.14}>.</MaskText>
+              {splitAccent(CLIENTS.heading).map((part, i) => (
+                <MaskText
+                  key={i}
+                  as={part.accent ? 'em' : undefined}
+                  delay={i * 0.05 + (i ? 0.05 : 0)}
+                >
+                  {part.text}
+                </MaskText>
+              ))}
             </h2>
           </div>
 
@@ -111,8 +69,7 @@ export default function Clients() {
             viewport={VIEWPORT}
             transition={{ duration: 0.85, ease: EASE, delay: 0.12 }}
           >
-            The organisations we produce for, across sport, energy and public enterprise.
-            Together we create stories that move people and build lasting impact.
+            {CLIENTS.note}
           </motion.p>
 
           {/* Target mark, echoing the aperture language used elsewhere */}
@@ -145,20 +102,24 @@ export default function Clients() {
           viewport={VIEWPORT}
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } } }}
         >
-          {CLIENTS.map((c, i) => (
+          {ITEMS.map((c, i) => {
+            const Card = c.url ? 'a' : 'div'
+            const linkProps = c.url
+              ? { href: c.url, target: '_blank', rel: 'noreferrer noopener' }
+              : {}
+            return (
             <motion.li
-              key={c.id}
+              key={`${i}-${c.name}`}
               variants={{
                 hidden: { opacity: 0, y: 22 },
                 show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
               }}
             >
-              <a
-                className="mn-cl__card"
-                href={c.href}
-                target="_blank"
-                rel="noreferrer noopener"
+              <Card
+                className={`mn-cl__card${c.url ? '' : ' mn-cl__card--static'}`}
+                {...linkProps}
               >
+                {c.url ? (
                 <span className="mn-cl__go" aria-hidden>
                   <svg viewBox="0 0 20 20" focusable="false">
                     <path
@@ -171,6 +132,7 @@ export default function Clients() {
                     />
                   </svg>
                 </span>
+                ) : null}
 
                 <span className="mn-cl__mark">
                   <img src={c.logo} alt="" loading="lazy" decoding="async" />
@@ -183,9 +145,10 @@ export default function Clients() {
                   <i>{String(i + 1).padStart(2, '0')}</i>
                   <b />
                 </span>
-              </a>
+              </Card>
             </motion.li>
-          ))}
+            )
+          })}
         </motion.ul>
 
         {/* ── Rails ────────────────────────────────────────── */}
@@ -205,7 +168,7 @@ export default function Clients() {
           transition={{ duration: 0.8, ease: EASE }}
         >
           {/* Derived from the list, so it cannot drift out of date. */}
-          <strong>{CLIENTS.length}</strong>
+          <strong>{ITEMS.length}</strong>
           <span>
             Organisations
             <br />

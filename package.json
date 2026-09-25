@@ -4,7 +4,10 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "content": "node scripts/fetch-content.mjs",
+    "predev": "node scripts/fetch-content.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/fetch-content.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },

@@ -2,36 +2,18 @@ import { motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
 import RevealImage from './primitives/RevealImage'
 import EdgeTitle from './primitives/EdgeTitle'
+import { ABOUT, SETTINGS, focal, pad2, splitAccent } from '@/lib/content'
 import { EASE, VIEWPORT, stagger, riseIn } from '@/lib/motion'
 import '../styles/about.css'
 
-const PILLARS = [
-  {
-    n: '01',
-    title: 'Holistic Approach',
-    body:
-      'We treat brand image as one system, focusing on visual and tangible content that drives engagement and trust.',
-  },
-  {
-    n: '02',
-    title: 'Tailored Services',
-    body:
-      'High-quality film production, professional photography and content strategy, shaped to position brands as industry leaders.',
-  },
-  {
-    n: '03',
-    title: 'Extensive Networking',
-    body:
-      'Deep professional experience and rooted networking opportunities, so every engagement carries further than the work itself.',
-    wide: true,
-  },
-]
-
+const PILLARS = ABOUT.pillars
+/* Values from the CMS, labels are copy and stay here. The hero states two of
+   the same figures and reads the same settings, so they cannot disagree. */
 const STATS = [
-  { value: '5+', label: 'Years of practice' },
-  { value: '9', label: 'Disciplines in-house' },
-  { value: '24/7', label: 'Operational window' },
-  { value: 'Global', label: 'Coverage', accent: true },
+  { value: SETTINGS.years_of_practice, label: 'Years of practice' },
+  { value: SETTINGS.discipline_count, label: 'Disciplines in-house' },
+  { value: SETTINGS.hours_compact, label: 'Operational window' },
+  { value: SETTINGS.coverage, label: 'Coverage', accent: true },
 ]
 
 export default function About() {
@@ -55,12 +37,18 @@ export default function About() {
 
             {/* Real <h2> — the page previously had none at all, so the
                 document outline stopped at the hero's <h1>. */}
+            {/* Three masked segments, same as before — the parts now come
+                from the CMS heading, split on its *accented* span. */}
             <h2 className="mn-about__title">
-              <MaskText>We shape the way a brand is</MaskText>{' '}
-              <MaskText as="em" delay={0.1}>
-                seen
-              </MaskText>
-              <MaskText delay={0.14}>, frame by frame.</MaskText>
+              {splitAccent(ABOUT.heading).map((part, i) => (
+                <MaskText
+                  key={i}
+                  as={part.accent ? 'em' : undefined}
+                  delay={i * 0.05 + (i ? 0.05 : 0)}
+                >
+                  {part.text}
+                </MaskText>
+              ))}
             </h2>
           </div>
 
@@ -71,9 +59,7 @@ export default function About() {
             viewport={VIEWPORT}
             transition={{ duration: 0.85, ease: EASE, delay: 0.15 }}
           >
-            Media Nest is a brand image management and consultancy practice. We create and curate
-            visual content that drives engagement, trust and lasting presence — from photography
-            and cinematography through to strategy, events and digital.
+            {ABOUT.description}
           </motion.p>
         </div>
 
@@ -87,11 +73,12 @@ export default function About() {
         >
           <motion.figure className="mn-about__figure" variants={riseIn}>
             <RevealImage
-              src="/media/INTERVIEW.webp"
-              alt="A Media Nest studio set lit for an interview shoot"
+              src={ABOUT.figure}
+              alt={ABOUT.figure_alt}
               width="900"
               height="900"
               parallax={4}
+              style={{ objectPosition: focal(ABOUT) }}
             />
             <figcaption className="mn-about__figcap">
               <strong>Visual Excellence, Tangible Results</strong>
@@ -99,13 +86,13 @@ export default function About() {
             </figcaption>
           </motion.figure>
 
-          {PILLARS.map((p) => (
+          {PILLARS.map((p, i) => (
             <motion.article
-              key={p.n}
-              className={`mn-pillar${p.wide ? ' mn-pillar--wide' : ''}`}
+              key={p.title}
+              className={`mn-pillar${p.is_wide ? ' mn-pillar--wide' : ''}`}
               variants={riseIn}
             >
-              <span className="mn-pillar__num">{p.n}</span>
+              <span className="mn-pillar__num">{pad2(i + 1)}</span>
               <h3 className="mn-pillar__title">{p.title}</h3>
               <p className="mn-pillar__body">{p.body}</p>
             </motion.article>

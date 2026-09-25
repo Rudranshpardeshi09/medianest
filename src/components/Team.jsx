@@ -2,51 +2,18 @@ import { motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
 import RevealImage from './primitives/RevealImage'
 import EdgeTitle from './primitives/EdgeTitle'
+import { TEAM, focal, splitAccent } from '@/lib/content'
+import { PLATFORM } from '@/lib/social'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/founders.css'
 
-const FOUNDERS = [
-  {
-    id: 'aditi',
-    first: 'Aditi',
-    last: 'Singh',
-    role: 'Managing Partner',
-    lines: ['Still Life & Sports Photographer', 'Artist & Poet'],
-    image: '/media/ADITI-MAM-1.webp',
-    social: [
-      {
-        icon: 'fab fa-instagram',
-        label: 'Instagram of Aditi Singh',
-        href: 'https://www.instagram.com/aditisinghphotography',
-      },
-      {
-        icon: 'fab fa-youtube',
-        label: 'YouTube of Aditi Singh',
-        href: 'https://youtube.com/@aditisinghphotography',
-      },
-    ],
-  },
-  {
-    id: 'vivek',
-    first: 'Vivek',
-    last: 'Pathak',
-    role: 'Managing Partner',
-    lines: ['Former Athlete', 'Sports Administrator', 'Sports & Profiling Photographer'],
-    image: '/media/VIVEK-SIR-2.webp',
-    social: [
-      {
-        icon: 'fab fa-instagram',
-        label: 'Instagram of Vivek Pathak',
-        href: 'https://www.instagram.com/pafcoms',
-      },
-      {
-        icon: 'fab fa-linkedin-in',
-        label: 'LinkedIn of Vivek Pathak',
-        href: 'https://www.linkedin.com/in/vivek-pathak-5257312a',
-      },
-    ],
-  },
-]
+/* The partners come from the CMS, and there can be any number of them: the
+   list is a flex column and the left/right flip is decided by row position, so
+   a third simply adds a row mirrored the other way. The heading spells the
+   count itself — the API fills {count} before sending it — so it cannot end up
+   claiming two while three are on screen. */
+const FOUNDERS = TEAM.people
+
 
 export default function Team() {
   return (
@@ -65,19 +32,22 @@ export default function Team() {
             The partners
           </motion.p>
 
+          {/* No separator between segments: the split keeps the space inside
+              the text and MaskText emits real spaces between words. Same as
+              About and Why Choose Us. */}
           <h2 className="mn-fnd__title">
-            <MaskText>Two photographers running a</MaskText>{' '}
-            <MaskText as="em" delay={0.1}>
-              practice
-            </MaskText>
-            <MaskText delay={0.14}>.</MaskText>
+            {splitAccent(TEAM.heading).map((part, i) => (
+              <MaskText key={i} as={part.accent ? 'em' : undefined} delay={i * 0.05 + (i ? 0.05 : 0)}>
+                {part.text}
+              </MaskText>
+            ))}
           </h2>
         </div>
 
         <div className="mn-fnd__list">
           {FOUNDERS.map((p, i) => (
             <article
-              key={p.id}
+              key={`${i}-${p.first_name}-${p.last_name}`}
               className={`mn-fnd__person${i % 2 === 1 ? ' mn-fnd__person--flip' : ''}`}
             >
               {/* Decorative layer: a ghosted ordinal, an aperture ring and a
@@ -130,13 +100,19 @@ export default function Team() {
 
               <figure className="mn-fnd__figure">
                 <div className="mn-fnd__frame">
-                  <RevealImage
-                    src={p.image}
-                    alt={`${p.first} ${p.last}, ${p.role} at Media Nest`}
-                    width="375"
-                    height="560"
-                    direction={i % 2 === 0 ? 'left' : 'right'}
-                  />
+                  {/* A person can be added in the admin before a portrait is
+                      uploaded. Rendering the image anyway gave a broken-image
+                      box with the alt text spilling out past the frame, so the
+                      frame is simply left empty — it keeps its 3:4 box either
+                      way, and the row's other column is unaffected. */}
+                  {p.photo ? (
+                    <RevealImage
+                      src={p.photo}
+                      alt={`${p.first_name} ${p.last_name}, ${p.role} at Media Nest`}
+                      direction={i % 2 === 0 ? 'left' : 'right'}
+                      objectPosition={focal(p)}
+                    />
+                  ) : null}
                   <span className="mn-fnd__grain" aria-hidden />
                 </div>
               </figure>
@@ -159,7 +135,7 @@ export default function Team() {
                         show: { y: '0%', transition: { duration: 1.05, ease: EASE } },
                       }}
                     >
-                      {p.first}
+                      {p.first_name}
                     </motion.span>
                   </span>
                   <em className="mn-mask">
@@ -170,7 +146,7 @@ export default function Team() {
                         show: { y: '0%', transition: { duration: 1.05, ease: EASE } },
                       }}
                     >
-                      {p.last}
+                      {p.last_name}
                     </motion.span>
                   </em>
                 </motion.h3>
@@ -184,24 +160,32 @@ export default function Team() {
                   <p className="mn-fnd__role">{p.role}</p>
 
                   <ul className="mn-fnd__lines">
-                    {p.lines.map((l) => (
-                      <li key={l}>{l}</li>
+                    {p.lines.map((l, j) => (
+                      <li key={`${j}-${l}`}>{l}</li>
                     ))}
                   </ul>
 
                   <ul className="mn-fnd__social">
-                    {p.social.map((s) => (
-                      <li key={s.href}>
-                        <a
-                          href={s.href}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          aria-label={s.label}
-                        >
-                          <i className={s.icon} aria-hidden />
-                        </a>
-                      </li>
-                    ))}
+                    {p.social.map((s, j) => {
+                      /* An unknown platform would otherwise render an empty
+                         icon box with no label — a link nobody can see or
+                         hear. The CMS only offers these five, but the data
+                         outlives any one version of this map. */
+                      const meta = PLATFORM[s.platform]
+                      if (!meta) return null
+                      return (
+                        <li key={`${j}-${s.platform}`}>
+                          <a
+                            href={s.url}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            aria-label={`${meta.name} of ${p.first_name} ${p.last_name}`}
+                          >
+                            <i className={meta.icon} aria-hidden />
+                          </a>
+                        </li>
+                      )
+                    })}
                   </ul>
                 </motion.div>
               </div>

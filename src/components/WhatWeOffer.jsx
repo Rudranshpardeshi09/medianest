@@ -9,19 +9,18 @@ import {
   useTransform,
   useVelocity,
 } from 'framer-motion'
+import { SERVICES, SERVICE_STRIP } from '@/lib/content'
 import { EASE, VIEWPORT } from '@/lib/motion'
 
-const DISCIPLINES = [
-  'Photography',
-  'Cinematography',
-  'Brand Strategy',
-  'Interviews',
-  'Live Streaming',
-  'Video Editing',
-  'Graphic Design',
-  'Events',
-  'Digital Marketing',
-]
+/**
+ * The ticker is the services list, read out in the order the services section
+ * shows them -- the three cards first, then the strip beneath.
+ *
+ * It used to be its own array of nine names, which happened to match. Two
+ * lists of the same thing drift: add a service in the admin and the ticker
+ * would silently keep advertising the old set. Derived, it cannot.
+ */
+const DISCIPLINES = [...SERVICES, ...SERVICE_STRIP].map((s) => s.label)
 
 /**
  * A ticker that drifts on its own and is *pushed* by scrolling: scroll down
@@ -90,8 +89,10 @@ export default function WhatWeOffer() {
               className="mn-offer__item"
               aria-hidden={copy > 0 ? true : undefined}
             >
-              {DISCIPLINES.map((d) => (
-                <span key={d} className="mn-offer__item">
+              {DISCIPLINES.map((d, i) => (
+                /* Keyed by position as well as name: the list is editable now
+                   and nothing stops two services sharing a label. */
+                <span key={`${i}-${d}`} className="mn-offer__item">
                   <span>{d}</span>
                   <i className="mn-offer__dot" aria-hidden />
                 </span>

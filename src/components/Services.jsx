@@ -2,50 +2,15 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
 import RevealImage from './primitives/RevealImage'
+import { SERVICES, SERVICE_STRIP, focal, pad2 } from '@/lib/content'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/services.css'
 
-const SERVICES = [
-  {
-    n: '01',
-    id: 'svc-photography',
-    title: 'Photography & Brand Visual Presence',
-    short: 'Photography',
-    body:
-      'Professional photography that highlights the unique aspects of your brand — considered, lit and directed to carry a visual identity.',
-    image: '/media/PHOTOGRAPHY-AND-BRAND-1.webp',
-    tags: ['Editorial', 'Product', 'Sports', 'Profiling'],
-  },
-  {
-    n: '02',
-    id: 'svc-cinematography',
-    title: 'Cinematography & Quality Production',
-    short: 'Cinematography',
-    body:
-      'Creative storytelling through high-quality, engaging film content — from concept and shoot through to the finished cut.',
-    image: '/media/CINEMATOGRAPHY-PRODUCTION-1.webp',
-    tags: ['Brand films', 'Documentary', 'Live stream', 'Post'],
-  },
-  {
-    n: '03',
-    id: 'svc-strategy',
-    title: 'Brand Image Strategy & Consultation',
-    short: 'Brand Strategy',
-    body:
-      'Tailored guidance to refine and align your brand image with its business goals, across every surface it appears on.',
-    image: '/media/BRAND-IMAGE-STRATEGY-1.webp',
-    tags: ['Positioning', 'Art direction', 'Content strategy', 'Rollout'],
-  },
-]
 
-const MORE = [
-  'Interviews',
-  'Live Streaming',
-  'Video Editing',
-  'Graphic Design',
-  'Events',
-  'Digital Marketing',
-]
+/* The rail scrolls to its card by id. That id used to be stored alongside
+   the copy; deriving it from the title keeps the two from drifting apart. */
+const slug = (title) =>
+  'svc-' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
 export default function Services() {
   const [active, setActive] = useState(0)
@@ -75,15 +40,15 @@ export default function Services() {
               {SERVICES.map((s, i) => {
                 const on = i === active
                 return (
-                  <li key={s.n} className="mn-svc__listitem" data-on={on}>
+                  <li key={s.title} className="mn-svc__listitem" data-on={on}>
                     <button
                       type="button"
                       className="mn-svc__listbtn"
                       aria-current={on ? 'true' : undefined}
-                      onClick={() => jumpTo(s.id)}
+                      onClick={() => jumpTo(slug(s.title))}
                     >
-                      <span className="mn-svc__listnum">{s.n}</span>
-                      <span className="mn-svc__listtitle">{s.short}</span>
+                      <span className="mn-svc__listnum">{pad2(i + 1)}</span>
+                      <span className="mn-svc__listtitle">{s.label}</span>
                     </button>
 
                     {/* Opened by CSS (grid-template-rows 0fr -> 1fr), not by animating
@@ -115,8 +80,8 @@ export default function Services() {
         <div className="mn-svc__cards">
           {SERVICES.map((s, i) => (
             <motion.article
-              key={s.n}
-              id={s.id}
+              key={s.title}
+              id={slug(s.title)}
               className="mn-svc__card"
               /* Claim the rail when this card owns the middle band of the
                  viewport, so the list always matches what is on screen. */
@@ -130,10 +95,11 @@ export default function Services() {
                   width="370"
                   height="500"
                   direction={i % 2 === 0 ? 'up' : 'right'}
+                  style={{ objectPosition: focal(s) }}
                 />
                 <div className="mn-svc__cardhead">
                   <div>
-                    <span className="mn-svc__cardnum">{s.n}</span>
+                    <span className="mn-svc__cardnum">{pad2(i + 1)}</span>
                     <h3 className="mn-svc__cardtitle">{s.title}</h3>
                   </div>
                   <span className="mn-svc__go" aria-hidden>
@@ -168,10 +134,13 @@ export default function Services() {
         transition={{ duration: 0.85, ease: EASE }}
       >
         <ul className="mn-svc__morelist">
-          {MORE.map((m, i) => (
-            <li key={m}>
-              <i aria-hidden>0{i + 4}</i>
-              {m}
+          {/* The numbering continues from the cards. It used to be written as
+              `0{i + 4}`, which renders "010" on a seventh entry and assumed
+              there were exactly three cards; both now follow the real counts. */}
+          {SERVICE_STRIP.map((m, i) => (
+            <li key={m.title}>
+              <i aria-hidden>{pad2(SERVICES.length + i + 1)}</i>
+              {m.title}
             </li>
           ))}
         </ul>

@@ -123,12 +123,73 @@
 /* ── Cards ─────────────────────────────────────────────────── */
 
 .mn-cl__grid {
+  --cl-gap: clamp(14px, 1.4vw, 22px);
+
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(14px, 1.4vw, 22px);
+  gap: var(--cl-gap);
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* ── Centring a last row that did not fill ──────────────────
+   The count is editable, so the last row is usually short. Left as it came,
+   it sat hard against the left edge with a hole beside it; centred, it reads
+   as a list that ended.
+
+   How it works. A card is found to be the first of the last row by being both
+   the first of SOME row (`:nth-child(Cn + 1)`) and the Nth from the end
+   (`:nth-last-child(N)`) -- which together mean the last row holds exactly N.
+   That card and its remaining siblings then shift right by half the empty
+   columns.
+
+   Two details worth not undoing:
+
+   * The shift is `left`, not `transform`. These cards animate in on a
+     transform and lift on another one at hover; a third would have to win a
+     fight with both.
+   * A grid item's containing block is its grid area, so `left: 100%` is one
+     column, not the whole grid. That is why the offsets read as 50/100/150%
+     plus the matching share of the gap, rather than needing the column count. */
+.mn-cl__grid > li {
+  position: relative;
+}
+
+/* Four columns: a last row of 1, 2 or 3 is short. */
+@media (min-width: 1181px) {
+  .mn-cl__grid > li:nth-child(4n + 1):nth-last-child(1),
+  .mn-cl__grid > li:nth-child(4n + 1):nth-last-child(1) ~ li {
+    left: calc(150% + var(--cl-gap) * 1.5);
+  }
+  .mn-cl__grid > li:nth-child(4n + 1):nth-last-child(2),
+  .mn-cl__grid > li:nth-child(4n + 1):nth-last-child(2) ~ li {
+    left: calc(100% + var(--cl-gap));
+  }
+  .mn-cl__grid > li:nth-child(4n + 1):nth-last-child(3),
+  .mn-cl__grid > li:nth-child(4n + 1):nth-last-child(3) ~ li {
+    left: calc(50% + var(--cl-gap) * 0.5);
+  }
+}
+
+/* Three columns. */
+@media (min-width: 821px) and (max-width: 1180px) {
+  .mn-cl__grid > li:nth-child(3n + 1):nth-last-child(1),
+  .mn-cl__grid > li:nth-child(3n + 1):nth-last-child(1) ~ li {
+    left: calc(100% + var(--cl-gap));
+  }
+  .mn-cl__grid > li:nth-child(3n + 1):nth-last-child(2),
+  .mn-cl__grid > li:nth-child(3n + 1):nth-last-child(2) ~ li {
+    left: calc(50% + var(--cl-gap) * 0.5);
+  }
+}
+
+/* Two columns: only a lone card is short. */
+@media (max-width: 820px) {
+  .mn-cl__grid > li:nth-child(2n + 1):nth-last-child(1),
+  .mn-cl__grid > li:nth-child(2n + 1):nth-last-child(1) ~ li {
+    left: calc(50% + var(--cl-gap) * 0.5);
+  }
 }
 
 .mn-cl__card {
@@ -155,6 +216,20 @@
 .mn-cl__card:focus-visible {
   outline: 2px solid var(--mn-orange, #e95523);
   outline-offset: 3px;
+}
+
+/* A client with no link. It is still a card and still counted, it just is not
+   a control -- so it does not rise under the cursor, does not warm its border
+   and does not grow its mark. Those three signals together say "click me",
+   and on a <div> that goes nowhere they are a lie. */
+.mn-cl__card--static:hover {
+  transform: none;
+  /* The same value the card rests at, so nothing moves at all. */
+  border-color: var(--mn-paper-edge, #ececf2);
+  box-shadow: none;
+}
+.mn-cl__card--static:hover .mn-cl__mark img {
+  transform: none;
 }
 
 .mn-cl__go {

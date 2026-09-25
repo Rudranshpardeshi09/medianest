@@ -41,9 +41,28 @@
   justify-content: center;
 }
 
+/* The stage holds the longest quote the CMS will accept, so that paging from
+   one testimonial to the next moves nothing.
+
+   It used to be 300px, which is a floor rather than a height: the box grew to
+   whatever the quote needed, so the two live quotes measured 311px and 380px
+   and the section grew 68px every time the carousel advanced itself — once
+   every nine seconds, taking the whole page below it along. Sized here against
+   a 260-character quote, which is the model's limit, measured at each width
+   where the type or the measure changes.
+
+   Contents are centred rather than top-aligned: with a fixed box a short quote
+   would otherwise sit above a band of empty paper. */
 .mn-quote__stage {
   position: relative;
-  min-height: 300px;
+  display: grid;
+  /* Vertically centred, horizontally full width. Not `place-items: center`:
+     that also centres on the inline axis, which lets a short quote shrink the
+     figure to its own width and re-wrap at a measure the long ones never use.
+     Stretching keeps every quote on the same measure. */
+  align-items: center;
+  justify-items: stretch;
+  min-height: 400px;
   outline: none;
 }
 
@@ -174,9 +193,14 @@
   background: var(--mn-orange, #e95523);
 }/* ── Responsive ────────────────────────────────────────────── */
 
+/* Below 1100 the inner padding drops, so the measure gets wider while the
+   type gets smaller — the same quote takes fewer lines and the stage needs
+   less height. Below 768 the measure narrows again and it needs more. */
 @media (max-width: 1100px) {
-  .mn-quote__inner { padding: 0 36px; }}
+  .mn-quote__inner { padding: 0 36px; }
+  .mn-quote__stage { min-height: 330px; }}
 
 @media (max-width: 767px) {
-  .mn-quote__inner { padding: 0 22px; }.mn-quote__stage { min-height: 360px; }}
+  .mn-quote__inner { padding: 0 22px; }
+  .mn-quote__stage { min-height: 370px; }}
 

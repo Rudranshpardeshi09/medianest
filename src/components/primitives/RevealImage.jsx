@@ -23,6 +23,7 @@ export default function RevealImage({
   width,
   height,
   sizes,
+  objectPosition,
 }) {
   const ref = useRef(null)
   const reduced = useReducedMotion()
@@ -41,6 +42,13 @@ export default function RevealImage({
   }[direction]
 
   const restScale = parallax ? 1.14 : 1
+
+  /* `objectPosition` is the crop's focal point, for images that come from the
+     CMS and so have no fixed composition. It shares the style object with the
+     parallax transform, which is why they are merged rather than one or the
+     other -- a tile can want both. */
+  const style =
+    parallax && !reduced ? { y, objectPosition } : objectPosition ? { objectPosition } : undefined
 
   return (
     <motion.div
@@ -68,7 +76,7 @@ export default function RevealImage({
         decoding="async"
         fetchPriority={priority ? 'high' : 'auto'}
         className={imgClassName}
-        style={parallax && !reduced ? { y } : undefined}
+        style={style}
         variants={{
           hidden: { scale: reduced ? 1 : 1.18 },
           show: { scale: restScale, transition: { duration: 1.45, ease: EASE, delay } },

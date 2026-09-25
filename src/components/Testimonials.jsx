@@ -1,34 +1,27 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import MaskText from './primitives/MaskText'
+import { TESTIMONIALS } from '@/lib/content'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/voices.css'
 import FloatField from './primitives/FloatField'
 
-const QUOTES = [
-  {
-    id: 'ajeya',
-    quote:
-      'MediaNest helps power PABSA, bringing billiards and snooker to the forefront in the Americas. We extend best wishes for their continued growth and success.',
-    name: 'Ajeya Prabhakar',
-    role: 'President, Pan American Billiards & Snooker Association',
-    image: '/media/ajeya-1.webp',
-  },
-  {
-    id: 'kalra',
-    quote:
-      'I extend my best wishes to the Media Nest team for continued success and creative excellence. As you lead the way in brand image management, may your innovative ideas keep inspiring brilliance and leaving a lasting impact on the brands you collaborate with.',
-    name: 'SPS Kalra',
-    role: 'Fashion & Cinematic Photographer',
-    image: '/media/spskalra.webp',
-  },
-]
+/* From the CMS, and any number of them: this is a carousel rather than a
+   grid, so the count only decides how many dots are drawn and whether the
+   auto-advance has anywhere to go.
+
+   Quote length is capped in the CMS because the stage is a fixed height. It
+   used not to be — the box grew to fit whatever was in it, so advancing from
+   the shorter quote to the longer one grew the section by 68px and shifted
+   everything below, every nine seconds. See the note in voices.css. */
+const QUOTES = TESTIMONIALS
 
 export default function Testimonials() {
   const [[index, dir], setState] = useState([0, 0])
   const [paused, setPaused] = useState(false)
   const count = QUOTES.length
-  const item = QUOTES[index]
+  /* Clamped, because the list is editable: unpublishing the quote that is on
+     show would otherwise leave `index` past the end and `item` undefined. */
+  const item = count ? QUOTES[Math.min(index, count - 1)] : null
 
   const go = useCallback(
     (step) => setState(([i]) => [(i + step + count) % count, step]),
@@ -52,6 +45,12 @@ export default function Testimonials() {
       go(1)
     }
   }
+
+  /* Nothing published means no section at all. An empty carousel -- a quote
+     mark, two arrows and no words -- reads as broken rather than as absent,
+     and nothing on the page links here, so removing it leaves no dead anchor.
+     The hooks above run first so this stays a valid early return. */
+  if (!item) return null
 
   // Direction-aware: paging back genuinely feels like going back
   const variants = {
@@ -101,7 +100,7 @@ export default function Testimonials() {
         >
           <AnimatePresence mode="wait" custom={dir}>
             <motion.figure
-              key={item.id}
+              key={index}
               className="mn-quote__fig"
               custom={dir}
               variants={variants}
@@ -115,7 +114,7 @@ export default function Testimonials() {
               <figcaption className="mn-quote__cap">
                 <span className="mn-quote__avatar">
                   <img
-                    src={item.image}
+                    src={item.photo}
                     alt=""
                     width="62"
                     height="62"
@@ -146,7 +145,7 @@ export default function Testimonials() {
 
           <ul className="mn-quote__dots">
             {QUOTES.map((q, i) => (
-              <li key={q.id}>
+              <li key={`${i}-${q.name}`}>
                 <button
                   type="button"
                   onClick={() => setState([i, i > index ? 1 : -1])}

@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import MaskText from './primitives/MaskText'
 import FloatField from './primitives/FloatField'
 import EdgeTitle from './primitives/EdgeTitle'
+import { CONTACT, REACH, SETTINGS, splitAccent } from '@/lib/content'
 import { EASE, VIEWPORT } from '@/lib/motion'
 import '../styles/contact.css'
 
@@ -157,11 +158,15 @@ export default function Contact() {
           </motion.p>
 
           <h2 className="mn-contact__title">
-            <MaskText>Let us make your brand look</MaskText>{' '}
-            <MaskText as="em" delay={0.1}>
-              inevitable
-            </MaskText>
-            <MaskText delay={0.14}>.</MaskText>
+            {splitAccent(CONTACT.heading).map((part, i) => (
+              <MaskText
+                key={i}
+                as={part.accent ? 'em' : undefined}
+                delay={i * 0.05 + (i ? 0.05 : 0)}
+              >
+                {part.text}
+              </MaskText>
+            ))}
           </h2>
 
           <motion.p
@@ -171,34 +176,42 @@ export default function Contact() {
             viewport={VIEWPORT}
             transition={{ duration: 0.85, ease: EASE, delay: 0.12 }}
           >
-            Tell us what you are building. We reply within one working day — every day, 24 x 7.
+            {/* The working hours are already in this sentence: the API fills
+                {hours} before sending it, so this cannot disagree with About
+                or the footer. */}
+            {CONTACT.lede}
           </motion.p>
 
           <div className="mn-contact__direct">
-            <a href="mailto:connect@medianest.co.in">
+            <a href={REACH.emailHref}>
               <i className="fas fa-envelope" aria-hidden />
-              connect@medianest.co.in
+              {REACH.email}
             </a>
-            <a href="tel:+918448112770">
+            <a href={REACH.phoneHref}>
               <i className="fas fa-phone" aria-hidden />
-              +91-8448112770
+              {REACH.phone}
             </a>
           </div>
 
-          {/* The firm details that used to sit in the hero's orange banner */}
+          {/* The firm details that used to sit in the hero's orange banner.
+
+              Coverage and hours come from the CMS because About states the
+              same two figures a few screens up. Left hardcoded, changing them
+              in settings updated About and left this block insisting on the
+              old answer — the page contradicting itself on one scroll. */}
           <dl className="mn-facts">
             <div>
               <dt>Firm</dt>
-              <dd>Media Nest</dd>
+              <dd>{REACH.firm}</dd>
             </div>
             <div>
               <dt>Operational</dt>
-              <dd>Global</dd>
+              <dd>{SETTINGS.coverage}</dd>
             </div>
             <div>
               <dt>Working hours</dt>
               <dd>
-                <span className="mn-facts__live">24 x 7</span>
+                <span className="mn-facts__live">{SETTINGS.hours_spaced}</span>
               </dd>
             </div>
           </dl>

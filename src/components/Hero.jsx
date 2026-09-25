@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import Magnetic from './Magnetic'
 import MediaLightbox from './MediaLightbox'
 import { SHOWREEL } from '@/lib/work'
+import { SETTINGS } from '@/lib/content'
 import '../styles/hero.css'
 
 /* House easing — decisive start, long settle. */
@@ -203,17 +204,19 @@ export default function Hero() {
             <circle cx="560" cy="286" r="292" className="mn-hsheet__arc--faint" />
           </svg>
 
-          {/* The firm's own figure, not an invented one: About records 5+
-              years of practice across nine in-house disciplines. */}
+          {/* The firm's own figures, from the CMS. The hero's layout and copy
+              stay in code -- these two values are the only thing it reads,
+              and only because About states the same figures and the two must
+              not disagree on the same screen. */}
           <span className="mn-hsheet__stat" aria-hidden>
-            5+
+            {SETTINGS.years_of_practice}
           </span>
           <p className="mn-hsheet__lead" aria-hidden>
             Years of
             <br />
             practice
             <br />
-            Nine disciplines
+            {SETTINGS.discipline_count_word} disciplines
           </p>
 
           {SHEET.map((f, i) => (
@@ -302,9 +305,9 @@ export default function Hero() {
 
       <MediaLightbox
         open={reel}
-        items={SHOWREEL.media}
+        items={SHOWREEL?.media}
         index={0}
-        label={SHOWREEL.name}
+        label={SHOWREEL?.name ?? ''}
         onIndex={() => {}}
         onClose={() => {
           setReel(false)

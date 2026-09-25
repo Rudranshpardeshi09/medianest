@@ -1,28 +1,13 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from 'framer-motion'
 import Magnetic from './Magnetic'
+import { REACH, SOCIAL } from '@/lib/content'
+import { NAV } from '@/lib/nav'
+import { PLATFORM } from '@/lib/social'
 import '../styles/nav.css'
 
 const EASE = [0.16, 1, 0.3, 1]
 
-/* Har item ka `id` page par maujood section se match karta hai,
-   isliye scroll-spy sab par kaam karta hai. */
-const NAV = [
-  { id: 'home', label: 'Home' },
-  { id: 'about', label: 'About Us' },
-  { id: 'services', label: 'Services' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'team', label: 'Team' },
-  { id: 'clients', label: 'Clients' },
-  { id: 'contact', label: 'Contact' },
-]
-
-const SOCIAL = [
-  { icon: 'fab fa-facebook-f', label: 'Facebook', href: 'https://www.facebook.com/medianest2024' },
-  { icon: 'fab fa-instagram', label: 'Instagram', href: 'https://www.instagram.com/medianest.official/' },
-  { icon: 'fab fa-youtube', label: 'YouTube', href: 'https://youtube.com/@medianesttv?feature=shared' },
-  { icon: 'fab fa-linkedin-in', label: 'LinkedIn', href: 'https://www.linkedin.com/company/104838310/' },
-]
 
 /** Viewfinder corner brackets. Purely decorative. */
 function Corners({ className }) {
@@ -295,16 +280,23 @@ export default function Header() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.55, ease: EASE, delay: 0.5 }}
             >
-              <a href="mailto:connect@medianest.co.in">connect@medianest.co.in</a>
-              <a href="tel:+918448112770">+91-8448112770</a>
+              <a href={REACH.emailHref}>{REACH.email}</a>
+              <a href={REACH.phoneHref}>{REACH.phone}</a>
               <ul className="mn-sheet__social">
-                {SOCIAL.map((s) => (
-                  <li key={s.label}>
-                    <a href={s.href} target="_blank" rel="noreferrer noopener" aria-label={s.label}>
-                      <i className={s.icon} aria-hidden />
-                    </a>
-                  </li>
-                ))}
+                {SOCIAL.map((s, i) => {
+                  const meta = PLATFORM[s.platform]
+                  /* WhatsApp's link is built from the phone number rather
+                     than stored — the same one the tap-to-call above uses. */
+                  const to = s.platform === 'whatsapp' ? REACH.whatsappHref : s.url
+                  if (!meta || !to) return null
+                  return (
+                    <li key={`${i}-${s.platform}`}>
+                      <a href={to} target="_blank" rel="noreferrer noopener" aria-label={meta.name}>
+                        <i className={meta.icon} aria-hidden />
+                      </a>
+                    </li>
+                  )
+                })}
               </ul>
             </motion.div>
           </motion.div>
