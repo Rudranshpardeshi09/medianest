@@ -103,6 +103,21 @@ export default function Footer() {
           <p style={{ margin: 0 }}>
             © {year} {REACH.firm}. {FOOTER.legal_note}
           </p>
+
+          {/* Only rendered when an address is set in the CMS, so the admin
+              stays unlisted until somebody deliberately publishes it. It is
+              marked nofollow and left out of the tab order's way — this is a
+              door for the people who run the site, not part of the site. */}
+          {SETTINGS.admin_url ? (
+            <a
+              className="mn-foot__admin"
+              href={SETTINGS.admin_url}
+              target="_blank"
+              rel="noreferrer noopener nofollow"
+            >
+              Admin
+            </a>
+          ) : null}
           <button type="button" className="mn-foot__top" onClick={() => go('home')}>
             Back to top
           </button>

@@ -6,6 +6,7 @@
     "phone_display": "+91-8448112770",
     "phone_e164": "+918448112770",
     "whatsapp_message": "Hi, I visited your website and want to know more.",
+    "admin_url": "https://rudranshpardeshi.pythonanywhere.com/studio/",
     "years_of_practice": "5+",
     "discipline_count": "9",
     "discipline_count_word": "Nine",
@@ -14,7 +15,7 @@
     "coverage": "Global"
   },
   "about": {
-    "heading": "We shape the way a brand is *seeeen*, frame by frame.",
+    "heading": "We shape the way a brand is *seen*, frame by frame.",
     "description": "Media Nest is a brand image management and consultancy practice. We create and curate visual content that drives engagement, trust and lasting presence — from photography and cinematography through to strategy, events and digital.",
     "figure": "/media/cms/about/INTERVIEW.webp",
     "figure_alt": "A Media Nest studio set lit for an interview shoot",
@@ -463,5 +464,5 @@
       "url": "https://www.linkedin.com/company/104838310/"
     }
   ],
-  "generated_at": "2026-09-24T13:33:02.492Z"
+  "generated_at": "2026-09-25T17:17:52.836Z"
 }

@@ -534,6 +534,26 @@
   color: var(--mn-orange, #e95523);
 }
 
+/* The way in for whoever runs the site. Set to match "Back to top" exactly,
+   because it belongs to the same row of utilities rather than to the page's
+   own content — it should read as furniture, not as a call to action. It is
+   pushed to sit beside that button rather than between it and the copyright,
+   which `space-between` would otherwise do. */
+.mn-foot__admin {
+  margin-left: auto;
+  font-family: var(--mn-font-sans, 'Roboto', sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--mn-on-dark-micro, rgba(255, 255, 255, 0.5));
+  transition: color 0.4s var(--mn-ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.mn-foot__admin:hover {
+  color: var(--mn-orange, #e95523);
+}
+
 /* ── Responsive ────────────────────────────────────────────── */
 
 @media (max-width: 1100px) {
